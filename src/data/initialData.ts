@@ -977,3 +977,85 @@ export const INITIAL_AUDIT_LOGS: AuditEvent[] = [
     timestamp: '2026-10-20T11:45:00Z'
   }
 ];
+
+export const INITIAL_NAV_ITEMS: any[] = [
+  { id: 'nav-1', menu: 'header', label: { en: 'Home', ur: 'مرکزی صفحہ' }, targetView: 'home', isVisible: true, sortOrder: 1 },
+  { id: 'nav-2', menu: 'header', label: { en: 'Fleet & Cars', ur: 'ہماری گاڑیاں' }, targetView: 'cars', isVisible: true, sortOrder: 2 },
+  { id: 'nav-3', menu: 'header', label: { en: 'Services', ur: 'سروسز' }, targetView: 'services', isVisible: true, sortOrder: 3 },
+  { id: 'nav-4', menu: 'header', label: { en: 'Rates', ur: 'کرایہ نامہ' }, targetView: 'rates', isVisible: true, sortOrder: 4 },
+  { id: 'nav-5', menu: 'header', label: { en: 'About Us', ur: 'ہمارے متعلق' }, targetView: 'about', isVisible: true, sortOrder: 5 },
+  { id: 'nav-6', menu: 'header', label: { en: 'Contact', ur: 'رابطہ کریں' }, targetView: 'contact', isVisible: true, sortOrder: 6 },
+  { id: 'nav-7', menu: 'header', label: { en: 'Track Booking', ur: 'بکنگ کا احوال' }, targetView: 'status', isVisible: true, sortOrder: 7 }
+];
+
+export const INITIAL_TRANSLATIONS: any[] = [
+  { id: 'tr-1', key: 'nav.home', category: 'Navigation', en: 'Home', ur: 'مرکزی صفحہ' },
+  { id: 'tr-2', key: 'nav.cars', category: 'Navigation', en: 'Our Fleet & Cars', ur: 'ہماری گاڑیاں' },
+  { id: 'tr-3', key: 'nav.services', category: 'Navigation', en: 'Services', ur: 'سروسز' },
+  { id: 'tr-4', key: 'nav.rates', category: 'Navigation', en: 'Rates & Packages', ur: 'کرایہ نامہ اور پیکیجز' },
+  { id: 'tr-5', key: 'cta.book', category: 'Buttons', en: 'Book a Car', ur: 'گاڑی بک کریں' },
+  { id: 'tr-6', key: 'cta.whatsapp', category: 'Buttons', en: 'Book on WhatsApp', ur: 'واٹس ایپ پر رابطہ' },
+  { id: 'tr-7', key: 'badge.verified', category: 'Badges', en: '100% Verified Fleet', ur: 'تصدیق شدہ اور محفوظ گاڑیاں' },
+  { id: 'tr-8', key: 'status.pending', category: 'Status', en: 'Pending Approval', ur: 'پینڈنگ (منظوری درکار ہے)' },
+  { id: 'tr-9', key: 'status.confirmed', category: 'Status', en: 'Confirmed', ur: 'تصدیق شدہ' },
+  { id: 'tr-10', key: 'status.completed', category: 'Status', en: 'Trip Completed', ur: 'سفر مکمل' }
+];
+
+export const INITIAL_MEDIA: any[] = [
+  {
+    id: 'med-1',
+    title: 'Toyota Corolla Silver Glamour',
+    url: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=900&q=80',
+    altText: { en: 'Toyota Corolla GLi 2023 in Sadiqabad', ur: 'ٹویوٹا کرولا جی ایل آئی 2023' },
+    category: 'cars',
+    sizeKB: 240,
+    uploadedAt: '2026-10-18T10:00:00Z'
+  },
+  {
+    id: 'med-2',
+    title: 'Toyota Fortuner White SUV',
+    url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
+    altText: { en: 'Toyota Fortuner Legender 4x4 wedding car', ur: 'ٹویوٹا فارچونر لیجنڈر 4x4' },
+    category: 'cars',
+    sizeKB: 310,
+    uploadedAt: '2026-10-18T10:15:00Z'
+  },
+  {
+    id: 'med-3',
+    title: 'Honda Civic Sporty Gold',
+    url: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=900&q=80',
+    altText: { en: 'Honda Civic Oriel Sunroof', ur: 'ہونڈا سیوک سن روف' },
+    category: 'cars',
+    sizeKB: 280,
+    uploadedAt: '2026-10-18T10:30:00Z'
+  },
+  {
+    id: 'med-4',
+    title: 'M-5 Motorway Highway Scenic Banner',
+    url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80',
+    altText: { en: 'Highway scenic road Punjab', ur: 'پنجاب ہائی وے اور موٹروے' },
+    category: 'banners',
+    sizeKB: 450,
+    uploadedAt: '2026-10-19T08:00:00Z'
+  }
+];
+
+export const INITIAL_FORM_FIELDS: any[] = [
+  { id: 'f-1', fieldKey: 'full_name', formType: 'booking', label: { en: 'Full Name', ur: 'مکمل نام' }, fieldType: 'text', isRequired: true, isVisible: true, isCore: true },
+  { id: 'f-2', fieldKey: 'phone', formType: 'booking', label: { en: 'Mobile Number', ur: 'موبائل نمبر' }, fieldType: 'phone', isRequired: true, isVisible: true, isCore: true },
+  { id: 'f-3', fieldKey: 'pickup_date', formType: 'booking', label: { en: 'Pickup Date', ur: 'پک اپ تاریخ' }, fieldType: 'date', isRequired: true, isVisible: true, isCore: true },
+  { id: 'f-4', fieldKey: 'return_date', formType: 'booking', label: { en: 'Return Date', ur: 'واپسی تاریخ' }, fieldType: 'date', isRequired: true, isVisible: true, isCore: true },
+  { id: 'f-5', fieldKey: 'pickup_location', formType: 'booking', label: { en: 'Pickup Address', ur: 'پک اپ ایڈریس' }, fieldType: 'text', isRequired: true, isVisible: true, isCore: true },
+  { id: 'f-6', fieldKey: 'destination', formType: 'booking', label: { en: 'Destination', ur: 'منزل' }, fieldType: 'text', isRequired: true, isVisible: true, isCore: true },
+  { id: 'f-7', fieldKey: 'email', formType: 'booking', label: { en: 'Email Address', ur: 'ای میل' }, fieldType: 'text', isRequired: false, isVisible: true, isCore: false },
+  { id: 'f-8', fieldKey: 'flight_number', formType: 'booking', label: { en: 'Flight Number (For Airport)', ur: 'فلائٹ نمبر' }, fieldType: 'text', isRequired: false, isVisible: true, isCore: false },
+  { id: 'f-9', fieldKey: 'special_requests', formType: 'booking', label: { en: 'Special Requests', ur: 'اضافی ہدایات' }, fieldType: 'textarea', isRequired: false, isVisible: true, isCore: false }
+];
+
+export const INITIAL_TEAM: any[] = [
+  { id: 'usr-1', name: 'Muhammad Usman', email: 'owner@rent2go-sadiqabad.pk', role: 'owner', isActive: true, lastLogin: '2026-10-21T04:20:00Z' },
+  { id: 'usr-2', name: 'Chaudhry Farhan', email: 'manager@rent2go-sadiqabad.pk', role: 'manager', isActive: true, lastLogin: '2026-10-20T17:15:00Z' },
+  { id: 'usr-3', name: 'Nasir Iqbal', email: 'dispatch@rent2go-sadiqabad.pk', role: 'staff', isActive: true, lastLogin: '2026-10-20T14:00:00Z' },
+  { id: 'usr-4', name: 'Bilal Ahmad', email: 'editor@rent2go-sadiqabad.pk', role: 'content_editor', isActive: true, lastLogin: '2026-10-19T11:30:00Z' }
+];
+

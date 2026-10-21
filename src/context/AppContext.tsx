@@ -78,6 +78,11 @@ interface AppContextType {
   moderateReview: (id: string, isApproved: boolean) => void;
   submitEnquiry: (enquiry: Omit<Enquiry, 'id' | 'createdAt' | 'status'>) => void;
   convertEnquiryToBooking: (enquiryId: string) => void;
+  duplicateVehicle: (id: string) => void;
+  clearDemoFleet: () => void;
+  clearDemoBookings: () => void;
+  exportAllData: () => string;
+  importAllData: (jsonStr: string) => { success: boolean; error?: string };
   resetAllData: () => void;
   navigateToCar: (slug: string) => void;
   navigateToBooking: (vehicleId?: string) => void;
@@ -569,6 +574,74 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     logAudit('Enquiries', 'Converted to Booking', `Enquiry ${enquiryId} converted to booking`);
   };
 
+  const duplicateVehicle = (id: string) => {
+    const existing = vehicles.find(v => v.id === id);
+    if (!existing) return;
+    const newId = `veh-${Date.now()}`;
+    const duplicated: Vehicle = {
+      ...existing,
+      id: newId,
+      stockCode: `${existing.stockCode}-COPY`,
+      slug: `${existing.slug}-copy-${Date.now().toString().slice(-4)}`,
+      title: {
+        en: `${existing.title.en} (Copy)`,
+        ur: `${existing.title.ur} (کاپی)`
+      },
+      customFields: {
+        ...existing.customFields,
+        registrationNumber: existing.customFields?.registrationNumber ? `${existing.customFields.registrationNumber}-B` : undefined
+      },
+      maintenanceWindows: []
+    };
+    setVehicles(prev => [duplicated, ...prev]);
+    logAudit('Fleet', 'Duplicate Vehicle', `Cloned vehicle ${existing.make} ${existing.model} as ${duplicated.stockCode}`);
+  };
+
+  const clearDemoFleet = () => {
+    setVehicles([]);
+    logAudit('Fleet', 'Clear Fleet', 'Admin cleared all vehicle records to begin with empty real fleet.');
+  };
+
+  const clearDemoBookings = () => {
+    setBookings([]);
+    logAudit('Bookings', 'Clear Bookings', 'Admin wiped booking history.');
+  };
+
+  const exportAllData = (): string => {
+    const exportPayload = {
+      exportDate: new Date().toISOString(),
+      version: '1.0',
+      data: {
+        vehicles,
+        bookings,
+        cmsPage,
+        services,
+        reviews,
+        settings,
+        enquiries
+      }
+    };
+    return JSON.stringify(exportPayload, null, 2);
+  };
+
+  const importAllData = (jsonStr: string): { success: boolean; error?: string } => {
+    try {
+      const parsed = JSON.parse(jsonStr);
+      const data = parsed.data || parsed;
+      if (data.vehicles && Array.isArray(data.vehicles)) setVehicles(data.vehicles);
+      if (data.bookings && Array.isArray(data.bookings)) setBookings(data.bookings);
+      if (data.cmsPage) setCmsPage(data.cmsPage);
+      if (data.services && Array.isArray(data.services)) setServices(data.services);
+      if (data.reviews && Array.isArray(data.reviews)) setReviews(data.reviews);
+      if (data.settings) setSettings(data.settings);
+      if (data.enquiries && Array.isArray(data.enquiries)) setEnquiries(data.enquiries);
+      logAudit('System', 'Import Backup', 'Successfully restored system data from backup JSON.');
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Invalid JSON format' };
+    }
+  };
+
   const resetAllData = () => {
     setVehicles(INITIAL_VEHICLES);
     setBookings(INITIAL_BOOKINGS);
@@ -578,6 +651,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSettings(INITIAL_SETTINGS);
     setAuditLogs(INITIAL_AUDIT_LOGS);
     localStorage.clear();
+    logAudit('System', 'Reset Defaults', 'Reset entire database back to default Sadiqabad seed data.');
   };
 
   const navigateToCar = (slug: string) => {
@@ -643,6 +717,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         moderateReview,
         submitEnquiry,
         convertEnquiryToBooking,
+        duplicateVehicle,
+        clearDemoFleet,
+        clearDemoBookings,
+        exportAllData,
+        importAllData,
         resetAllData,
         navigateToCar,
         navigateToBooking

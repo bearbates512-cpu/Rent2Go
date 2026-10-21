@@ -18,7 +18,7 @@ export const FloatingWhatsApp: React.FC = () => {
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${prefilledMessage}`;
 
   return (
-    <aside aria-label="WhatsApp quick chat" className="fixed bottom-6 end-6 z-50 flex items-center group">
+    <aside aria-label="WhatsApp quick chat" className="fixed bottom-8 sm:bottom-10 end-6 z-40 flex items-center group">
       <a
         href={whatsappUrl}
         target="_blank"

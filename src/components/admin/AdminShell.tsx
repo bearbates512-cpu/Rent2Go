@@ -18,7 +18,9 @@ import {
   Menu,
   X,
   Search,
-  CheckCircle2
+  CheckCircle2,
+  Layers,
+  Globe
 } from 'lucide-react';
 
 interface AdminShellProps {
@@ -50,10 +52,16 @@ export const AdminShell: React.FC<AdminShellProps> = ({
     { id: 'calendar', label: 'Fleet Calendar', icon: Calendar },
     { id: 'vehicles', label: 'Vehicles & Fleet', icon: Car },
     { id: 'cms', label: 'Website CMS (Visual)', icon: FileEdit },
-    { id: 'pricing', label: 'Pricing Rules', icon: Banknote },
+    { id: 'navigation', label: 'Navigation & Menus', icon: Layers },
+    { id: 'pricing', label: 'Pricing & Fare Engine', icon: Banknote },
     { id: 'enquiries', label: 'Enquiries & CRM', icon: MessageSquare, badge: newEnquiriesCount },
     { id: 'reviews', label: 'Reviews Moderation', icon: Star },
+    { id: 'media', label: 'Media Library', icon: Palette },
+    { id: 'translations', label: 'Translations (EN/UR)', icon: Globe },
+    { id: 'formbuilder', label: 'Form Builder', icon: FileEdit },
+    { id: 'reports', label: 'Reports & Analytics', icon: History },
     { id: 'theme', label: 'Theme & Branding', icon: Palette },
+    { id: 'team', label: 'Team & Permissions', icon: Shield },
     { id: 'settings', label: 'Settings & Modules', icon: Settings },
     { id: 'audit', label: 'Audit Log', icon: History }
   ];

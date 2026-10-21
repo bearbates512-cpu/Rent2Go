@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle } from 'lucide-react';
+import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw } from 'lucide-react';
 
 export const AdminSettings: React.FC = () => {
-  const { settings, updateSiteSettings, resetAllData } = useApp();
+  const { settings, updateSiteSettings, resetAllData, clearDemoFleet, clearDemoBookings, exportAllData, importAllData } = useApp();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importStatus, setImportStatus] = useState<string>('');
 
   const [phone, setPhone] = useState(settings.phone);
   const [phoneFormatted, setPhoneFormatted] = useState(settings.phoneFormatted);
@@ -266,26 +268,143 @@ export const AdminSettings: React.FC = () => {
           </div>
         </div>
 
-        {/* Danger Zone: Reset Data */}
-        <div className="p-6 rounded-3xl border border-rose-200 bg-rose-50/50 space-y-3">
-          <span className="text-xs font-bold text-rose-800 uppercase tracking-wider block">
-            Danger Zone
-          </span>
-          <p className="text-xs text-rose-700">
-            Reset all vehicles, bookings, CMS content, and reviews to pristine default Sadiqabad seed data.
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              if (confirm('Are you sure you want to reset all data to initial defaults?')) {
-                resetAllData();
-                alert('All data reset to initial seed state.');
-              }
-            }}
-            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors"
-          >
-            Reset All Application Data
-          </button>
+        {/* Advanced Data Management, Backup & Demo Hub */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h2 className="text-sm font-bold text-[#0B1F3A] uppercase tracking-wider flex items-center gap-2">
+                <Database className="w-4 h-4 text-amber-500" />
+                <span>Data Management & Backup Hub</span>
+              </h2>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Full export/import, real fleet entry controls, and demo data wiping.
+              </p>
+            </div>
+          </div>
+
+          {importStatus && (
+            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs font-bold">
+              {importStatus}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Export System Backup */}
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <span className="font-bold text-xs text-slate-800 block">Export Full System Backup (JSON)</span>
+              <p className="text-[11px] text-slate-500">
+                Downloads an encrypted-ready JSON backup of all vehicles, rates, bookings, website CMS, and customer reviews.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  const json = exportAllData();
+                  const blob = new Blob([json], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `rent2go-backup-${new Date().toISOString().split('T')[0]}.json`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="px-4 py-2 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Download System Backup</span>
+              </button>
+            </div>
+
+            {/* Import Backup */}
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <span className="font-bold text-xs text-slate-800 block">Restore System Backup (JSON)</span>
+              <p className="text-[11px] text-slate-500">
+                Upload a previous Rent2Go JSON backup to restore all business data and fleet inventory.
+              </p>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept=".json"
+                className="hidden"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = ev => {
+                    const content = ev.target?.result as string;
+                    const res = importAllData(content);
+                    if (res.success) {
+                      setImportStatus('Backup restored successfully! All data loaded.');
+                      setTimeout(() => setImportStatus(''), 3000);
+                    } else {
+                      setImportStatus(`Import failed: ${res.error}`);
+                    }
+                  };
+                  reader.readAsText(file);
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+              >
+                <Upload className="w-3.5 h-3.5 text-slate-600" />
+                <span>Upload & Restore Backup</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Demo Cleaners for Admin Real Data Entry */}
+          <div className="p-5 rounded-2xl border border-amber-200 bg-amber-50/50 space-y-3">
+            <span className="text-xs font-bold text-amber-900 uppercase tracking-wider block">
+              Real Data Onboarding & Demo Cleaning
+            </span>
+            <p className="text-xs text-amber-800">
+              When ready to enter your actual showroom cars and real customer bookings, use these one-click tools:
+            </p>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm('Clear all demo fleet vehicles? You can then add your actual cars one by one.')) {
+                    clearDemoFleet();
+                    alert('Demo fleet cleared! Go to Fleet & Vehicles tab to add your real cars.');
+                  }
+                }}
+                className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Clear Demo Fleet (Start Fresh)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm('Wipe demo booking history?')) {
+                    clearDemoBookings();
+                    alert('Booking history cleared.');
+                  }
+                }}
+                className="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold transition-colors flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Clear Demo Bookings</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm('Reset everything back to initial Sadiqabad demo seed state?')) {
+                    resetAllData();
+                    alert('All data restored to default demo state.');
+                  }
+                }}
+                className="px-3.5 py-2 rounded-xl border border-slate-300 hover:bg-white text-slate-800 text-xs font-bold transition-colors flex items-center gap-1.5"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                <span>Reload Sample Demo Fleet</span>
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

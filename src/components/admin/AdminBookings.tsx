@@ -20,8 +20,11 @@ import {
   History,
   X,
   ShieldCheck,
-  User
+  User,
+  Printer,
+  Send
 } from 'lucide-react';
+import { RentalAgreementModal } from './RentalAgreementModal.tsx';
 
 export const AdminBookings: React.FC = () => {
   const {
@@ -51,11 +54,42 @@ export const AdminBookings: React.FC = () => {
   const [mSource, setMSource] = useState<'phone' | 'whatsapp' | 'walk_in'>('phone');
   const [manualError, setManualError] = useState('');
 
+  // Agreement Modal State
+  const [agreementBooking, setAgreementBooking] = useState<Booking | null>(null);
+
   // Editable quote state inside detail drawer
   const [editTotal, setEditTotal] = useState<number | ''>('');
   const [editDeposit, setEditDeposit] = useState<number | ''>('');
   const [editPaymentStatus, setEditPaymentStatus] = useState<Booking['paymentStatus']>('unpaid');
   const [statusActionError, setStatusActionError] = useState<string>('');
+
+  const handleSendWhatsAppNotification = (b: Booking) => {
+    const cleanDigits = b.customerPhone.replace(/\D/g, '');
+    let target = cleanDigits;
+    if (target.startsWith('0')) target = '92' + target.slice(1);
+    else if (!target.startsWith('92')) target = '92' + target;
+
+    const total = (b.confirmedTotal || b.estimate?.estimatedTotal || 0).toLocaleString();
+    const deposit = (b.depositAmount || 0).toLocaleString();
+
+    const text = encodeURIComponent(
+      `*Rent2Go Rent-a-Car Sadiqabad*\n` +
+      `Assalam-o-Alaikum ${b.customerName}!\n\n` +
+      `Aapki car booking confirmation details yeh hain:\n` +
+      `📋 *Booking Reference:* ${b.reference}\n` +
+      `🚗 *Gaari:* ${b.vehicleName}\n` +
+      `📅 *Pickup:* ${b.pickupDate} (${b.pickupTime || '09:00'})\n` +
+      `🏁 *Return:* ${b.returnDate} (${b.returnTime || '18:00'})\n` +
+      `📍 *Route:* ${b.pickupLocation} ➔ ${b.destination}\n` +
+      `💰 *Total Fare:* PKR ${total}\n` +
+      `💵 *Advance / Deposit:* PKR ${deposit}\n` +
+      `✨ *Status:* ${b.status.toUpperCase()}\n\n` +
+      `Kisi bhi madad ya driver coordination ke liye rabta karein:\n` +
+      `📞 Helpline: ${settings.phoneFormatted}\n` +
+      `Shukriya!`
+    );
+    window.open(`https://wa.me/${target}?text=${text}`, '_blank');
+  };
 
   const filteredBookings = bookings.filter(b => {
     if (selectedStatus !== 'all' && b.status !== selectedStatus) return false;
@@ -297,12 +331,28 @@ export const AdminBookings: React.FC = () => {
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-end">
-                    <button
-                      onClick={() => openDetailDrawer(b)}
-                      className="px-3 py-1.5 rounded-lg bg-[#0B1F3A] hover:bg-[#142F57] text-white text-xs font-bold transition-colors"
-                    >
-                      Manage
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => openDetailDrawer(b)}
+                        className="px-2.5 py-1.5 rounded-lg bg-[#0B1F3A] hover:bg-[#142F57] text-white text-xs font-bold transition-colors"
+                      >
+                        Manage
+                      </button>
+                      <button
+                        onClick={() => setAgreementBooking(b)}
+                        className="p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-[#0B1F3A] transition-colors"
+                        title="Print Voucher & Agreement"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleSendWhatsAppNotification(b)}
+                        className="p-1.5 rounded-lg border border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors"
+                        title="Send WhatsApp Alert"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -334,12 +384,34 @@ export const AdminBookings: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <button
-                onClick={() => setActiveBooking(null)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-              >
-                <X className="w-5 h-5" />
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setAgreementBooking(activeBooking)}
+                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all flex items-center gap-1.5"
+                  title="Print official rental voucher"
+                >
+                  <Printer className="w-3.5 h-3.5 text-[#0B1F3A]" />
+                  <span className="hidden sm:inline">Print Voucher</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSendWhatsAppNotification(activeBooking)}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200 transition-all flex items-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="hidden sm:inline">WhatsApp Alert</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveBooking(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Conflict Detection Indicator (Per PRD B4 & Schema Section 8) */}
@@ -698,6 +770,16 @@ export const AdminBookings: React.FC = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* OFFICIAL PRINTABLE RENTAL AGREEMENT MODAL */}
+      {agreementBooking && (
+        <RentalAgreementModal
+          booking={agreementBooking}
+          vehicle={vehicles.find(v => v.id === agreementBooking.vehicleId)}
+          settings={settings}
+          onClose={() => setAgreementBooking(null)}
+        />
       )}
     </div>
   );

@@ -14,11 +14,131 @@ import {
   Image,
   X,
   Gauge,
-  Users
+  Users,
+  Copy,
+  Sparkles,
+  Navigation,
+  ShieldCheck,
+  RotateCcw
 } from 'lucide-react';
 
+const POPULAR_FLEET_PRESETS = [
+  {
+    label: 'Corolla Altis 1.6',
+    make: 'Toyota',
+    model: 'Corolla Altis',
+    variant: '1.6 VVTi Automatic',
+    year: 2023,
+    category: 'sedan' as VehicleCategory,
+    seats: 5,
+    doors: 4,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '6500',
+    driverFee: 1500,
+    deposit: 10000,
+    img: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    label: 'Civic RS Turbo',
+    make: 'Honda',
+    model: 'Civic Oriel / RS',
+    variant: '1.5 VTEC Turbo CVT',
+    year: 2023,
+    category: 'sedan' as VehicleCategory,
+    seats: 5,
+    doors: 4,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '11000',
+    driverFee: 2000,
+    deposit: 15000,
+    img: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    label: 'Fortuner Legender',
+    make: 'Toyota',
+    model: 'Fortuner Legender',
+    variant: '2.8L 4x4 Sigma 4',
+    year: 2024,
+    category: 'suv' as VehicleCategory,
+    seats: 7,
+    doors: 5,
+    trans: 'automatic' as const,
+    fuel: 'diesel' as const,
+    dailyRate: '24000',
+    driverFee: 2500,
+    deposit: 30000,
+    img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    label: 'Suzuki Alto VXL',
+    make: 'Suzuki',
+    model: 'Alto VXL',
+    variant: '660cc AGS Automatic',
+    year: 2023,
+    category: 'hatchback' as VehicleCategory,
+    seats: 4,
+    doors: 5,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '4000',
+    driverFee: 1200,
+    deposit: 8000,
+    img: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    label: 'Yaris ATIV CVT',
+    make: 'Toyota',
+    model: 'Yaris ATIV',
+    variant: '1.3 CVT Automatic',
+    year: 2023,
+    category: 'sedan' as VehicleCategory,
+    seats: 5,
+    doors: 4,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '5500',
+    driverFee: 1500,
+    deposit: 10000,
+    img: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    label: 'Hiace Grand Cabin',
+    make: 'Toyota',
+    model: 'Hiace Grand Cabin',
+    variant: '3.0L High Roof 14-Seater',
+    year: 2022,
+    category: 'van' as VehicleCategory,
+    seats: 14,
+    doors: 4,
+    trans: 'automatic' as const,
+    fuel: 'diesel' as const,
+    dailyRate: '16000',
+    driverFee: 2500,
+    deposit: 20000,
+    img: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=900&q=80'
+  },
+  {
+    label: 'Prado TX 4.0 V6',
+    make: 'Toyota',
+    model: 'Land Cruiser Prado',
+    variant: 'TX-L 4.0 V6 4x4',
+    year: 2022,
+    category: 'luxury' as VehicleCategory,
+    seats: 7,
+    doors: 5,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '28000',
+    driverFee: 3000,
+    deposit: 35000,
+    img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80'
+  }
+];
+
 export const AdminVehicles: React.FC = () => {
-  const { vehicles, addVehicle, updateVehicle, deleteVehicle, locale } = useApp();
+  const { vehicles, addVehicle, updateVehicle, deleteVehicle, duplicateVehicle, clearDemoFleet, resetAllData } = useApp();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -37,17 +157,37 @@ export const AdminVehicles: React.FC = () => {
   const [fuelType, setFuelType] = useState<'petrol' | 'diesel' | 'hybrid' | 'electric'>('petrol');
   const [hasAC, setHasAC] = useState<boolean>(true);
   const [driverOption, setDriverOption] = useState<'with_driver' | 'self_drive' | 'both'>('both');
-  const [dailyRate, setDailyRate] = useState<string>('6000');
+  const [dailyRate, setDailyRate] = useState<string>('6500');
   const [isQuoteOnly, setIsQuoteOnly] = useState<boolean>(false);
   const [driverFee, setDriverFee] = useState<number>(1500);
   const [mileageLimit, setMileageLimit] = useState<string>('200 KM');
   const [extraKmRate, setExtraKmRate] = useState<number>(25);
   const [secDeposit, setSecDeposit] = useState<number>(10000);
+  const [regNumber, setRegNumber] = useState<string>('RYK-2023-');
+  const [odometerKm, setOdometerKm] = useState<number>(38500);
+  const [gpsTracker, setGpsTracker] = useState<boolean>(true);
   const [coverImage, setCoverImage] = useState<string>(
     'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'
   );
   const [visibility, setVisibility] = useState<VehicleVisibility>('published');
   const [opStatus, setOpStatus] = useState<VehicleOpStatus>('available');
+
+  const applyPreset = (p: typeof POPULAR_FLEET_PRESETS[0]) => {
+    setMake(p.make);
+    setModel(p.model);
+    setVariant(p.variant);
+    setModelYear(p.year);
+    setCategory(p.category);
+    setSeats(p.seats);
+    setDoors(p.doors);
+    setTransmission(p.trans);
+    setFuelType(p.fuel);
+    setDailyRate(p.dailyRate);
+    setIsQuoteOnly(false);
+    setDriverFee(p.driverFee);
+    setSecDeposit(p.deposit);
+    setCoverImage(p.img);
+  };
 
   const openAddModal = () => {
     setEditingVehicle(null);
@@ -68,6 +208,9 @@ export const AdminVehicles: React.FC = () => {
     setMileageLimit('200 KM');
     setExtraKmRate(25);
     setSecDeposit(10000);
+    setRegNumber(`RYK-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`);
+    setOdometerKm(35000);
+    setGpsTracker(true);
     setCoverImage('https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80');
     setVisibility('published');
     setOpStatus('available');
@@ -93,6 +236,9 @@ export const AdminVehicles: React.FC = () => {
     setMileageLimit(v.customFields?.mileageLimitPerDay || '200 KM');
     setExtraKmRate(v.customFields?.extraKmRate || 25);
     setSecDeposit(v.customFields?.securityDeposit || 10000);
+    setRegNumber(v.customFields?.registrationNumber || `RYK-${v.modelYear}-0000`);
+    setOdometerKm(v.customFields?.odometerKm || 40000);
+    setGpsTracker(v.customFields?.gpsTrackerInstalled ?? true);
     setCoverImage(v.coverImage);
     setVisibility(v.visibility);
     setOpStatus(v.opStatus);
@@ -124,8 +270,17 @@ export const AdminVehicles: React.FC = () => {
       fuelType,
       hasAC,
       driverOption,
-      features: ['Air Conditioning', 'Power Windows', 'ABS Brakes', 'Clean Sanitized Interior'],
+      features: [
+        'Air Conditioning',
+        'Power Windows',
+        'ABS Brakes',
+        'Clean Sanitized Interior',
+        gpsTracker ? 'Live GPS Satellite Tracker' : 'Factory Security'
+      ],
       customFields: {
+        registrationNumber: regNumber.trim(),
+        odometerKm,
+        gpsTrackerInstalled: gpsTracker,
         mileageLimitPerDay: mileageLimit,
         extraKmRate,
         securityDeposit: secDeposit
@@ -156,7 +311,8 @@ export const AdminVehicles: React.FC = () => {
       return (
         v.make.toLowerCase().includes(q) ||
         v.model.toLowerCase().includes(q) ||
-        v.stockCode.toLowerCase().includes(q)
+        v.stockCode.toLowerCase().includes(q) ||
+        (v.customFields?.registrationNumber && v.customFields.registrationNumber.toLowerCase().includes(q))
       );
     }
     return true;
@@ -167,19 +323,50 @@ export const AdminVehicles: React.FC = () => {
       {/* Title & Add Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-[#0B1F3A]">Fleet & Vehicles Management</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-black text-[#0B1F3A]">Fleet & Vehicles Management</h1>
+            <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold font-mono">
+              {vehicles.length} Cars
+            </span>
+          </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Add cars, update daily rates, manage photos, and toggle visibility.
+            Add cars, update daily rates, track registration numbers, and toggle visibility.
           </p>
         </div>
 
-        <button
-          onClick={openAddModal}
-          className="px-4 py-2.5 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>Add New Vehicle</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {vehicles.length > 0 ? (
+            <button
+              onClick={() => {
+                if (confirm('Are you sure you want to clear demo fleet? You will be able to add your real cars from scratch (or restore demo fleet anytime in Settings).')) {
+                  clearDemoFleet();
+                }
+              }}
+              className="px-3.5 py-2.5 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold transition-all flex items-center gap-1.5"
+            >
+              <Trash2 className="w-4 h-4 text-rose-500" />
+              <span>Clear Demo Fleet (Start Fresh)</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                resetAllData();
+              }}
+              className="px-3.5 py-2.5 rounded-xl border border-blue-200 text-blue-700 hover:bg-blue-50 text-xs font-bold transition-all flex items-center gap-1.5"
+            >
+              <RotateCcw className="w-4 h-4 text-blue-500" />
+              <span>Load Sample Demo Fleet</span>
+            </button>
+          )}
+
+          <button
+            onClick={openAddModal}
+            className="px-4 py-2.5 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Add New Vehicle</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search */}
@@ -242,7 +429,20 @@ export const AdminVehicles: React.FC = () => {
                         <span className="font-bold text-slate-900 block text-sm">
                           {veh.make} {veh.model}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-400">{veh.stockCode} • {veh.modelYear}</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[10px] font-mono text-slate-400">{veh.stockCode} • {veh.modelYear}</span>
+                          {veh.customFields?.registrationNumber && (
+                            <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
+                              {veh.customFields.registrationNumber}
+                            </span>
+                          )}
+                          {veh.customFields?.gpsTrackerInstalled && (
+                            <span className="text-[9px] font-bold text-blue-700 bg-blue-50 px-1 rounded flex items-center gap-0.5">
+                              <ShieldCheck className="w-2.5 h-2.5" />
+                              <span>GPS</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -286,6 +486,13 @@ export const AdminVehicles: React.FC = () => {
                   </td>
                   <td className="py-3.5 px-4 text-end space-x-1.5">
                     <button
+                      onClick={() => duplicateVehicle(veh.id)}
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-emerald-700 hover:bg-slate-100"
+                      title="Duplicate Vehicle (Clone)"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                    <button
                       onClick={() => openEditModal(veh)}
                       className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100"
                       title="Edit Vehicle"
@@ -328,6 +535,66 @@ export const AdminVehicles: React.FC = () => {
             </div>
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
+              {!editingVehicle && (
+                <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-950">
+                    <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Auto-Fill With Popular Pakistani Rental Cars:</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {POPULAR_FLEET_PRESETS.map(p => (
+                      <button
+                        key={p.label}
+                        type="button"
+                        onClick={() => applyPreset(p)}
+                        className="px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-slate-800 text-[11px] font-bold hover:bg-[#0B1F3A] hover:text-[#F5B301] hover:border-[#0B1F3A] transition-all shadow-2xs cursor-pointer"
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Registration and Operations */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+                <span className="font-bold text-slate-700 block">Fleet Identity & Hardware</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-500 block mb-1">Registration / Plate No *</label>
+                    <input
+                      type="text"
+                      value={regNumber}
+                      onChange={e => setRegNumber(e.target.value)}
+                      placeholder="e.g. RYK-2023-4567"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono font-bold uppercase"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-500 block mb-1">Current Odometer (KM)</label>
+                    <input
+                      type="number"
+                      value={odometerKm}
+                      onChange={e => setOdometerKm(Number(e.target.value))}
+                      placeholder="35000"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono font-bold"
+                    />
+                  </div>
+                  <div className="flex items-center pt-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={gpsTracker}
+                        onChange={e => setGpsTracker(e.target.checked)}
+                        className="w-4 h-4 accent-[#0B1F3A]"
+                      />
+                      <span className="text-slate-700 font-bold">GPS Tracker Installed</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="font-bold text-slate-700 block mb-1">Make *</label>

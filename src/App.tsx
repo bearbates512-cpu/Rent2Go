@@ -29,6 +29,12 @@ import { AdminReviews } from './components/admin/AdminReviews.tsx';
 import { AdminTheme } from './components/admin/AdminTheme.tsx';
 import { AdminSettings } from './components/admin/AdminSettings.tsx';
 import { AdminAudit } from './components/admin/AdminAudit.tsx';
+import { AdminNavigation } from './components/admin/AdminNavigation.tsx';
+import { AdminMediaLibrary } from './components/admin/AdminMediaLibrary.tsx';
+import { AdminTranslations } from './components/admin/AdminTranslations.tsx';
+import { AdminFormBuilder } from './components/admin/AdminFormBuilder.tsx';
+import { AdminReports } from './components/admin/AdminReports.tsx';
+import { AdminTeam } from './components/admin/AdminTeam.tsx';
 
 function MainAppContent() {
   const { currentView, setCurrentView, navigateToCar } = useApp();
@@ -62,10 +68,16 @@ function MainAppContent() {
         {adminTab === 'calendar' && <AdminCalendar />}
         {adminTab === 'vehicles' && <AdminVehicles />}
         {adminTab === 'cms' && <AdminCMS />}
+        {adminTab === 'navigation' && <AdminNavigation />}
         {adminTab === 'pricing' && <AdminPricing />}
         {adminTab === 'enquiries' && <AdminEnquiries />}
         {adminTab === 'reviews' && <AdminReviews />}
+        {adminTab === 'media' && <AdminMediaLibrary />}
+        {adminTab === 'translations' && <AdminTranslations />}
+        {adminTab === 'formbuilder' && <AdminFormBuilder />}
+        {adminTab === 'reports' && <AdminReports />}
         {adminTab === 'theme' && <AdminTheme />}
+        {adminTab === 'team' && <AdminTeam />}
         {adminTab === 'settings' && <AdminSettings />}
         {adminTab === 'audit' && <AdminAudit />}
       </AdminShell>

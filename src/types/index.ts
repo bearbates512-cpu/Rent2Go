@@ -35,6 +35,10 @@ export interface Vehicle {
   driverOption: DriverOption;
   features: string[];
   customFields: {
+    registrationNumber?: string;
+    odometerKm?: number;
+    gpsTrackerInstalled?: boolean;
+    insuranceExpiry?: string;
     mileageLimitPerDay?: string;
     extraKmRate?: number;
     securityDeposit?: number;
@@ -249,3 +253,53 @@ export interface AuditEvent {
 }
 
 export type AdminRole = 'owner' | 'admin' | 'manager' | 'staff' | 'content_editor';
+
+export interface NavigationItem {
+  id: string;
+  menu: 'header' | 'footer';
+  label: TranslatableString;
+  targetView: string; // view id or custom page slug
+  isCustomUrl?: boolean;
+  url?: string;
+  isVisible: boolean;
+  sortOrder: number;
+}
+
+export interface TranslationItem {
+  id: string;
+  key: string;
+  category: string;
+  en: string;
+  ur: string;
+}
+
+export interface MediaAsset {
+  id: string;
+  title: string;
+  url: string;
+  altText: TranslatableString;
+  category: 'cars' | 'banners' | 'drivers' | 'general';
+  sizeKB: number;
+  uploadedAt: string;
+}
+
+export interface FormFieldConfig {
+  id: string;
+  fieldKey: string;
+  formType: 'booking' | 'contact';
+  label: TranslatableString;
+  fieldType: 'text' | 'phone' | 'date' | 'time' | 'select' | 'textarea';
+  isRequired: boolean;
+  isVisible: boolean;
+  isCore: boolean;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: AdminRole;
+  isActive: boolean;
+  lastLogin: string;
+}
+
