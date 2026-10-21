@@ -80,17 +80,13 @@ export const AdminShell: React.FC<AdminShellProps> = ({
               {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
 
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center shadow-xs shrink-0">
-                <img
-                  src="/assets/aistudio/Rent2Go_Home___Motion_Logo_4f24b879.png"
-                  alt="Rent2Go"
-                  className="w-full h-full object-contain rounded"
-                />
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[#F5B301] text-[#0B1F3A] flex items-center justify-center font-black">
+                <Car className="w-5 h-5" />
               </div>
-              <div className="flex items-center gap-1.5">
+              <div>
                 <span className="font-extrabold text-base tracking-tight text-white">Rent2Go</span>
-                <span className="text-[10px] font-bold text-amber-400 uppercase px-1.5 py-0.5 rounded bg-white/10">
+                <span className="text-[10px] font-bold text-amber-400 ms-1.5 uppercase px-1.5 py-0.5 rounded bg-white/10">
                   Admin Mini-CMS
                 </span>
               </div>

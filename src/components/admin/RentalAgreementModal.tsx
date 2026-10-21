@@ -58,20 +58,14 @@ export const RentalAgreementModal: React.FC<RentalAgreementModalProps> = ({
           {/* Header */}
           <div className="flex items-start justify-between border-b-2 border-[#0B1F3A] pb-5">
             <div>
-              <div className="flex items-center gap-3 mb-1.5">
-                <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-200 flex items-center justify-center shadow-xs shrink-0">
-                  <img
-                    src="/assets/aistudio/Rent2Go_Home___Motion_Logo_4f24b879.png"
-                    alt="Rent2Go Logo"
-                    className="w-full h-full object-contain rounded-lg"
-                  />
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-8 h-8 rounded-lg bg-[#0B1F3A] text-[#F5B301] flex items-center justify-center font-black">
+                  <Car className="w-5 h-5" />
                 </div>
-                <div>
-                  <h1 className="text-2xl font-black text-[#0B1F3A] tracking-tight">Rent2Go</h1>
-                  <span className="text-[11px] font-bold text-slate-600 block">
-                    Car Rental Sadiqabad • Rent Today. Go Tomorrow.
-                  </span>
-                </div>
+                <h1 className="text-2xl font-black text-[#0B1F3A] tracking-tight">Rent2Go</h1>
+                <span className="text-xs font-bold text-slate-500 uppercase px-2 py-0.5 rounded bg-slate-100">
+                  Car Rental Sadiqabad
+                </span>
               </div>
               <p className="text-slate-600 font-medium">
                 KLP Road Bypass / Model Town Chowk, Sadiqabad, Distt. Rahim Yar Khan, Punjab

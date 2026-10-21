@@ -37,18 +37,17 @@ export const Header: React.FC = () => {
           {/* Logo */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2.5 cursor-pointer select-none group py-1"
+            className="flex items-center gap-2.5 cursor-pointer select-none group"
           >
-            <img
-              src="/assets/aistudio/Rent2Go_Home___Motion_Logo_4f24b879.png"
-              alt="Rent2Go Logo"
-              className="h-11 sm:h-12 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform drop-shadow-xs"
-            />
+            <div className="w-10 h-10 rounded-xl bg-[#0B1F3A] flex items-center justify-center text-[#F5B301] shadow-md shadow-slate-900/10 group-hover:scale-105 transition-transform">
+              <Car className="w-6 h-6 stroke-[2.2]" />
+            </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-1 leading-none">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-[#0B1F3A]">Rent<span className="text-[#0284c7]">2Go</span></span>
+              <div className="flex items-center gap-1">
+                <span className="text-2xl font-extrabold tracking-tight text-[#0B1F3A]">Rent</span>
+                <span className="text-2xl font-black text-[#F5B301]">2Go</span>
               </div>
-              <span className="text-[10px] font-bold tracking-wider text-slate-500 uppercase mt-0.5">
+              <span className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase -mt-1">
                 {locale === 'ur' ? 'صادق آباد کار رینٹل' : 'Sadiqabad Rental'}
               </span>
             </div>
