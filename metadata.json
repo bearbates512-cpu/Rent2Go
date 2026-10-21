@@ -1,0 +1,6 @@
+{
+  "name": "Rent2Go - Rent-a-Car Sadiqabad",
+  "description": "Premium car rental service in Sadiqabad with professional drivers, transparent pricing, verified fleet, and bilingual Urdu-English booking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

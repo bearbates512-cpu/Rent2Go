@@ -1,0 +1,510 @@
+import React, { useState } from 'react';
+import { useApp } from '../../context/AppContext.tsx';
+import { Vehicle, VehicleCategory, VehicleVisibility, VehicleOpStatus } from '../../types/index.ts';
+import {
+  Car,
+  PlusCircle,
+  Search,
+  FileEdit,
+  Trash2,
+  CheckCircle2,
+  AlertTriangle,
+  Eye,
+  EyeOff,
+  Image,
+  X,
+  Gauge,
+  Users
+} from 'lucide-react';
+
+export const AdminVehicles: React.FC = () => {
+  const { vehicles, addVehicle, updateVehicle, deleteVehicle, locale } = useApp();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+
+  // Form state
+  const [make, setMake] = useState('Toyota');
+  const [model, setModel] = useState('Corolla');
+  const [variant, setVariant] = useState('Altis 1.6');
+  const [modelYear, setModelYear] = useState<number>(2023);
+  const [category, setCategory] = useState<VehicleCategory>('sedan');
+  const [seats, setSeats] = useState<number>(5);
+  const [doors, setDoors] = useState<number>(4);
+  const [transmission, setTransmission] = useState<'automatic' | 'manual'>('automatic');
+  const [fuelType, setFuelType] = useState<'petrol' | 'diesel' | 'hybrid' | 'electric'>('petrol');
+  const [hasAC, setHasAC] = useState<boolean>(true);
+  const [driverOption, setDriverOption] = useState<'with_driver' | 'self_drive' | 'both'>('both');
+  const [dailyRate, setDailyRate] = useState<string>('6000');
+  const [isQuoteOnly, setIsQuoteOnly] = useState<boolean>(false);
+  const [driverFee, setDriverFee] = useState<number>(1500);
+  const [mileageLimit, setMileageLimit] = useState<string>('200 KM');
+  const [extraKmRate, setExtraKmRate] = useState<number>(25);
+  const [secDeposit, setSecDeposit] = useState<number>(10000);
+  const [coverImage, setCoverImage] = useState<string>(
+    'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'
+  );
+  const [visibility, setVisibility] = useState<VehicleVisibility>('published');
+  const [opStatus, setOpStatus] = useState<VehicleOpStatus>('available');
+
+  const openAddModal = () => {
+    setEditingVehicle(null);
+    setMake('Toyota');
+    setModel('Corolla Altis');
+    setVariant('1.6 Automatic');
+    setModelYear(2023);
+    setCategory('sedan');
+    setSeats(5);
+    setDoors(4);
+    setTransmission('automatic');
+    setFuelType('petrol');
+    setHasAC(true);
+    setDriverOption('both');
+    setDailyRate('6500');
+    setIsQuoteOnly(false);
+    setDriverFee(1500);
+    setMileageLimit('200 KM');
+    setExtraKmRate(25);
+    setSecDeposit(10000);
+    setCoverImage('https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80');
+    setVisibility('published');
+    setOpStatus('available');
+    setModalOpen(true);
+  };
+
+  const openEditModal = (v: Vehicle) => {
+    setEditingVehicle(v);
+    setMake(v.make);
+    setModel(v.model);
+    setVariant(v.variant || '');
+    setModelYear(v.modelYear);
+    setCategory(v.category);
+    setSeats(v.seats);
+    setDoors(v.doors);
+    setTransmission(v.transmission);
+    setFuelType(v.fuelType);
+    setHasAC(v.hasAC);
+    setDriverOption(v.driverOption);
+    setDailyRate(v.dailyRatePKR ? v.dailyRatePKR.toString() : '');
+    setIsQuoteOnly(v.dailyRatePKR === null);
+    setDriverFee(v.driverDailyFeePKR || 1500);
+    setMileageLimit(v.customFields?.mileageLimitPerDay || '200 KM');
+    setExtraKmRate(v.customFields?.extraKmRate || 25);
+    setSecDeposit(v.customFields?.securityDeposit || 10000);
+    setCoverImage(v.coverImage);
+    setVisibility(v.visibility);
+    setOpStatus(v.opStatus);
+    setModalOpen(true);
+  };
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const vehicleData: Omit<Vehicle, 'id'> = {
+      stockCode: editingVehicle?.stockCode || `R2G-${make.substring(0, 3).toUpperCase()}-${Date.now().toString().slice(-3)}`,
+      slug: `${make.toLowerCase()}-${model.toLowerCase().replace(/\s+/g, '-')}-${modelYear}`,
+      make: make.trim(),
+      model: model.trim(),
+      variant: variant.trim(),
+      modelYear,
+      category,
+      title: {
+        en: `${make} ${model} (${modelYear})`,
+        ur: `${make} ${model} (${modelYear})`
+      },
+      description: {
+        en: `${make} ${model} ${variant}. Available for hire in Sadiqabad with professional driver or self-drive.`,
+        ur: `${make} ${model} صادق آباد اور پنجاب بھر کے سفر کے لیے دستیاب۔`
+      },
+      seats,
+      doors,
+      transmission,
+      fuelType,
+      hasAC,
+      driverOption,
+      features: ['Air Conditioning', 'Power Windows', 'ABS Brakes', 'Clean Sanitized Interior'],
+      customFields: {
+        mileageLimitPerDay: mileageLimit,
+        extraKmRate,
+        securityDeposit: secDeposit
+      },
+      dailyRatePKR: isQuoteOnly ? null : (parseInt(dailyRate) || 5000),
+      driverDailyFeePKR: driverFee,
+      visibility,
+      opStatus,
+      isFeatured: true,
+      coverImage: coverImage.trim(),
+      galleryImages: [coverImage.trim()],
+      maintenanceWindows: editingVehicle?.maintenanceWindows || []
+    };
+
+    if (editingVehicle) {
+      updateVehicle({ ...vehicleData, id: editingVehicle.id });
+    } else {
+      addVehicle(vehicleData);
+    }
+
+    setModalOpen(false);
+  };
+
+  const filteredVehicles = vehicles.filter(v => {
+    if (selectedCategory !== 'all' && v.category !== selectedCategory) return false;
+    if (searchTerm.trim()) {
+      const q = searchTerm.toLowerCase();
+      return (
+        v.make.toLowerCase().includes(q) ||
+        v.model.toLowerCase().includes(q) ||
+        v.stockCode.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  return (
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Title & Add Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-[#0B1F3A]">Fleet & Vehicles Management</h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Add cars, update daily rates, manage photos, and toggle visibility.
+          </p>
+        </div>
+
+        <button
+          onClick={openAddModal}
+          className="px-4 py-2.5 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>Add New Vehicle</span>
+        </button>
+      </div>
+
+      {/* Filter and Search */}
+      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 no-scrollbar">
+          {['all', 'sedan', 'suv', 'hatchback', 'van', 'luxury'].map(cat => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all capitalize ${
+                selectedCategory === cat
+                  ? 'bg-[#0B1F3A] text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative w-full sm:w-64">
+          <Search className="w-4 h-4 text-slate-400 absolute start-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            placeholder="Search make, model, stock code..."
+            className="w-full ps-9 pe-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium"
+          />
+        </div>
+      </div>
+
+      {/* Vehicles Grid / Table */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-start text-xs">
+            <thead className="bg-[#0B1F3A] text-white uppercase text-[10px] font-bold tracking-wider">
+              <tr>
+                <th className="py-3.5 px-4 text-start">Car & Stock</th>
+                <th className="py-3.5 px-4 text-start">Category</th>
+                <th className="py-3.5 px-4 text-start">Specs</th>
+                <th className="py-3.5 px-4 text-start">Daily Rent</th>
+                <th className="py-3.5 px-4 text-start">Driver Fee</th>
+                <th className="py-3.5 px-4 text-start">Visibility</th>
+                <th className="py-3.5 px-4 text-start">Status</th>
+                <th className="py-3.5 px-4 text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredVehicles.map(veh => (
+                <tr key={veh.id} className="hover:bg-slate-50/70">
+                  <td className="py-3.5 px-4">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={veh.coverImage}
+                        alt=""
+                        className="w-14 h-10 rounded-lg object-cover shrink-0"
+                      />
+                      <div>
+                        <span className="font-bold text-slate-900 block text-sm">
+                          {veh.make} {veh.model}
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400">{veh.stockCode} • {veh.modelYear}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-3.5 px-4 uppercase text-slate-600 font-semibold">
+                    {veh.category}
+                  </td>
+                  <td className="py-3.5 px-4 text-slate-600">
+                    <span>{veh.seats} Seats</span> • <span className="capitalize">{veh.transmission}</span>
+                  </td>
+                  <td className="py-3.5 px-4 font-mono font-bold text-[#0B1F3A]">
+                    {veh.dailyRatePKR ? `Rs. ${veh.dailyRatePKR.toLocaleString()}` : (
+                      <span className="text-amber-700 font-sans font-semibold text-xs">Quote Only</span>
+                    )}
+                  </td>
+                  <td className="py-3.5 px-4 font-mono text-slate-600">
+                    Rs. {veh.driverDailyFeePKR.toLocaleString()}
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        veh.visibility === 'published'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : veh.visibility === 'draft'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      {veh.visibility}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        veh.opStatus === 'available'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-rose-100 text-rose-800'
+                      }`}
+                    >
+                      {veh.opStatus.replace(/_/g, ' ')}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 text-end space-x-1.5">
+                    <button
+                      onClick={() => openEditModal(veh)}
+                      className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100"
+                      title="Edit Vehicle"
+                    >
+                      <FileEdit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to delete ${veh.make} ${veh.model}?`)) {
+                          deleteVehicle(veh.id);
+                        }
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-slate-100"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ADD / EDIT VEHICLE MODAL */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-[#0B1F3A]">
+                {editingVehicle ? `Edit ${editingVehicle.make} ${editingVehicle.model}` : 'Add New Fleet Vehicle'}
+              </h2>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSave} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Make *</label>
+                  <input
+                    type="text"
+                    value={make}
+                    onChange={e => setMake(e.target.value)}
+                    placeholder="Toyota, Honda, Suzuki"
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Model *</label>
+                  <input
+                    type="text"
+                    value={model}
+                    onChange={e => setModel(e.target.value)}
+                    placeholder="Corolla, Civic, Prado"
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Model Year *</label>
+                  <input
+                    type="number"
+                    value={modelYear}
+                    onChange={e => setModelYear(parseInt(e.target.value))}
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Category</label>
+                  <select
+                    value={category}
+                    onChange={e => setCategory(e.target.value as any)}
+                    className="w-full p-2.5 rounded-xl border border-slate-200 capitalize"
+                  >
+                    <option value="sedan">Sedan</option>
+                    <option value="suv">SUV 4x4</option>
+                    <option value="hatchback">Hatchback</option>
+                    <option value="van">Passenger Van</option>
+                    <option value="luxury">Luxury VIP</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Seats</label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={30}
+                    value={seats}
+                    onChange={e => setSeats(parseInt(e.target.value))}
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Transmission</label>
+                  <select
+                    value={transmission}
+                    onChange={e => setTransmission(e.target.value as any)}
+                    className="w-full p-2.5 rounded-xl border border-slate-200"
+                  >
+                    <option value="automatic">Automatic</option>
+                    <option value="manual">Manual</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Pricing section */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <span className="font-bold text-slate-700 block">Tariff & Driver Rates</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-500 block mb-1">Daily Rate (PKR)</label>
+                    <input
+                      type="number"
+                      disabled={isQuoteOnly}
+                      value={dailyRate}
+                      onChange={e => setDailyRate(e.target.value)}
+                      placeholder="6000"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono font-bold disabled:bg-slate-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-500 block mb-1">Driver Daily Fee (PKR)</label>
+                    <input
+                      type="number"
+                      value={driverFee}
+                      onChange={e => setDriverFee(parseInt(e.target.value))}
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono font-bold"
+                    />
+                  </div>
+
+                  <div className="flex items-center pt-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isQuoteOnly}
+                        onChange={e => setIsQuoteOnly(e.target.checked)}
+                        className="accent-[#0B1F3A]"
+                      />
+                      <span className="text-slate-700 font-semibold">"Contact for Quote" only</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Photo URL */}
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Cover Photo URL *</label>
+                <input
+                  type="url"
+                  value={coverImage}
+                  onChange={e => setCoverImage(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-[11px]"
+                  required
+                />
+              </div>
+
+              {/* Visibility and Operational Status */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Visibility</label>
+                  <select
+                    value={visibility}
+                    onChange={e => setVisibility(e.target.value as any)}
+                    className="w-full p-2.5 rounded-xl border border-slate-200 capitalize"
+                  >
+                    <option value="published">Published (Visible on site)</option>
+                    <option value="draft">Draft (Hidden)</option>
+                    <option value="hidden">Hidden</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Operational Status</label>
+                  <select
+                    value={opStatus}
+                    onChange={e => setOpStatus(e.target.value as any)}
+                    className="w-full p-2.5 rounded-xl border border-slate-200 capitalize"
+                  >
+                    <option value="available">Available</option>
+                    <option value="maintenance">In Maintenance</option>
+                    <option value="temporarily_unavailable">Temporarily Unavailable</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-[#0B1F3A] text-[#F5B301] font-bold"
+                >
+                  Save Vehicle
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
