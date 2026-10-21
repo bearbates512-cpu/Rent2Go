@@ -16,13 +16,22 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-[#F5B301]">
-                <Car className="w-5 h-5 stroke-[2.2]" />
+            <div className="flex items-center gap-3">
+              <div className="bg-white p-1 rounded-xl shadow-xs shrink-0">
+                <img
+                  src="/assets/aistudio/Rent2Go_Home___Motion_Logo_4f24b879.png"
+                  alt="Rent2Go Logo"
+                  className="h-10 w-auto object-contain rounded-lg"
+                />
               </div>
-              <div className="flex items-center gap-1 text-xl font-extrabold text-white">
-                <span>Rent</span>
-                <span className="text-[#F5B301]">2Go</span>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1 text-xl font-extrabold text-white">
+                  <span>Rent</span>
+                  <span className="text-[#38bdf8]">2Go</span>
+                </div>
+                <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                  {locale === 'ur' ? 'صادق آباد کار رینٹل' : 'Sadiqabad Rental'}
+                </span>
               </div>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
