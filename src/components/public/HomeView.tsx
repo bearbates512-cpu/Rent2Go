@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
 import { QuickSearchBar } from './QuickSearchBar.tsx';
 import { CarCard } from './CarCard.tsx';
-import { AnimatedEarthBackground } from './AnimatedEarthBackground.tsx';
 import {
   ShieldCheck,
   UserCheck,
@@ -65,9 +64,10 @@ export const HomeView: React.FC = () => {
           const bannerImg = sec.props.bannerImage || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80';
 
           return (
-            <section key={sec.id} className="relative bg-[#0B1F3A] text-white pt-16 pb-24 overflow-hidden min-h-[580px] flex items-center">
-              {/* Unique 3D Animated Earth Background with Live Mobility Flight Arcs */}
-              <AnimatedEarthBackground variant="hero" showControls={true} />
+            <section key={sec.id} className="relative bg-[#0B1F3A] text-white pt-16 pb-24 overflow-hidden">
+              {/* Clean Subtle Lighting Glows */}
+              <div className="absolute inset-0 bg-radial from-blue-900/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute top-0 end-0 w-96 h-96 bg-[#F5B301]/10 rounded-full blur-3xl pointer-events-none" />
 
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -128,55 +128,28 @@ export const HomeView: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Hero Right Visual: 3D Orbit Showcase & Glass Fleet Telemetry */}
-                  <div className="lg:col-span-5 relative flex flex-col justify-end min-h-[360px] lg:min-h-[440px] pointer-events-none">
-                    {/* Floating Glass Telemetry Card */}
-                    <div className="pointer-events-auto p-5 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl shadow-black/50 text-white space-y-3.5 transition-all hover:bg-white/15">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#F5B301] animate-ping" />
-                          <span className="text-xs font-mono font-bold text-[#F5B301] tracking-wide uppercase">
-                            {locale === 'ur' ? 'لائیو روٹس و نیویگیشن' : 'Live Fleet Radar'}
+                  {/* Hero Right Visual: Car Showcase Image */}
+                  <div className="lg:col-span-5 relative">
+                    <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-700/80 group">
+                      <img
+                        src={bannerImg}
+                        alt="Rent2Go Car Rental Fleet"
+                        className="w-full h-80 lg:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute bottom-4 inset-x-4 p-4 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 flex items-center justify-between text-xs text-white">
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                            Local Fleet Hub
+                          </span>
+                          <span className="font-bold text-sm text-white">
+                            Sadiqabad, Punjab (KLP Road)
                           </span>
                         </div>
-                        <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-500/80 text-white border border-emerald-400/30">
-                          ● 24/7 Available
+                        <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-[11px] flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          Open 24/7
                         </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 pt-1">
-                        <div className="p-2.5 rounded-2xl bg-white/5 border border-white/10">
-                          <span className="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">
-                            {locale === 'ur' ? 'مین برانچ' : 'Main Hub'}
-                          </span>
-                          <span className="text-xs font-bold text-white block mt-0.5">
-                            {settings.city}, KLP Road
-                          </span>
-                        </div>
-                        <div className="p-2.5 rounded-2xl bg-white/5 border border-white/10">
-                          <span className="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">
-                            {locale === 'ur' ? 'رابطہ نیٹ ورک' : 'Corridors'}
-                          </span>
-                          <span className="text-xs font-bold text-[#F5B301] block mt-0.5">
-                            Motorway N-5 / M-5
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-slate-300 pt-1 border-t border-white/10">
-                        <span className="text-[11px]">
-                          {locale === 'ur' ? 'زمین کو گھمائیں اور روٹس دیکھیں' : 'Interactive 3D Earth • Drag to rotate'}
-                        </span>
-                        <button
-                          onClick={() => {
-                            setCurrentView('cars');
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
-                          className="text-[#F5B301] hover:text-amber-300 font-bold text-xs flex items-center gap-1 transition-colors"
-                        >
-                          <span>{locale === 'ur' ? 'تمام گاڑیاں دیکھیں' : 'View Cars'}</span>
-                          <ArrowIcon className="w-3.5 h-3.5" />
-                        </button>
                       </div>
                     </div>
                   </div>

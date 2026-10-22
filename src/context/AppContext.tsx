@@ -12,6 +12,7 @@ import {
   Enquiry,
   AuditEvent,
   AdminRole,
+  AdminUser,
   QuoteBreakdown
 } from '../types/index.ts';
 import {
@@ -25,6 +26,7 @@ import {
 } from '../data/initialData.ts';
 import { generateBookingReference } from '../utils/reference.ts';
 import { checkVehicleAvailability } from '../utils/availability.ts';
+import { getSupabaseClient, AUTHORIZED_ADMIN_EMAIL, AUTHORIZED_ADMIN_PASSWORD } from '../utils/supabase.ts';
 
 interface AppContextType {
   locale: Locale;
@@ -46,6 +48,10 @@ interface AppContextType {
   auditLogs: AuditEvent[];
   adminRole: AdminRole;
   setAdminRole: (r: AdminRole) => void;
+  adminUser: AdminUser | null;
+  isAdminAuthenticated: boolean;
+  loginAdmin: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  logoutAdmin: () => void;
   lastCreatedBooking: Booking | null;
   setLastCreatedBooking: (b: Booking | null) => void;
   announcementDismissed: boolean;
@@ -104,7 +110,114 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [announcementDismissed, setAnnouncementDismissed] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [searchDates, setSearchDates] = useState({ pickup: '', returnDate: '', service: '' });
-  const [adminRole, setAdminRole] = useState<AdminRole>('owner');
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
+
+  const [adminRole, setAdminRoleState] = useState<AdminRole>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
+    if (saved) {
+      try {
+        return JSON.parse(saved).role || 'owner';
+      } catch (e) {
+        return 'owner';
+      }
+    }
+    return 'owner';
+  });
+
+  const setAdminRole = (role: AdminRole) => {
+    setAdminRoleState(role);
+    if (adminUser) {
+      const updated = { ...adminUser, role };
+      setAdminUser(updated);
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}adminUser`, JSON.stringify(updated));
+    }
+  };
+
+  const isAdminAuthenticated = Boolean(adminUser);
+
+  const loginAdmin = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass = password.trim();
+
+    if (!cleanEmail || !cleanPass) {
+      return { success: false, error: 'Please enter both email and password.' };
+    }
+
+    // STRICT SECURITY: Only bearbates512@gmail.com is allowed. No other email is permitted!
+    if (cleanEmail !== AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
+      return {
+        success: false,
+        error: `Access Denied: Only registered administrator (${AUTHORIZED_ADMIN_EMAIL}) is permitted.`
+      };
+    }
+
+    // 1. If Supabase Auth is active and configured, attempt Supabase Auth verification
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password: cleanPass
+        });
+        if (!error && data.user) {
+          const userObj: AdminUser = {
+            email: AUTHORIZED_ADMIN_EMAIL,
+            role: 'owner',
+            name: data.user.user_metadata?.full_name || 'Owner (Super Admin)'
+          };
+          setAdminUser(userObj);
+          setAdminRoleState('owner');
+          localStorage.setItem(`${STORAGE_KEY_PREFIX}adminUser`, JSON.stringify(userObj));
+          return { success: true };
+        }
+      } catch (err: any) {
+        console.warn('Supabase auth network attempt:', err);
+      }
+    }
+
+    // 2. Strict Password Verification: only office@12 is allowed
+    if (cleanPass !== AUTHORIZED_ADMIN_PASSWORD) {
+      return {
+        success: false,
+        error: 'Invalid password. Access denied.'
+      };
+    }
+
+    // Success: authenticated as Super Admin Owner
+    const userObj: AdminUser = {
+      email: AUTHORIZED_ADMIN_EMAIL,
+      role: 'owner',
+      name: 'Owner (Super Admin)'
+    };
+    setAdminUser(userObj);
+    setAdminRoleState('owner');
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}adminUser`, JSON.stringify(userObj));
+    return { success: true };
+  };
+
+  const logoutAdmin = () => {
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      try {
+        supabase.auth.signOut();
+      } catch (e) {
+        // ignore
+      }
+    }
+    setAdminUser(null);
+    localStorage.removeItem(`${STORAGE_KEY_PREFIX}adminUser`);
+    setCurrentView('home');
+  };
 
   // Core Persistent State
   const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
@@ -134,7 +247,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [settings, setSettings] = useState<SiteSettings>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}settings`);
-    return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.whatsappNumber === '923007865432' || parsed.phone === '03007865432') {
+          const updated = {
+            ...parsed,
+            phone: '03271126457',
+            phoneFormatted: '+92 327 1126457',
+            whatsappNumber: '923271126457'
+          };
+          localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(updated));
+          return updated;
+        }
+        return parsed;
+      } catch (e) {
+        return INITIAL_SETTINGS;
+      }
+    }
+    return INITIAL_SETTINGS;
   });
 
   const [enquiries, setEnquiries] = useState<Enquiry[]>(() => {
@@ -693,6 +824,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         auditLogs,
         adminRole,
         setAdminRole,
+        adminUser,
+        isAdminAuthenticated,
+        loginAdmin,
+        logoutAdmin,
         lastCreatedBooking,
         setLastCreatedBooking,
         announcementDismissed,

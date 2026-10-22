@@ -35,9 +35,10 @@ import { AdminTranslations } from './components/admin/AdminTranslations.tsx';
 import { AdminFormBuilder } from './components/admin/AdminFormBuilder.tsx';
 import { AdminReports } from './components/admin/AdminReports.tsx';
 import { AdminTeam } from './components/admin/AdminTeam.tsx';
+import { AdminLogin } from './components/admin/AdminLogin.tsx';
 
 function MainAppContent() {
-  const { currentView, setCurrentView, navigateToCar } = useApp();
+  const { currentView, setCurrentView, navigateToCar, isAdminAuthenticated } = useApp();
   const [adminTab, setAdminTab] = useState<string>('dashboard');
 
   // Handle URL parameters (e.g. ?view=admin or ?view=cars or ?view=book)
@@ -56,6 +57,10 @@ function MainAppContent() {
 
   // Admin Portal View
   if (currentView === 'admin') {
+    if (!isAdminAuthenticated) {
+      return <AdminLogin />;
+    }
+
     return (
       <AdminShell currentTab={adminTab} setCurrentTab={setAdminTab}>
         {adminTab === 'dashboard' && (

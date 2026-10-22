@@ -254,6 +254,12 @@ export interface AuditEvent {
 
 export type AdminRole = 'owner' | 'admin' | 'manager' | 'staff' | 'content_editor';
 
+export interface AdminUser {
+  email: string;
+  role: AdminRole;
+  name: string;
+}
+
 export interface NavigationItem {
   id: string;
   menu: 'header' | 'footer';

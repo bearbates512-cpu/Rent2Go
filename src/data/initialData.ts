@@ -686,9 +686,9 @@ export const INITIAL_SETTINGS: SiteSettings = {
     en: 'Rent Easy. Travel Better.',
     ur: 'آسان کرایہ، بہتر سفر'
   },
-  phone: '03007865432',
-  phoneFormatted: '+92 300 7865432',
-  whatsappNumber: '923007865432',
+  phone: '03271126457',
+  phoneFormatted: '+92 327 1126457',
+  whatsappNumber: '923271126457',
   email: 'info@rent2go-sadiqabad.pk',
   address: {
     en: 'Main KLP Road, Near Sadiqabad Bypass, Sadiqabad, Punjab',

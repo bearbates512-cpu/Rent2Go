@@ -1,11 +1,19 @@
 import React, { useState, useRef } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw } from 'lucide-react';
+import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw, Lock, KeyRound } from 'lucide-react';
+import { AUTHORIZED_ADMIN_EMAIL, setCustomSupabaseConfig, getSupabaseClient } from '../../utils/supabase.ts';
 
 export const AdminSettings: React.FC = () => {
   const { settings, updateSiteSettings, resetAllData, clearDemoFleet, clearDemoBookings, exportAllData, importAllData } = useApp();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<string>('');
+  const [supabaseUrl, setSupabaseUrl] = useState(
+    () => (typeof window !== 'undefined' ? localStorage.getItem('rent2go_supabase_url') || '' : '')
+  );
+  const [supabaseKey, setSupabaseKey] = useState(
+    () => (typeof window !== 'undefined' ? localStorage.getItem('rent2go_supabase_key') || '' : '')
+  );
+  const [supabaseSaveMsg, setSupabaseSaveMsg] = useState('');
 
   const [phone, setPhone] = useState(settings.phone);
   const [phoneFormatted, setPhoneFormatted] = useState(settings.phoneFormatted);
@@ -118,7 +126,7 @@ export const AdminSettings: React.FC = () => {
             </div>
 
             <div>
-              <label className="font-bold text-slate-700 block mb-1">WhatsApp Number (e.g. 923007865432)</label>
+              <label className="font-bold text-slate-700 block mb-1">WhatsApp Number (e.g. 923271126457)</label>
               <input
                 type="text"
                 value={whatsapp}
@@ -265,6 +273,82 @@ export const AdminSettings: React.FC = () => {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Supabase Security & Master Administrator */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <Lock className="w-5 h-5 text-blue-600" />
+              <div>
+                <h2 className="text-sm font-bold text-[#0B1F3A] uppercase tracking-wider">
+                  Supabase Security & Master Administrator
+                </h2>
+                <p className="text-[11px] text-slate-500">
+                  Secured admin access for <strong>{AUTHORIZED_ADMIN_EMAIL}</strong>
+                </p>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
+              Active Security Guard
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 space-y-1 text-xs text-blue-950">
+            <span className="font-bold block">Super Administrator Email:</span>
+            <p className="font-mono text-blue-900 font-bold">{AUTHORIZED_ADMIN_EMAIL}</p>
+            <p className="text-[11px] text-blue-800 mt-1">
+              Only this email address with valid password can access the Rent2Go Admin Panel.
+            </p>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700">Supabase Cloud Connection Credentials</span>
+              <span className="text-[10px] text-slate-400">Optional for direct Supabase Auth</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 block mb-1">Supabase Project URL</label>
+                <input
+                  type="url"
+                  value={supabaseUrl}
+                  onChange={e => setSupabaseUrl(e.target.value)}
+                  placeholder="https://your-project.supabase.co"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 block mb-1">Supabase Anon Public Key</label>
+                <input
+                  type="text"
+                  value={supabaseKey}
+                  onChange={e => setSupabaseKey(e.target.value)}
+                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+                  className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-xs"
+                />
+              </div>
+            </div>
+
+            {supabaseSaveMsg && (
+              <p className="text-xs font-bold text-emerald-700">{supabaseSaveMsg}</p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                setCustomSupabaseConfig(supabaseUrl, supabaseKey);
+                setSupabaseSaveMsg('Supabase credentials saved successfully!');
+                setTimeout(() => setSupabaseSaveMsg(''), 3000);
+              }}
+              className="px-4 py-2 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+            >
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>Save Supabase Configuration</span>
+            </button>
           </div>
         </div>
 

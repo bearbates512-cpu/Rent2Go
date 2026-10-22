@@ -20,7 +20,9 @@ import {
   Search,
   CheckCircle2,
   Layers,
-  Globe
+  Globe,
+  LogOut,
+  User
 } from 'lucide-react';
 
 interface AdminShellProps {
@@ -37,6 +39,8 @@ export const AdminShell: React.FC<AdminShellProps> = ({
   const {
     adminRole,
     setAdminRole,
+    adminUser,
+    logoutAdmin,
     setCurrentView,
     bookings,
     enquiries
@@ -81,15 +85,15 @@ export const AdminShell: React.FC<AdminShellProps> = ({
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center shadow-xs shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center shrink-0">
                 <img
-                  src="/assets/aistudio/Rent2Go_Home___Motion_Logo_4f24b879.png"
+                  src="/assets/aistudio/Rent2Go_icon_transparent.png"
                   alt="Rent2Go"
-                  className="w-full h-full object-contain rounded"
+                  className="w-full h-full object-contain brightness-125"
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-base tracking-tight text-white">Rent2Go</span>
+                <span className="font-extrabold text-base tracking-tight text-white">Rent<span className="text-[#F5B301]">2Go</span></span>
                 <span className="text-[10px] font-bold text-amber-400 uppercase px-1.5 py-0.5 rounded bg-white/10">
                   Admin Mini-CMS
                 </span>
@@ -98,7 +102,13 @@ export const AdminShell: React.FC<AdminShellProps> = ({
           </div>
 
           {/* Right Header Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* User identity */}
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/25 text-emerald-300 text-xs">
+              <User className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="font-mono text-[11px] font-semibold">{adminUser?.email || 'bearbates512@gmail.com'}</span>
+            </div>
+
             {/* Role Switcher */}
             <div className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-lg text-xs">
               <Shield className="w-3.5 h-3.5 text-amber-400" />
@@ -125,6 +135,16 @@ export const AdminShell: React.FC<AdminShellProps> = ({
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span className="hidden md:inline">View Public Site</span>
+            </button>
+
+            {/* Logout Button */}
+            <button
+              onClick={logoutAdmin}
+              className="px-2.5 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 text-rose-300 hover:text-white text-xs font-bold transition-colors flex items-center gap-1.5"
+              title="Sign Out of Admin"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Sign Out</span>
             </button>
           </div>
         </div>
