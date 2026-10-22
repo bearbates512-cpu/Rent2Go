@@ -117,7 +117,14 @@ export interface Booking {
   estimate: QuoteBreakdown;
   confirmedTotal?: number;
   depositAmount?: number;
+  totalPaidAmount?: number;
+  remainingBalance?: number;
   paymentStatus: 'unpaid' | 'deposit_requested' | 'deposit_received' | 'paid' | 'refunded';
+  tripStatus?: 'scheduled' | 'on_trip' | 'returned' | 'overdue';
+  dispatchedAt?: string;
+  actualReturnedAt?: string;
+  overtimeHourlyRate?: number;
+  overtimeCharges?: number;
   assignedTo?: string;
   createdAt: string;
   updatedAt: string;

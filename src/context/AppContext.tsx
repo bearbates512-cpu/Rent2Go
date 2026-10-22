@@ -69,7 +69,18 @@ interface AppContextType {
   ) => { success: boolean; error?: string };
   updateBookingPayment: (
     bookingId: string,
-    data: { confirmedTotal?: number; depositAmount?: number; paymentStatus?: Booking['paymentStatus'] }
+    data: {
+      confirmedTotal?: number;
+      depositAmount?: number;
+      totalPaidAmount?: number;
+      remainingBalance?: number;
+      paymentStatus?: Booking['paymentStatus'];
+      tripStatus?: Booking['tripStatus'];
+      actualReturnedAt?: string;
+      dispatchedAt?: string;
+      overtimeHourlyRate?: number;
+      overtimeCharges?: number;
+    }
   ) => void;
   createManualBooking: (bookingData: Partial<Booking>) => { success: boolean; booking?: Booking; error?: string };
   addVehicle: (v: Omit<Vehicle, 'id'>) => void;
@@ -227,7 +238,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [bookings, setBookings] = useState<Booking[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}bookings`);
-    return saved ? JSON.parse(saved) : INITIAL_BOOKINGS;
+    if (saved) {
+      try {
+        const parsed: Booking[] = JSON.parse(saved);
+        if (!parsed.some(b => b.id === 'bk-1004')) {
+          const merged = [...parsed, ...INITIAL_BOOKINGS.filter(init => !parsed.some(p => p.id === init.id))];
+          localStorage.setItem(`${STORAGE_KEY_PREFIX}bookings`, JSON.stringify(merged));
+          return merged;
+        }
+        return parsed;
+      } catch (e) {
+        return INITIAL_BOOKINGS;
+      }
+    }
+    return INITIAL_BOOKINGS;
   });
 
   const [cmsPage, setCmsPage] = useState<CMSPage>(() => {
@@ -528,12 +552,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateBookingPayment = (
     bookingId: string,
-    data: { confirmedTotal?: number; depositAmount?: number; paymentStatus?: Booking['paymentStatus'] }
+    data: {
+      confirmedTotal?: number;
+      depositAmount?: number;
+      totalPaidAmount?: number;
+      remainingBalance?: number;
+      paymentStatus?: Booking['paymentStatus'];
+      tripStatus?: Booking['tripStatus'];
+      actualReturnedAt?: string;
+      dispatchedAt?: string;
+      overtimeHourlyRate?: number;
+      overtimeCharges?: number;
+    }
   ) => {
     setBookings(prev =>
       prev.map(b => (b.id === bookingId ? { ...b, ...data, updatedAt: new Date().toISOString() } : b))
     );
-    logAudit('Bookings', 'Payment Updated', `Booking ID ${bookingId} payment details updated`);
+    logAudit('Bookings', 'Payment & Trip Settlement', `Booking ID ${bookingId} updated`);
   };
 
   // Vehicle Fleet CRUD
