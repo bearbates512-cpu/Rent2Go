@@ -61,7 +61,7 @@ export const HomeView: React.FC = () => {
           const badgeText = sec.props.badgeText ? sec.props.badgeText[locale] || sec.props.badgeText.en : '';
           const primaryBtn = sec.props.primaryBtnText ? sec.props.primaryBtnText[locale] || sec.props.primaryBtnText.en : 'Explore Fleet';
           const secondaryBtn = sec.props.secondaryBtnText ? sec.props.secondaryBtnText[locale] || sec.props.secondaryBtnText.en : 'WhatsApp Us';
-          const bannerImg = sec.props.bannerImage || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80';
+          const bannerImg = sec.props.bannerImage || '/cars/civic-rs.jpg';
 
           return (
             <section key={sec.id} className="relative bg-[#0B1F3A] text-white pt-16 pb-24 overflow-hidden">
@@ -135,6 +135,9 @@ export const HomeView: React.FC = () => {
                         src={bannerImg}
                         alt="Rent2Go Car Rental Fleet"
                         className="w-full h-80 lg:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/cars/civic-rs.jpg';
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
                       <div className="absolute bottom-4 inset-x-4 p-4 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 flex items-center justify-between text-xs text-white">

@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Bun lock files (prevents Cloudflare Pages build issues)
+bun.lock
+bun.lockb
+.bun/

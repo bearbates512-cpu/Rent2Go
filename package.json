@@ -1,14 +1,16 @@
 {
   "name": "react-example",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "packageManager": "npm@10.9.9",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
+    "prebuild": "node -e \"try{['bun.lock','bun.lockb'].forEach(f=>require('fs').existsSync(f)&&require('fs').unlinkSync(f))}catch(e){}\"",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "clean": "rm -rf dist server.js bun.lock bun.lockb",
+    "lint": "tsc --noEmit",
+    "postinstall": "node -e \"try{['bun.lock','bun.lockb'].forEach(f=>require('fs').existsSync(f)&&require('fs').unlinkSync(f))}catch(e){}\""
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

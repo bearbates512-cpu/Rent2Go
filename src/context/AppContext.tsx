@@ -98,6 +98,8 @@ interface AppContextType {
   duplicateVehicle: (id: string) => void;
   clearDemoFleet: () => void;
   clearDemoBookings: () => void;
+  resetFleetToDefault: () => void;
+  purgeAllDemoData: () => void;
   exportAllData: () => string;
   importAllData: (jsonStr: string) => { success: boolean; error?: string };
   resetAllData: () => void;
@@ -107,7 +109,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const STORAGE_KEY_PREFIX = 'rent2go_v1_';
+const STORAGE_KEY_PREFIX = 'rent2go_v3_';
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [locale, setLocaleState] = useState<Locale>(() => {
@@ -122,10 +124,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [searchDates, setSearchDates] = useState({ pickup: '', returnDate: '', service: '' });
   const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`) || localStorage.getItem('rent2go_v1_adminUser');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const u = JSON.parse(saved);
+        if (u.email?.toLowerCase() === AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
+          return u;
+        }
       } catch (e) {
         return null;
       }
@@ -134,7 +139,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [adminRole, setAdminRoleState] = useState<AdminRole>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`) || localStorage.getItem('rent2go_v1_adminUser');
     if (saved) {
       try {
         return JSON.parse(saved).role || 'owner';
@@ -768,9 +773,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     logAudit('Fleet', 'Clear Fleet', 'Admin cleared all vehicle records to begin with empty real fleet.');
   };
 
+  const resetFleetToDefault = () => {
+    setVehicles(INITIAL_VEHICLES);
+    logAudit('Fleet', 'Reset Fleet', 'Admin reset fleet to new 8-car high-definition inventory.');
+  };
+
   const clearDemoBookings = () => {
     setBookings([]);
     logAudit('Bookings', 'Clear Bookings', 'Admin wiped booking history.');
+  };
+
+  const purgeAllDemoData = () => {
+    setBookings([]);
+    setEnquiries([]);
+    logAudit('System', 'Purge Demo Records', 'Admin cleared all demo bookings and incoming inquiries.');
   };
 
   const exportAllData = (): string => {
@@ -890,6 +906,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         duplicateVehicle,
         clearDemoFleet,
         clearDemoBookings,
+        resetFleetToDefault,
+        purgeAllDemoData,
         exportAllData,
         importAllData,
         resetAllData,

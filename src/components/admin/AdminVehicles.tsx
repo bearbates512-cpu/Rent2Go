@@ -19,44 +19,46 @@ import {
   Sparkles,
   Navigation,
   ShieldCheck,
-  RotateCcw
+  RotateCcw,
+  Upload,
+  Check
 } from 'lucide-react';
 
 const POPULAR_FLEET_PRESETS = [
   {
-    label: 'Corolla Altis 1.6',
+    label: 'Corolla Grande 2024',
     make: 'Toyota',
-    model: 'Corolla Altis',
-    variant: '1.6 VVTi Automatic',
-    year: 2023,
+    model: 'Corolla Altis Grande',
+    variant: '1.8 Dual VVT-i Special Edition',
+    year: 2024,
     category: 'sedan' as VehicleCategory,
     seats: 5,
     doors: 4,
     trans: 'automatic' as const,
     fuel: 'petrol' as const,
-    dailyRate: '6500',
+    dailyRate: '8000',
     driverFee: 1500,
-    deposit: 10000,
-    img: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'
+    deposit: 15000,
+    img: '/cars/corolla-grande.jpg'
   },
   {
-    label: 'Civic RS Turbo',
+    label: 'Civic RS Turbo 2023',
     make: 'Honda',
-    model: 'Civic Oriel / RS',
-    variant: '1.5 VTEC Turbo CVT',
+    model: 'Civic RS Turbo',
+    variant: '1.5 VTEC Turbo Oriel',
     year: 2023,
     category: 'sedan' as VehicleCategory,
     seats: 5,
     doors: 4,
     trans: 'automatic' as const,
     fuel: 'petrol' as const,
-    dailyRate: '11000',
+    dailyRate: '12000',
     driverFee: 2000,
-    deposit: 15000,
-    img: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?auto=format&fit=crop&w=900&q=80'
+    deposit: 25000,
+    img: '/cars/civic-rs.jpg'
   },
   {
-    label: 'Fortuner Legender',
+    label: 'Fortuner Legender 2024',
     make: 'Toyota',
     model: 'Fortuner Legender',
     variant: '2.8L 4x4 Sigma 4',
@@ -66,29 +68,29 @@ const POPULAR_FLEET_PRESETS = [
     doors: 5,
     trans: 'automatic' as const,
     fuel: 'diesel' as const,
-    dailyRate: '24000',
+    dailyRate: '25000',
     driverFee: 2500,
-    deposit: 30000,
-    img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80'
+    deposit: 35000,
+    img: '/cars/fortuner-legender.jpg'
   },
   {
-    label: 'Suzuki Alto VXL',
-    make: 'Suzuki',
-    model: 'Alto VXL',
-    variant: '660cc AGS Automatic',
+    label: 'Land Cruiser Prado 2023',
+    make: 'Toyota',
+    model: 'Land Cruiser Prado',
+    variant: 'TX-L 4.0 V6 4x4',
     year: 2023,
-    category: 'hatchback' as VehicleCategory,
-    seats: 4,
+    category: 'luxury' as VehicleCategory,
+    seats: 7,
     doors: 5,
     trans: 'automatic' as const,
     fuel: 'petrol' as const,
-    dailyRate: '4000',
-    driverFee: 1200,
-    deposit: 8000,
-    img: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80'
+    dailyRate: '32000',
+    driverFee: 3000,
+    deposit: 40000,
+    img: '/cars/prado.jpg'
   },
   {
-    label: 'Yaris ATIV CVT',
+    label: 'Toyota Yaris ATIV 2023',
     make: 'Toyota',
     model: 'Yaris ATIV',
     variant: '1.3 CVT Automatic',
@@ -101,44 +103,81 @@ const POPULAR_FLEET_PRESETS = [
     dailyRate: '5500',
     driverFee: 1500,
     deposit: 10000,
-    img: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80'
+    img: '/cars/toyota-yaris.jpg'
   },
   {
-    label: 'Hiace Grand Cabin',
+    label: 'Suzuki Alto VXL 2024',
+    make: 'Suzuki',
+    model: 'Alto VXL',
+    variant: '660cc AGS Automatic',
+    year: 2024,
+    category: 'hatchback' as VehicleCategory,
+    seats: 4,
+    doors: 5,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '3500',
+    driverFee: 1200,
+    deposit: 8000,
+    img: '/cars/suzuki-alto.jpg'
+  },
+  {
+    label: 'Suzuki Cultus VXL 2023',
+    make: 'Suzuki',
+    model: 'Cultus VXL',
+    variant: '1.0L K10B Auto Gear Shift',
+    year: 2023,
+    category: 'hatchback' as VehicleCategory,
+    seats: 5,
+    doors: 5,
+    trans: 'automatic' as const,
+    fuel: 'petrol' as const,
+    dailyRate: '4500',
+    driverFee: 1500,
+    deposit: 10000,
+    img: '/cars/suzuki-cultus.jpg'
+  },
+  {
+    label: 'Hiace Grand Cabin 2023',
     make: 'Toyota',
     model: 'Hiace Grand Cabin',
-    variant: '3.0L High Roof 14-Seater',
-    year: 2022,
+    variant: 'High Roof Super GL 14-Seater',
+    year: 2023,
     category: 'van' as VehicleCategory,
     seats: 14,
     doors: 4,
     trans: 'automatic' as const,
     fuel: 'diesel' as const,
     dailyRate: '16000',
-    driverFee: 2500,
+    driverFee: 2000,
     deposit: 20000,
-    img: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=900&q=80'
-  },
-  {
-    label: 'Prado TX 4.0 V6',
-    make: 'Toyota',
-    model: 'Land Cruiser Prado',
-    variant: 'TX-L 4.0 V6 4x4',
-    year: 2022,
-    category: 'luxury' as VehicleCategory,
-    seats: 7,
-    doors: 5,
-    trans: 'automatic' as const,
-    fuel: 'petrol' as const,
-    dailyRate: '28000',
-    driverFee: 3000,
-    deposit: 35000,
-    img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80'
+    img: '/cars/hiace-cabin.jpg'
   }
 ];
 
+export const PRESET_GALLERY_IMAGES = [
+  { name: 'Corolla Altis Grande (White)', url: '/cars/corolla-grande.jpg' },
+  { name: 'Civic RS Turbo (Black)', url: '/cars/civic-rs.jpg' },
+  { name: 'Fortuner Legender 4x4 (White)', url: '/cars/fortuner-legender.jpg' },
+  { name: 'Land Cruiser Prado (Black)', url: '/cars/prado.jpg' },
+  { name: 'Toyota Yaris ATIV (Silver)', url: '/cars/toyota-yaris.jpg' },
+  { name: 'Suzuki Alto VXL (White)', url: '/cars/suzuki-alto.jpg' },
+  { name: 'Suzuki Cultus VXL (Grey)', url: '/cars/suzuki-cultus.jpg' },
+  { name: 'Hiace Grand Cabin (White)', url: '/cars/hiace-cabin.jpg' }
+];
+
 export const AdminVehicles: React.FC = () => {
-  const { vehicles, addVehicle, updateVehicle, deleteVehicle, duplicateVehicle, clearDemoFleet, resetAllData } = useApp();
+  const {
+    vehicles,
+    addVehicle,
+    updateVehicle,
+    deleteVehicle,
+    duplicateVehicle,
+    clearDemoFleet,
+    resetFleetToDefault,
+    purgeAllDemoData,
+    resetAllData
+  } = useApp();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -166,11 +205,64 @@ export const AdminVehicles: React.FC = () => {
   const [regNumber, setRegNumber] = useState<string>('RYK-2023-');
   const [odometerKm, setOdometerKm] = useState<number>(38500);
   const [gpsTracker, setGpsTracker] = useState<boolean>(true);
-  const [coverImage, setCoverImage] = useState<string>(
-    'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'
-  );
+  const [coverImage, setCoverImage] = useState<string>('/cars/corolla-grande.jpg');
   const [visibility, setVisibility] = useState<VehicleVisibility>('published');
   const [opStatus, setOpStatus] = useState<VehicleOpStatus>('available');
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File is too large. Please select an image under 10MB.');
+      return;
+    }
+
+    setUploadLoading(true);
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDimension = 1000;
+
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          setCoverImage(compressedDataUrl);
+        }
+        setUploadLoading(false);
+      };
+      img.onerror = () => {
+        setUploadLoading(false);
+        alert('Could not process this image file.');
+      };
+      if (typeof readerEvent.target?.result === 'string') {
+        img.src = readerEvent.target.result;
+      }
+    };
+    reader.onerror = () => {
+      setUploadLoading(false);
+      alert('Error reading file.');
+    };
+    reader.readAsDataURL(file);
+  };
 
   const applyPreset = (p: typeof POPULAR_FLEET_PRESETS[0]) => {
     setMake(p.make);
@@ -211,7 +303,7 @@ export const AdminVehicles: React.FC = () => {
     setRegNumber(`RYK-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`);
     setOdometerKm(35000);
     setGpsTracker(true);
-    setCoverImage('https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80');
+    setCoverImage('/cars/corolla-grande.jpg');
     setVisibility('published');
     setOpStatus('available');
     setModalOpen(true);
@@ -335,33 +427,48 @@ export const AdminVehicles: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {vehicles.length > 0 ? (
+          <button
+            onClick={() => {
+              if (confirm('Are you sure you want to purge all demo bookings and customer inquiries? Your cars will be preserved.')) {
+                purgeAllDemoData();
+              }
+            }}
+            title="Clean up test customer inquiries and bookings while keeping cars"
+            className="px-3.5 py-2 rounded-xl border border-rose-200 bg-rose-50/60 text-rose-700 hover:bg-rose-100/80 text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+            <span>Purge Demo Bookings</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (confirm('Load the 8 fresh Pakistani rental cars (Grande, Civic RS, Fortuner, Prado, Yaris, Alto, Cultus, Hiace) with high-res photos?')) {
+                resetFleetToDefault();
+              }
+            }}
+            title="Reload 8 Pakistani rental models with realistic photos and rates"
+            className="px-3.5 py-2 rounded-xl border border-blue-200 bg-blue-50/60 text-blue-800 hover:bg-blue-100/80 text-xs font-bold transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-blue-600" />
+            <span>Reset 8 Real Cars</span>
+          </button>
+
+          {vehicles.length > 0 && (
             <button
               onClick={() => {
-                if (confirm('Are you sure you want to clear demo fleet? You will be able to add your real cars from scratch (or restore demo fleet anytime in Settings).')) {
+                if (confirm('Are you sure you want to clear all vehicles from the fleet? You can restore them anytime with "Reset 8 Real Cars".')) {
                   clearDemoFleet();
                 }
               }}
-              className="px-3.5 py-2.5 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold transition-all flex items-center gap-1.5"
+              className="px-3 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-semibold transition-all cursor-pointer"
             >
-              <Trash2 className="w-4 h-4 text-rose-500" />
-              <span>Clear Demo Fleet (Start Fresh)</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                resetAllData();
-              }}
-              className="px-3.5 py-2.5 rounded-xl border border-blue-200 text-blue-700 hover:bg-blue-50 text-xs font-bold transition-all flex items-center gap-1.5"
-            >
-              <RotateCcw className="w-4 h-4 text-blue-500" />
-              <span>Load Sample Demo Fleet</span>
+              Clear Fleet
             </button>
           )}
 
           <button
             onClick={openAddModal}
-            className="px-4 py-2.5 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Add New Vehicle</span>
@@ -711,17 +818,99 @@ export const AdminVehicles: React.FC = () => {
                 </div>
               </div>
 
-              {/* Photo URL */}
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">Cover Photo URL *</label>
-                <input
-                  type="url"
-                  value={coverImage}
-                  onChange={e => setCoverImage(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-[11px]"
-                  required
-                />
+              {/* Photo & Image Section */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-700 block">Vehicle Photo *</span>
+                  <span className="text-[10px] text-slate-500">Device upload, preset library, or web link</span>
+                </div>
+
+                {/* Preview and Direct Upload */}
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                  <div className="relative w-28 h-20 rounded-xl overflow-hidden bg-slate-200 shrink-0 border border-slate-300 shadow-2xs">
+                    {coverImage ? (
+                      <img
+                        src={coverImage}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400">
+                        <Image className="w-6 h-6" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 w-full space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <label className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-300 hover:border-[#0B1F3A] hover:bg-slate-100 cursor-pointer text-xs font-bold text-slate-800 transition-all shadow-2xs">
+                        <Upload className="w-4 h-4 text-amber-500" />
+                        <span>{uploadLoading ? 'Optimizing photo...' : 'Upload Photo from Device / Mobile'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          disabled={uploadLoading}
+                        />
+                      </label>
+                      <span className="text-[11px] text-slate-400">or enter file path / link:</span>
+                    </div>
+
+                    <input
+                      type="text"
+                      value={coverImage}
+                      onChange={e => setCoverImage(e.target.value)}
+                      placeholder="/cars/corolla-grande.jpg or https://..."
+                      className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-[11px] bg-white"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Quick Presets Gallery Selector */}
+                <div className="space-y-1.5 pt-2 border-t border-slate-200/80">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block">
+                    Or Pick Real Car Photo from Library:
+                  </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {PRESET_GALLERY_IMAGES.map((preset) => {
+                      const isSelected = coverImage === preset.url;
+                      return (
+                        <button
+                          key={preset.url}
+                          type="button"
+                          onClick={() => setCoverImage(preset.url)}
+                          className={`flex items-center gap-2 p-1.5 rounded-xl border text-start transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-amber-50/90 border-amber-500 ring-2 ring-amber-400/30'
+                              : 'bg-white border-slate-200 hover:border-slate-300'
+                          }`}
+                        >
+                          <img
+                            src={preset.url}
+                            alt={preset.name}
+                            className="w-10 h-8 object-cover rounded-lg shrink-0 border border-slate-100"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
+                            }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[10px] font-bold text-slate-800 truncate leading-tight">{preset.name}</p>
+                            {isSelected && (
+                              <span className="text-[9px] font-bold text-amber-700 flex items-center gap-0.5 mt-0.5">
+                                <Check className="w-3 h-3" /> Selected
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
               {/* Visibility and Operational Status */}

@@ -287,6 +287,9 @@ export const BookingWizard: React.FC = () => {
                           src={veh.coverImage}
                           alt={veh.make}
                           className="w-20 h-14 rounded-xl object-cover shrink-0"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
+                          }}
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-sm text-[#0B1F3A] truncate">

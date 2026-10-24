@@ -131,6 +131,9 @@ export const CarDetailView: React.FC = () => {
                   src={activePhoto || vehicle.coverImage}
                   alt={title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
+                  }}
                 />
                 <div className="absolute top-4 start-4 flex items-center gap-2">
                   <span className="px-3 py-1 rounded-md bg-[#0B1F3A]/90 text-white text-xs font-bold uppercase tracking-wider">
@@ -155,7 +158,14 @@ export const CarDetailView: React.FC = () => {
                           : 'border-transparent opacity-70 hover:opacity-100'
                       }`}
                     >
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <img
+                        src={img}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
+                        }}
+                      />
                     </button>
                   ))}
                 </div>

@@ -23,13 +23,13 @@ export interface BookingBillingInput {
   pickupTime?: string; // HH:mm
   returnDate: string; // YYYY-MM-DD
   returnTime?: string; // HH:mm
-  confirmedTotal?: number;
-  estimatedTotal?: number;
-  depositAmount?: number;
-  totalPaidAmount?: number;
+  confirmedTotal?: number | null;
+  estimatedTotal?: number | null;
+  depositAmount?: number | null;
+  totalPaidAmount?: number | null;
   dailyRate?: number | null;
-  overtimeHourlyRate?: number;
-  customOvertimeCharges?: number;
+  overtimeHourlyRate?: number | null;
+  customOvertimeCharges?: number | null;
   actualReturnedAt?: string; // ISO string or undefined
   status?: string;
   tripStatus?: 'scheduled' | 'on_trip' | 'returned' | 'overdue';
@@ -53,8 +53,8 @@ export function calculateRentalBilling(
   booking: BookingBillingInput,
   currentTimestamp: number = Date.now()
 ): OvertimeCalculation {
-  const baseTotal = booking.confirmedTotal ?? booking.estimatedTotal ?? 0;
-  const paidAmount = booking.totalPaidAmount ?? booking.depositAmount ?? 0;
+  const baseTotal = (booking.confirmedTotal !== null && booking.confirmedTotal !== undefined) ? booking.confirmedTotal : (booking.estimatedTotal || 0);
+  const paidAmount = (booking.totalPaidAmount !== null && booking.totalPaidAmount !== undefined) ? booking.totalPaidAmount : (booking.depositAmount || 0);
   const remainingBaseBalance = Math.max(0, baseTotal - paidAmount);
 
   // Parse scheduled return date and time
@@ -103,7 +103,7 @@ export function calculateRentalBilling(
     : getDefaultHourlyOvertimeRate(booking.dailyRate);
 
   // Overtime charges: either manual override or calculated
-  const overtimeCharges = booking.customOvertimeCharges !== undefined
+  const overtimeCharges = (booking.customOvertimeCharges !== undefined && booking.customOvertimeCharges !== null)
     ? booking.customOvertimeCharges
     : chargeableHours * hourlyRate;
 

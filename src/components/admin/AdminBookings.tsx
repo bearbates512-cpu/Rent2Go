@@ -136,23 +136,25 @@ export const AdminBookings: React.FC = () => {
     setSettlementSuccessMsg('');
   };
 
-  const handleSaveSettlement = (markReturned: boolean = false) => {
+  const handleSaveSettlement = (markReturned: boolean = false, overridePaid?: number) => {
     if (!settleBooking) return;
     const hourly = customHourlyRate === '' ? undefined : Number(customHourlyRate);
     const overtimeChg = customOvertimeAmt === '' ? undefined : Number(customOvertimeAmt);
-    const paid = paidUpdateInput === '' ? 0 : Number(paidUpdateInput);
+    const effectivePaid = overridePaid !== undefined 
+      ? overridePaid 
+      : (paidUpdateInput === '' ? 0 : Number(paidUpdateInput));
 
     const baseTotal = settleBooking.confirmedTotal ?? settleBooking.estimate?.estimatedTotal ?? 0;
     const finalBill = baseTotal + (overtimeChg || 0);
-    const remaining = Math.max(0, finalBill - paid);
+    const remaining = Math.max(0, finalBill - effectivePaid);
 
     const updatePayload: any = {
       overtimeHourlyRate: hourly,
       overtimeCharges: overtimeChg,
-      totalPaidAmount: paid,
-      depositAmount: paid,
+      totalPaidAmount: effectivePaid,
+      depositAmount: effectivePaid,
       remainingBalance: remaining,
-      paymentStatus: remaining === 0 ? 'paid' : paid > 0 ? 'deposit_received' : 'unpaid'
+      paymentStatus: remaining === 0 ? 'paid' : effectivePaid > 0 ? 'deposit_received' : 'unpaid'
     };
 
     if (markReturned) {
@@ -166,6 +168,7 @@ export const AdminBookings: React.FC = () => {
     // Update active state
     const refreshed = { ...settleBooking, ...updatePayload };
     setSettleBooking(refreshed);
+    setPaidUpdateInput(effectivePaid);
     setSettlementSuccessMsg(markReturned ? 'Vehicle marked as RETURNED and balance settled successfully!' : 'Settlement & overtime details updated successfully!');
     setTimeout(() => setSettlementSuccessMsg(''), 4000);
   };
@@ -898,8 +901,7 @@ export const AdminBookings: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            setPaidUpdateInput(finalTotal);
-                            handleSaveSettlement(true);
+                            handleSaveSettlement(true, finalTotal);
                           }}
                           className="px-4 py-2 rounded-xl bg-[#F5B301] hover:bg-amber-400 text-[#0B1F3A] text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
                         >
@@ -1234,6 +1236,8 @@ export const AdminBookings: React.FC = () => {
       {agreementBooking && (
         <RentalAgreementModal
           booking={agreementBooking}
+          vehicle={vehicles.find(v => v.id === agreementBooking.vehicleId)}
+          settings={settings}
           onClose={() => setAgreementBooking(null)}
         />
       )}

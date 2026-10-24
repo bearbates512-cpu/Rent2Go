@@ -17,7 +17,7 @@ export const FleetView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedTransmission, setSelectedTransmission] = useState<string>('all');
   const [selectedDriverOption, setSelectedDriverOption] = useState<string>('all');
-  const [maxPrice, setMaxPrice] = useState<number>(30000);
+  const [maxPrice, setMaxPrice] = useState<number>(40000);
   const [sortBy, setSortBy] = useState<string>('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
 
@@ -87,7 +87,7 @@ export const FleetView: React.FC = () => {
     setSearchTerm('');
     setSelectedTransmission('all');
     setSelectedDriverOption('all');
-    setMaxPrice(30000);
+    setMaxPrice(40000);
     setSortBy('featured');
   };
 
@@ -96,7 +96,7 @@ export const FleetView: React.FC = () => {
     Boolean(searchTerm) ||
     selectedTransmission !== 'all' ||
     selectedDriverOption !== 'all' ||
-    maxPrice < 30000;
+    maxPrice < 40000;
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen py-10">
@@ -251,7 +251,7 @@ export const FleetView: React.FC = () => {
               <input
                 type="range"
                 min={3000}
-                max={30000}
+                max={40000}
                 step={1000}
                 value={maxPrice}
                 onChange={e => setMaxPrice(parseInt(e.target.value))}
@@ -259,7 +259,7 @@ export const FleetView: React.FC = () => {
               />
               <div className="flex justify-between text-[10px] text-slate-400 mt-1">
                 <span>Rs. 3,000</span>
-                <span>Rs. 30,000+</span>
+                <span>Rs. 40,000+</span>
               </div>
             </div>
           </aside>

@@ -10,21 +10,21 @@ import {
 
 export const INITIAL_VEHICLES: Vehicle[] = [
   {
-    id: 'veh-corolla-2023',
+    id: 'veh-corolla-2024',
     stockCode: 'R2G-COR-01',
-    slug: 'toyota-corolla-gli-2023',
+    slug: 'toyota-corolla-altis-grande-2024',
     make: 'Toyota',
-    model: 'Corolla GLi',
-    variant: '1.3 VVTi Automatic',
-    modelYear: 2023,
+    model: 'Corolla Altis Grande',
+    variant: '1.8 Dual VVT-i Special Edition',
+    modelYear: 2024,
     category: 'sedan',
     title: {
-      en: 'Toyota Corolla GLi (2023)',
-      ur: 'ٹویوٹا کرولا جی ایل آئی (2023)'
+      en: 'Toyota Corolla Altis Grande (2024)',
+      ur: 'ٹویوٹا کرولا الٹس گرینڈے (2024)'
     },
     description: {
-      en: 'Pakistan’s favorite reliable family sedan. Smooth suspension, powerful dual AC, and spacious boot for long highway journeys.',
-      ur: 'پاکستان کی پسندیدہ اور پائیدار فیملی گاڑی۔ بہترین اے سی، آرام دہ سیٹیں اور سامان کے لیے کشادہ ڈگی۔'
+      en: 'Top-of-the-line luxury sedan with sunroof, beige leather interior, cruise control, and smooth highway ride across Punjab and Sindh.',
+      ur: 'ٹاپ آف دی لائن لگژری سیڈان مع سن روف، لیدر انٹیرئیر اور پرسکون موٹروے سفر۔'
     },
     seats: 5,
     doors: 4,
@@ -32,43 +32,42 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     fuelType: 'petrol',
     hasAC: true,
     driverOption: 'both',
-    features: ['Chilled Dual AC', 'Bluetooth Audio', 'ABS Brakes', 'Power Windows', 'Spacious Trunk'],
+    features: ['Electric Sunroof', 'Cruise Control', 'Push Start', 'Chilled Dual AC', 'Reverse Camera & Sensors'],
     customFields: {
+      registrationNumber: 'RYK-24-7860',
+      odometerKm: 28400,
+      gpsTrackerInstalled: true,
       mileageLimitPerDay: '200 KM',
-      extraKmRate: 25,
-      securityDeposit: 10000,
+      extraKmRate: 30,
+      securityDeposit: 15000,
       luggageBags: 3
     },
-    dailyRatePKR: 6000,
+    dailyRatePKR: 8000,
     driverDailyFeePKR: 1500,
     visibility: 'published',
     opStatus: 'available',
     isFeatured: true,
     featuredOrder: 1,
-    coverImage: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80'
-    ],
+    coverImage: '/cars/corolla-grande.jpg',
+    galleryImages: ['/cars/corolla-grande.jpg'],
     maintenanceWindows: []
   },
   {
-    id: 'veh-civic-2022',
+    id: 'veh-civic-rs-2023',
     stockCode: 'R2G-CIV-02',
-    slug: 'honda-civic-oriel-2022',
+    slug: 'honda-civic-rs-turbo-2023',
     make: 'Honda',
-    model: 'Civic Oriel',
-    variant: '1.5 Turbo VTEC',
-    modelYear: 2022,
+    model: 'Civic RS Turbo',
+    variant: '1.5 VTEC Turbo Oriel',
+    modelYear: 2023,
     category: 'sedan',
     title: {
-      en: 'Honda Civic Oriel Sunroof (2022)',
-      ur: 'ہونڈا سیوک اورئیل سن روف (2022)'
+      en: 'Honda Civic RS Turbo (2023)',
+      ur: 'ہونڈا سیوک آر ایس ٹربو (2023)'
     },
     description: {
-      en: 'Executive luxury sedan with sporty performance, sunroof, push start, and premium leather interior for VIP travel and business trips.',
-      ur: 'پرتعیش ایگزیکٹو سیڈان مع سن روف، بہترین پک اور لیدر انٹیرئیر، وی آئی پی سفر اور بزنس کے لیے۔'
+      en: 'Flagship executive turbo sedan with sporty body kit, electric sunroof, digital cockpit, and elite comfort for VIP travel.',
+      ur: 'ایگزیکٹو ٹربو سیڈان مع سن روف، ڈیجیٹل ڈیش بورڈ اور بہترین وی آئی پی پروٹوکول۔'
     },
     seats: 5,
     doors: 4,
@@ -76,41 +75,41 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     fuelType: 'petrol',
     hasAC: true,
     driverOption: 'both',
-    features: ['Electric Sunroof', 'Cruise Control', 'Push Start', 'Rear AC Vents', 'Reverse Camera'],
+    features: ['Turbo Charged Engine', 'Electric Sunroof', 'Ambient Lighting', 'Leather Seats', 'Rear AC Vents'],
     customFields: {
+      registrationNumber: 'LEA-23-4512',
+      odometerKm: 31200,
+      gpsTrackerInstalled: true,
       mileageLimitPerDay: '200 KM',
-      extraKmRate: 35,
-      securityDeposit: 20000,
+      extraKmRate: 40,
+      securityDeposit: 25000,
       luggageBags: 3
     },
-    dailyRatePKR: 9500,
-    driverDailyFeePKR: 1500,
+    dailyRatePKR: 12000,
+    driverDailyFeePKR: 2000,
     visibility: 'published',
     opStatus: 'available',
     isFeatured: true,
     featuredOrder: 2,
-    coverImage: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80'
-    ],
+    coverImage: '/cars/civic-rs.jpg',
+    galleryImages: ['/cars/civic-rs.jpg'],
     maintenanceWindows: []
   },
   {
-    id: 'veh-fortuner-2023',
+    id: 'veh-fortuner-2024',
     stockCode: 'R2G-FOR-03',
-    slug: 'toyota-fortuner-legender-2023',
+    slug: 'toyota-fortuner-legender-2024',
     make: 'Toyota',
-    model: 'Fortuner',
-    variant: 'Legender 4x4 Sigma 4',
-    modelYear: 2023,
+    model: 'Fortuner Legender',
+    variant: '2.8L 4x4 Sigma 4',
+    modelYear: 2024,
     category: 'suv',
     title: {
-      en: 'Toyota Fortuner Legender 4x4 (2023)',
-      ur: 'ٹویوٹا فارچونر لیجنڈر 4x4 (2023)'
+      en: 'Toyota Fortuner Legender 4x4 (2024)',
+      ur: 'ٹویوٹا فارچونر لیجنڈر 4x4 (2024)'
     },
     description: {
-      en: 'King of the road 7-seater luxury 4x4 SUV. Commanding presence, premium leather, power tailgate, perfect for weddings, protocol, and northern tours.',
+      en: 'King of the road 7-seater luxury 4x4 SUV. Commanding presence, two-tone leather, power tailgate, perfect for weddings, protocol, and northern tours.',
       ur: 'شاہانہ 7 سیٹر 4x4 ایس یو وی۔ شادی بیاہ، پروٹوکول اور فیملی کے لمبے سفر کے لیے بہترین انتخاب۔'
     },
     seats: 7,
@@ -119,33 +118,76 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     fuelType: 'diesel',
     hasAC: true,
     driverOption: 'with_driver',
-    features: ['4x4 Off-Road', '7 Leather Seats', 'Dual Climate Control', 'Power Tailgate', 'VIP Protocol Look'],
+    features: ['Sigma 4 4x4 Off-Road', '7 Leather Seats', 'Dual Climate AC', 'Power Tailgate', 'VIP Protocol Look'],
     customFields: {
+      registrationNumber: 'ICT-24-9988',
+      odometerKm: 19500,
+      gpsTrackerInstalled: true,
       mileageLimitPerDay: '250 KM',
-      extraKmRate: 60,
-      securityDeposit: 30000,
+      extraKmRate: 65,
+      securityDeposit: 35000,
       luggageBags: 5
     },
-    dailyRatePKR: 22000,
-    driverDailyFeePKR: 2000,
+    dailyRatePKR: 25000,
+    driverDailyFeePKR: 2500,
     visibility: 'published',
     opStatus: 'available',
     isFeatured: true,
     featuredOrder: 3,
-    coverImage: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80'
-    ],
+    coverImage: '/cars/fortuner-legender.jpg',
+    galleryImages: ['/cars/fortuner-legender.jpg'],
+    maintenanceWindows: []
+  },
+  {
+    id: 'veh-prado-2023',
+    stockCode: 'R2G-PRA-04',
+    slug: 'toyota-land-cruiser-prado-2023',
+    make: 'Toyota',
+    model: 'Land Cruiser Prado',
+    variant: 'TX-L 4.0 V6 4x4',
+    modelYear: 2023,
+    category: 'luxury',
+    title: {
+      en: 'Toyota Land Cruiser Prado TX (2023)',
+      ur: 'ٹویوٹا لینڈ کروزر پراڈو ٹی ایکس (2023)'
+    },
+    description: {
+      en: 'Flagship full-size luxury SUV with commanding road presence, air suspension, rear entertainment, and VIP security protection.',
+      ur: 'انتہائی پروقار لگژری ایس یو وی۔ وی آئی پی سیکیورٹی، بارات پروٹوکول اور سرکاری و کارپوریٹ وفود کے لیے۔'
+    },
+    seats: 7,
+    doors: 5,
+    transmission: 'automatic',
+    fuelType: 'petrol',
+    hasAC: true,
+    driverOption: 'with_driver',
+    features: ['V6 4x4 Luxury', 'Full Leather Cabin', 'Coolbox Refrigerator', 'Sunroof', 'VIP Chauffeur'],
+    customFields: {
+      registrationNumber: 'MN-23-1122',
+      odometerKm: 42000,
+      gpsTrackerInstalled: true,
+      mileageLimitPerDay: '250 KM',
+      extraKmRate: 80,
+      securityDeposit: 40000,
+      luggageBags: 5
+    },
+    dailyRatePKR: 32000,
+    driverDailyFeePKR: 3000,
+    visibility: 'published',
+    opStatus: 'available',
+    isFeatured: true,
+    featuredOrder: 4,
+    coverImage: '/cars/prado.jpg',
+    galleryImages: ['/cars/prado.jpg'],
     maintenanceWindows: []
   },
   {
     id: 'veh-yaris-2023',
-    stockCode: 'R2G-YAR-04',
+    stockCode: 'R2G-YAR-05',
     slug: 'toyota-yaris-ativ-2023',
     make: 'Toyota',
-    model: 'Yaris',
-    variant: '1.3 ATIV CVT',
+    model: 'Yaris ATIV',
+    variant: '1.3 ATIV CVT Automatic',
     modelYear: 2023,
     category: 'sedan',
     title: {
@@ -153,7 +195,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
       ur: 'ٹویوٹا یارس اے ٹی آئی وی (2023)'
     },
     description: {
-      en: 'Fuel efficient and modern compact sedan. Very comfortable in city traffic and economical for Rahim Yar Khan, Sukkur, or local trips.',
+      en: 'Fuel efficient and modern compact sedan. Very comfortable in city traffic and economical for Rahim Yar Khan, Sukkur, or local journeys.',
       ur: 'کم ایندھن خرچ کرنے والی جدید گاڑی۔ شہر کے اندر اور قریبی شہروں کے سفر کے لیے انتہائی کفایتی۔'
     },
     seats: 5,
@@ -162,10 +204,13 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     fuelType: 'petrol',
     hasAC: true,
     driverOption: 'both',
-    features: ['Excellent Fuel Mileage', 'Traction Control', 'Touchscreen Infotainment', 'Chilled AC'],
+    features: ['High Fuel Mileage 16+ KM/L', 'Traction Control', 'Touchscreen Screen', 'Chilled AC', 'ABS Brakes'],
     customFields: {
+      registrationNumber: 'RYK-23-3310',
+      odometerKm: 34000,
+      gpsTrackerInstalled: true,
       mileageLimitPerDay: '200 KM',
-      extraKmRate: 20,
+      extraKmRate: 22,
       securityDeposit: 10000,
       luggageBags: 2
     },
@@ -173,16 +218,15 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     driverDailyFeePKR: 1500,
     visibility: 'published',
     opStatus: 'available',
-    isFeatured: false,
-    coverImage: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80'
-    ],
+    isFeatured: true,
+    featuredOrder: 5,
+    coverImage: '/cars/toyota-yaris.jpg',
+    galleryImages: ['/cars/toyota-yaris.jpg'],
     maintenanceWindows: []
   },
   {
     id: 'veh-alto-2024',
-    stockCode: 'R2G-ALT-05',
+    stockCode: 'R2G-ALT-06',
     slug: 'suzuki-alto-vxl-2024',
     make: 'Suzuki',
     model: 'Alto',
@@ -194,8 +238,8 @@ export const INITIAL_VEHICLES: Vehicle[] = [
       ur: 'سوزوکی آلٹو وی ایکس ایل (2024)'
     },
     description: {
-      en: 'Most economical city runner. High fuel average (20+ km/l), automatic AGS gear, easy to park, perfect for daily errands in Sadiqabad.',
-      ur: 'سب سے سستی اور کفایتی گاڑی۔ شاندار پیٹرول ایوریج، آٹومیٹک، روزمرہ کاموں کے لیے موزوں۔'
+      en: 'Most economical city runner in Pakistan. Exceptional 20+ km/l fuel average, automatic AGS gear, effortless to drive and park.',
+      ur: 'سب سے سستی اور بہترین کار۔ 20+ کلومیٹر فی لیٹر مائلیج، آٹومیٹک، روزمرہ کاموں کے لیے موزوں۔'
     },
     seats: 4,
     doors: 5,
@@ -203,8 +247,11 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     fuelType: 'petrol',
     hasAC: true,
     driverOption: 'both',
-    features: ['High Fuel Economy 20+ KM/L', 'AGS Automatic', 'Power Steering', 'Air Conditioning'],
+    features: ['High Fuel Economy 20+ KM/L', 'AGS Automatic', 'Electric Power Steering', 'Air Conditioning'],
     customFields: {
+      registrationNumber: 'RYK-24-5541',
+      odometerKm: 18000,
+      gpsTrackerInstalled: true,
       mileageLimitPerDay: '150 KM',
       extraKmRate: 15,
       securityDeposit: 8000,
@@ -215,28 +262,68 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     visibility: 'published',
     opStatus: 'available',
     isFeatured: true,
-    featuredOrder: 4,
-    coverImage: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80'
-    ],
+    featuredOrder: 6,
+    coverImage: '/cars/suzuki-alto.jpg',
+    galleryImages: ['/cars/suzuki-alto.jpg'],
     maintenanceWindows: []
   },
   {
-    id: 'veh-cabin-2022',
-    stockCode: 'R2G-CAB-06',
-    slug: 'toyota-hiace-grand-cabin-2022',
+    id: 'veh-cultus-2023',
+    stockCode: 'R2G-CUL-07',
+    slug: 'suzuki-cultus-vxl-2023',
+    make: 'Suzuki',
+    model: 'Cultus',
+    variant: 'VXL Auto Gear Shift',
+    modelYear: 2023,
+    category: 'hatchback',
+    title: {
+      en: 'Suzuki Cultus VXL AGS (2023)',
+      ur: 'سوزوکی کلٹس وی ایکس ایل (2023)'
+    },
+    description: {
+      en: 'Roomy 5-seater family hatchback with impressive fuel average, smooth automatic driving, dual airbags, and spacious seating.',
+      ur: '5 افراد کے لیے کشادہ فیملی ہیچ بیک، بہترین پک، ایئر بیگ اور شاندار مائلیج۔'
+    },
+    seats: 5,
+    doors: 5,
+    transmission: 'automatic',
+    fuelType: 'petrol',
+    hasAC: true,
+    driverOption: 'both',
+    features: ['Dual Airbags', 'Alloy Wheels', 'Fog Lamps', 'Chilled AC', 'Bluetooth Audio'],
+    customFields: {
+      registrationNumber: 'RYK-23-8822',
+      odometerKm: 31000,
+      gpsTrackerInstalled: true,
+      mileageLimitPerDay: '200 KM',
+      extraKmRate: 20,
+      securityDeposit: 10000,
+      luggageBags: 2
+    },
+    dailyRatePKR: 4500,
+    driverDailyFeePKR: 1500,
+    visibility: 'published',
+    opStatus: 'available',
+    isFeatured: false,
+    coverImage: '/cars/suzuki-cultus.jpg',
+    galleryImages: ['/cars/suzuki-cultus.jpg'],
+    maintenanceWindows: []
+  },
+  {
+    id: 'veh-cabin-2023',
+    stockCode: 'R2G-CAB-08',
+    slug: 'toyota-hiace-grand-cabin-2023',
     make: 'Toyota',
     model: 'Hiace Grand Cabin',
-    variant: 'High Roof Super GL',
-    modelYear: 2022,
+    variant: 'High Roof Super GL 14-Seater',
+    modelYear: 2023,
     category: 'van',
     title: {
       en: 'Toyota Hiace Grand Cabin (14 Seater)',
       ur: 'ٹویوٹا ہائی ایس گرینڈ کیبن (14 سیٹر)'
     },
     description: {
-      en: 'Spacious high-roof 14-seater luxury passenger van. Individual AC vents, reclining captain seats, ideal for family umrah/ziarat groups, weddings, and long tours.',
+      en: 'Spacious high-roof 14-seater luxury passenger van. Individual dual AC vents, reclining seats, ideal for family umrah/ziarat groups, weddings, and long tours.',
       ur: 'کشادہ 14 سیٹر لگژری ہائی ایس۔ ہر سیٹ کے لیے الگ اے سی، فیملی ٹور، زیارات اور بارات کے لیے بہترین۔'
     },
     seats: 14,
@@ -245,64 +332,23 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     fuelType: 'diesel',
     hasAC: true,
     driverOption: 'with_driver',
-    features: ['14 Passenger Reclining Seats', 'Roof Dual AC', 'Huge Luggage Space', 'Trained Highway Driver'],
+    features: ['14 Reclining Passenger Seats', 'Dual Roof AC', 'Huge Luggage Capacity', 'Experienced Highway Driver'],
     customFields: {
+      registrationNumber: 'ICT-23-2211',
+      odometerKm: 55000,
+      gpsTrackerInstalled: true,
       mileageLimitPerDay: '300 KM',
-      extraKmRate: 40,
-      securityDeposit: 0,
-      luggageBags: 10
+      extraKmRate: 45,
+      securityDeposit: 20000,
+      luggageBags: 8
     },
-    dailyRatePKR: 14000,
+    dailyRatePKR: 16000,
     driverDailyFeePKR: 2000,
     visibility: 'published',
     opStatus: 'available',
     isFeatured: false,
-    coverImage: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=80'
-    ],
-    maintenanceWindows: []
-  },
-  {
-    id: 'veh-mercedes-2021',
-    stockCode: 'R2G-MERC-07',
-    slug: 'mercedes-benz-e-class-2021',
-    make: 'Mercedes-Benz',
-    model: 'E-Class',
-    variant: 'E200 Exclusive Luxury',
-    modelYear: 2021,
-    category: 'luxury',
-    title: {
-      en: 'Mercedes-Benz E-Class Luxury VIP',
-      ur: 'مرسڈیز بینز ای کلاس لگژری'
-    },
-    description: {
-      en: 'Ultra-prestigious VIP sedan available exclusively on special quotation for VIP guests, corporate events, and wedding bride/groom entry.',
-      ur: 'انتہائی پروقار لگژری گاڑی۔ خصوصی تقریبات، وی آئی پی معززین اور دلہا دلہن کے پروٹوکول کے لیے۔'
-    },
-    seats: 5,
-    doors: 4,
-    transmission: 'automatic',
-    fuelType: 'petrol',
-    hasAC: true,
-    driverOption: 'with_driver',
-    features: ['VIP Chauffeur in Uniform', 'Ambient Lighting', 'Burmester Sound', 'Tinted Windows'],
-    customFields: {
-      mileageLimitPerDay: 'Custom',
-      extraKmRate: 100,
-      securityDeposit: 50000,
-      luggageBags: 3
-    },
-    dailyRatePKR: null, // "Contact for quote"
-    driverDailyFeePKR: 2500,
-    visibility: 'published',
-    opStatus: 'available',
-    isFeatured: true,
-    featuredOrder: 5,
-    coverImage: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=900&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80'
-    ],
+    coverImage: '/cars/hiace-cabin.jpg',
+    galleryImages: ['/cars/hiace-cabin.jpg'],
     maintenanceWindows: []
   }
 ];
@@ -479,8 +525,8 @@ export const INITIAL_BOOKINGS: Booking[] = [
     customerPhone: '+92 301 7654321',
     customerEmail: 'rizwan.ry@gmail.com',
     preferredContact: 'whatsapp',
-    vehicleId: 'veh-corolla-2023',
-    vehicleName: 'Toyota Corolla GLi (2023)',
+    vehicleId: 'veh-corolla-2024',
+    vehicleName: 'Toyota Corolla Altis Grande (2024)',
     status: 'pending',
     source: 'website',
     rentalType: 'daily',
@@ -496,12 +542,12 @@ export const INITIAL_BOOKINGS: Booking[] = [
     internalNotes: 'Customer contacted on WhatsApp; requested confirmation by evening.',
     estimate: {
       rentalDays: 3,
-      baseRatePerDay: 6000,
-      baseTotal: 18000,
+      baseRatePerDay: 8000,
+      baseTotal: 24000,
       driverFeePerDay: 1500,
       driverTotal: 4500,
       securityDeposit: 0,
-      estimatedTotal: 22500,
+      estimatedTotal: 28500,
       needsQuote: false,
       currency: 'PKR',
       inclusions: ['Clean & inspected vehicle', '24/7 roadside assistance', 'Verified local driver'],
@@ -527,8 +573,8 @@ export const INITIAL_BOOKINGS: Booking[] = [
     customerPhone: '+92 321 8899001',
     customerEmail: 'tariq.ffc@yahoo.com',
     preferredContact: 'call',
-    vehicleId: 'veh-fortuner-2023',
-    vehicleName: 'Toyota Fortuner Legender 4x4 (2023)',
+    vehicleId: 'veh-fortuner-2024',
+    vehicleName: 'Toyota Fortuner Legender 4x4 (2024)',
     status: 'confirmed',
     source: 'whatsapp',
     rentalType: 'daily',
@@ -544,25 +590,25 @@ export const INITIAL_BOOKINGS: Booking[] = [
     internalNotes: 'Deposit of PKR 20,000 received via Bank Transfer. Driver Aslam assigned.',
     estimate: {
       rentalDays: 3,
-      baseRatePerDay: 22000,
-      baseTotal: 66000,
-      driverFeePerDay: 2000,
-      driverTotal: 6000,
+      baseRatePerDay: 25000,
+      baseTotal: 75000,
+      driverFeePerDay: 2500,
+      driverTotal: 7500,
       securityDeposit: 0,
-      estimatedTotal: 72000,
+      estimatedTotal: 82500,
       needsQuote: false,
       currency: 'PKR',
       inclusions: ['VIP Chauffeur', 'AC & Bottled Water'],
       exclusions: ['Fuel & Motorway Tolls']
     },
-    confirmedTotal: 72000,
+    confirmedTotal: 82500,
     depositAmount: 20000,
     totalPaidAmount: 20000,
-    remainingBalance: 52000,
+    remainingBalance: 62500,
     paymentStatus: 'deposit_received',
     tripStatus: 'on_trip',
     dispatchedAt: '2026-10-22T08:00:00Z',
-    overtimeHourlyRate: 1800,
+    overtimeHourlyRate: 2000,
     assignedTo: 'Driver Aslam',
     createdAt: '2026-10-18T14:30:00Z',
     updatedAt: '2026-10-19T09:00:00Z',
@@ -589,8 +635,8 @@ export const INITIAL_BOOKINGS: Booking[] = [
     customerPhone: '+92 300 9876543',
     customerEmail: 'farooq.khan@gmail.com',
     preferredContact: 'whatsapp',
-    vehicleId: 'veh-yaris-2022',
-    vehicleName: 'Toyota Yaris ATIV (2022)',
+    vehicleId: 'veh-yaris-2023',
+    vehicleName: 'Toyota Yaris ATIV (2023)',
     status: 'confirmed',
     source: 'phone',
     rentalType: 'daily',
@@ -819,7 +865,7 @@ export const INITIAL_CMS_PAGE: CMSPage = {
         badgeText: { en: 'Sadiqabad’s #1 Trusted Car Rental', ur: 'صادق آباد کا سب سے قابلِ اعتماد کار رینٹل' },
         primaryBtnText: { en: 'Explore All Fleet', ur: 'تمام گاڑیاں دیکھیں' },
         secondaryBtnText: { en: 'Book on WhatsApp', ur: 'واٹس ایپ پر رابطہ' },
-        bannerImage: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80'
+        bannerImage: '/cars/civic-rs.jpg'
       },
       isVisible: true,
       sortOrder: 1

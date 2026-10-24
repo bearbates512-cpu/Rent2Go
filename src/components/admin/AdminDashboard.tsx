@@ -11,8 +11,11 @@ import {
   ArrowUpRight,
   ShieldCheck,
   TrendingUp,
-  Banknote
+  Banknote,
+  Timer,
+  Wallet
 } from 'lucide-react';
+import { calculateRentalBilling } from '../../utils/rentalBilling.ts';
 
 interface AdminDashboardProps {
   onNavigateTab: (tab: string) => void;
@@ -34,14 +37,58 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const totalRevenue = confirmedBookings.reduce((sum, b) => sum + (b.confirmedTotal || b.estimate?.estimatedTotal || 0), 0);
   const totalDeposits = confirmedBookings.reduce((sum, b) => sum + (b.depositAmount || 0), 0);
 
+  // Live trip & overtime calculations
+  const onTripBookings = bookings.filter(b => b.tripStatus === 'on_trip');
+  const overdueBookings = bookings.filter(b => {
+    const veh = vehicles.find(v => v.id === b.vehicleId);
+    const bill = calculateRentalBilling({
+      pickupDate: b.pickupDate,
+      pickupTime: b.pickupTime,
+      returnDate: b.returnDate,
+      returnTime: b.returnTime,
+      confirmedTotal: b.confirmedTotal,
+      estimatedTotal: b.estimate?.estimatedTotal,
+      depositAmount: b.depositAmount,
+      dailyRate: veh?.dailyRatePKR,
+      overtimeHourlyRate: b.overtimeHourlyRate,
+      customOvertimeCharges: b.overtimeCharges,
+      actualReturnedAt: b.actualReturnedAt,
+      tripStatus: b.tripStatus,
+      status: b.status
+    });
+    return bill.isOverdue;
+  });
+
+  const totalOutstanding = bookings
+    .filter(b => b.status === 'confirmed' || b.tripStatus === 'on_trip')
+    .reduce((sum, b) => {
+      const veh = vehicles.find(v => v.id === b.vehicleId);
+      const bill = calculateRentalBilling({
+        pickupDate: b.pickupDate,
+        pickupTime: b.pickupTime,
+        returnDate: b.returnDate,
+        returnTime: b.returnTime,
+        confirmedTotal: b.confirmedTotal,
+        estimatedTotal: b.estimate?.estimatedTotal,
+        depositAmount: b.depositAmount,
+        dailyRate: veh?.dailyRatePKR,
+        overtimeHourlyRate: b.overtimeHourlyRate,
+        customOvertimeCharges: b.overtimeCharges,
+        actualReturnedAt: b.actualReturnedAt,
+        tripStatus: b.tripStatus,
+        status: b.status
+      });
+      return sum + bill.finalRemainingDue;
+    }, 0);
+
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Top Welcome & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-[#0B1F3A]">Business Dashboard</h1>
           <p className="text-xs text-slate-500 mt-1">
-            Real-time fleet status and booking queue for Sadiqabad Hub.
+            Real-time fleet status, client balances, and overtime tracking for Sadiqabad Hub.
           </p>
         </div>
 
@@ -63,6 +110,36 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Overdue Trips Alert Banner */}
+      {overdueBookings.length > 0 && (
+        <div
+          onClick={() => onNavigateTab('bookings')}
+          className="p-4 rounded-2xl bg-rose-50 border border-rose-300 shadow-sm flex items-center justify-between cursor-pointer hover:bg-rose-100 transition-all group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
+              <Timer className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-rose-900 uppercase tracking-wide">
+                  ⚠️ Alert: {overdueBookings.length} Vehicle(s) are currently OVERDUE (گاڑی کا وقت اوپر ہو گیا ہے)
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-200 text-rose-800">
+                  Hourly Charges Accruing
+                </span>
+              </div>
+              <p className="text-xs text-rose-700 mt-0.5">
+                گاڑی واپسی کا وقت گزر چکا ہے۔ اوور ٹائم کے گھنٹے، فی گھنٹہ چارجز اور بقایا رقم دیکھنے کے لیے کلک کریں۔
+              </p>
+            </div>
+          </div>
+          <button className="px-3.5 py-1.5 rounded-xl bg-rose-600 group-hover:bg-rose-700 text-white text-xs font-bold transition-colors shrink-0">
+            Open Return Desk
+          </button>
+        </div>
+      )}
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -86,65 +163,71 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <span className="text-[11px] text-slate-500 block">Needs review & quote check</span>
         </div>
 
-        {/* Confirmed Trips */}
+        {/* Cars Out On Trip */}
         <div
-          onClick={() => onNavigateTab('calendar')}
-          className="bg-white rounded-2xl p-5 border border-emerald-200/90 shadow-2xs hover:border-emerald-400 cursor-pointer transition-all space-y-2 group"
+          onClick={() => onNavigateTab('bookings')}
+          className="bg-white rounded-2xl p-5 border border-blue-200/90 shadow-2xs hover:border-blue-400 cursor-pointer transition-all space-y-2 group"
         >
-          <div className="flex items-center justify-between text-xs font-bold text-emerald-800">
-            <span>Confirmed Trips</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-emerald-950 font-mono">
-              {confirmedBookings.length}
-            </span>
-            <span className="text-xs text-emerald-700 font-semibold">scheduled</span>
-          </div>
-          <span className="text-[11px] text-slate-500 block">Locked on fleet calendar</span>
-        </div>
-
-        {/* Maintenance / Out of service */}
-        <div
-          onClick={() => onNavigateTab('vehicles')}
-          className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs hover:border-slate-300 cursor-pointer transition-all space-y-2"
-        >
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-            <span>Maintenance Fleet</span>
-            <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-slate-900 font-mono">
-              {maintenanceCars.length}
-            </span>
-            <span className="text-xs text-slate-500 font-semibold">vehicles</span>
-          </div>
-          <span className="text-[11px] text-slate-500 block">Blocked from public booking</span>
-        </div>
-
-        {/* Revenue Volume */}
-        <div
-          onClick={() => onNavigateTab('pricing')}
-          className="bg-white rounded-2xl p-5 border border-blue-200/90 shadow-2xs hover:border-blue-400 cursor-pointer transition-all space-y-2"
-        >
-          <div className="flex items-center justify-between text-xs font-bold text-blue-800">
-            <span>Agreed Booking Volume</span>
+          <div className="flex items-center justify-between text-xs font-bold text-blue-900">
+            <span>Cars On Trip (سفر پر روانہ)</span>
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Banknote className="w-4 h-4" />
+              <Car className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-blue-950 font-mono">
+              {onTripBookings.length}
+            </span>
+            <span className="text-xs text-blue-700 font-semibold">on road</span>
+          </div>
+          <span className="text-[11px] text-slate-500 block">Active trips with clients</span>
+        </div>
+
+        {/* Overdue Trips Alert */}
+        <div
+          onClick={() => onNavigateTab('bookings')}
+          className={`rounded-2xl p-5 border shadow-2xs cursor-pointer transition-all space-y-2 group ${
+            overdueBookings.length > 0
+              ? 'bg-rose-50/60 border-rose-300 hover:border-rose-400'
+              : 'bg-white border-slate-200 hover:border-slate-300'
+          }`}
+        >
+          <div className="flex items-center justify-between text-xs font-bold text-rose-800">
+            <span>Overdue Trips (وقت اوپر ہوا)</span>
+            <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center">
+              <Timer className="w-4 h-4 animate-pulse" />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-rose-950 font-mono">
+              {overdueBookings.length}
+            </span>
+            <span className="text-xs text-rose-700 font-bold">cars late</span>
+          </div>
+          <span className="text-[11px] text-rose-600 font-semibold block">
+            {overdueBookings.length > 0 ? 'Accruing hourly overtime charges' : 'All returns on time'}
+          </span>
+        </div>
+
+        {/* Revenue & Outstanding Balance */}
+        <div
+          onClick={() => onNavigateTab('bookings')}
+          className="bg-white rounded-2xl p-5 border border-amber-200/90 shadow-2xs hover:border-amber-400 cursor-pointer transition-all space-y-2"
+        >
+          <div className="flex items-center justify-between text-xs font-bold text-amber-900">
+            <span>Revenue & Client Balances</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Wallet className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xs text-blue-700 font-bold">PKR</span>
+            <span className="text-xs text-amber-700 font-bold">PKR</span>
             <span className="text-2xl font-black text-[#0B1F3A] font-mono">
               {totalRevenue.toLocaleString()}
             </span>
           </div>
           <span className="text-[11px] text-slate-500 block">
-            Deposits collected: PKR {totalDeposits.toLocaleString()}
+            Deposits: PKR {totalDeposits.toLocaleString()} • Due: <strong className="text-amber-800">PKR {totalOutstanding.toLocaleString()}</strong>
           </span>
         </div>
       </div>
