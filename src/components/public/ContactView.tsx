@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
 import { normalizePkPhone } from '../../utils/phone.ts';
 import { Phone, MessageSquare, Mail, MapPin, Clock, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Premium3DBusinessCard } from './Premium3DBusinessCard.tsx';
 
 export const ContactView: React.FC = () => {
   const { locale, settings, submitEnquiry } = useApp();
@@ -143,6 +144,22 @@ export const ContactView: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Executive 3D Business Card */}
+            <div className="bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-800 shadow-xl overflow-hidden text-center">
+              <div className="mb-3">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-[#d4af68] font-bold">
+                  {locale === 'ur' ? 'ایگزیکٹو ڈائریکٹر ڈیجیٹل کارڈ' : 'EXECUTIVE DIGITAL CARD'}
+                </span>
+                <h3 className="text-sm font-bold text-white mt-0.5">
+                  {locale === 'ur' ? 'ڈائریکٹر محمد طارق گوندل' : 'Muhammad Tariq Gondal'}
+                </h3>
+              </div>
+              <Premium3DBusinessCard
+                name="Muhammad Tariq Gondal"
+                titleRole="MANAGING DIRECTOR & FOUNDER"
+              />
             </div>
           </div>
 

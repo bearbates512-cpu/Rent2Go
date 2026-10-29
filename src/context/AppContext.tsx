@@ -124,11 +124,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [searchDates, setSearchDates] = useState({ pickup: '', returnDate: '', service: '' });
   const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`) || localStorage.getItem('rent2go_v1_adminUser');
+    if (typeof window === 'undefined') return null;
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
     if (saved) {
       try {
         const u = JSON.parse(saved);
-        if (u.email?.toLowerCase() === AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
+        if (u && typeof u.email === 'string' && u.email.trim().toLowerCase() === AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
           return u;
         }
       } catch (e) {
@@ -139,15 +140,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [adminRole, setAdminRoleState] = useState<AdminRole>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`) || localStorage.getItem('rent2go_v1_adminUser');
+    if (typeof window === 'undefined') return 'staff';
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
     if (saved) {
       try {
         return JSON.parse(saved).role || 'owner';
       } catch (e) {
-        return 'owner';
+        return 'staff';
       }
     }
-    return 'owner';
+    return 'staff';
   });
 
   const setAdminRole = (role: AdminRole) => {
@@ -222,6 +224,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const logoutAdmin = () => {
+    // 1. Sign out from Supabase if client is active
     const supabase = getSupabaseClient();
     if (supabase) {
       try {
@@ -230,8 +233,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         // ignore
       }
     }
+    // 2. Completely reset in-memory state
     setAdminUser(null);
-    localStorage.removeItem(`${STORAGE_KEY_PREFIX}adminUser`);
+    setAdminRoleState('staff');
+
+    // 3. Purge all stored admin keys across versions
+    try {
+      localStorage.removeItem(`${STORAGE_KEY_PREFIX}adminUser`);
+      localStorage.removeItem('rent2go_v1_adminUser');
+      localStorage.removeItem('rent2go_v2_adminUser');
+      localStorage.removeItem('rent2go_adminUser');
+      sessionStorage.removeItem('rent2go_adminUser');
+      sessionStorage.removeItem('rent2go_admin_session');
+    } catch (e) {
+      // ignore
+    }
+
+    // 4. Return to home view and clear admin path from URL
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+      if (path === '/admin/panel' || path === '/admin' || window.location.hash.includes('admin')) {
+        window.history.pushState(null, '', '/');
+      }
+    }
     setCurrentView('home');
   };
 

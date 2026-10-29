@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext.tsx';
+import { Premium3DBusinessCard } from './Premium3DBusinessCard.tsx';
 import { ShieldCheck, MapPin, Users, Phone, Car, Clock, Award } from 'lucide-react';
 
 export const AboutView: React.FC = () => {
@@ -76,6 +77,28 @@ export const AboutView: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Executive 3D Business Card Section */}
+        <div className="space-y-4">
+          <div className="text-center max-w-lg mx-auto">
+            <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+              {locale === 'ur' ? 'ایگزیکٹو ڈیجیٹل کارڈ' : 'Executive Leadership Pass'}
+            </span>
+            <h2 className="text-2xl font-extrabold text-[#0B1F3A] mt-1.5">
+              {locale === 'ur' ? 'مینجنگ ڈائریکٹر کا آفیشل 3D وزٹنگ کارڈ' : 'Managing Director Official 3D Business Card'}
+            </h2>
+            <p className="text-slate-500 text-xs mt-1">
+              {locale === 'ur'
+                ? 'براہِ راست ڈائریکٹر سے رابطہ کریں یا ان کا تصدیق شدہ وزٹنگ کارڈ محفوظ کریں۔'
+                : 'Connect directly with our leadership or save our official verified contact pass.'}
+            </p>
+          </div>
+
+          <Premium3DBusinessCard
+            name="Muhammad Tariq Gondal"
+            titleRole="MANAGING DIRECTOR & FOUNDER"
+          />
         </div>
 
         {/* Office location card */}

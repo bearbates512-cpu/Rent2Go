@@ -19,12 +19,19 @@ import {
 export const AdminLogin: React.FC = () => {
   const { loginAdmin, setCurrentView, locale, dir } = useApp();
 
-  const [email, setEmail] = useState(AUTHORIZED_ADMIN_EMAIL);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [showSupabaseSettings, setShowSupabaseSettings] = useState(false);
+
+  // Clear inputs on mount to enforce locked state
+  React.useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setErrorMsg('');
+  }, []);
 
   // Supabase manual config fields if user wants to link their project
   const [supabaseUrl, setSupabaseUrl] = useState(
@@ -40,15 +47,37 @@ export const AdminLogin: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+
+    const cleanEmail = email.trim();
+    const cleanPassword = password.trim();
+
+    if (!cleanEmail || !cleanPassword) {
+      setErrorMsg(
+        locale === 'ur'
+          ? 'برائے مہربانی ایڈمن جی میل اور پاس ورڈ دونوں درج کریں۔'
+          : 'Please enter both administrator Gmail and password.'
+      );
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const result = await loginAdmin(email, password);
+      const result = await loginAdmin(cleanEmail, cleanPassword);
       if (!result.success) {
-        setErrorMsg(result.error || 'Invalid administrator credentials');
+        setErrorMsg(
+          locale === 'ur'
+            ? 'ایڈمن رسائی مسترد: غلط جی میل یا پاس ورڈ! ایڈمن پینل مقفل ہے۔'
+            : (result.error || 'Invalid administrator credentials. Admin panel is locked.')
+        );
+        setPassword('');
+      } else {
+        setEmail('');
+        setPassword('');
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Login failed. Please check credentials.');
+      setPassword('');
     } finally {
       setLoading(false);
     }
@@ -70,7 +99,10 @@ export const AdminLogin: React.FC = () => {
       {/* Back to Site Button */}
       <div className="w-full max-w-md mb-4 flex items-center justify-between">
         <button
-          onClick={() => setCurrentView('home')}
+          onClick={() => {
+            window.history.pushState(null, '', '/');
+            setCurrentView('home');
+          }}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors"
         >
           {dir === 'rtl' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
@@ -104,15 +136,28 @@ export const AdminLogin: React.FC = () => {
                 : 'Secured Management Console & Fleet CMS'}
             </p>
           </div>
+        </div>
 
-          {/* Security Banner with Bearbates Badge */}
-          <div className="p-2.5 rounded-xl bg-blue-50/80 border border-blue-200/90 text-start flex items-start gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <div className="text-[11px] text-blue-950">
-              <span className="font-bold block">Authorized Super Admin:</span>
-              <span className="font-mono text-blue-800 text-[10px] break-all">{AUTHORIZED_ADMIN_EMAIL}</span>
+        {/* Security Banner with Lock indicator */}
+        <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-start flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
+              <Lock className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-extrabold text-xs text-amber-950 block">
+                {locale === 'ur' ? 'ایڈمن پینل مقفل ہے' : 'Admin Panel Locked'}
+              </span>
+              <span className="text-[10px] text-amber-800">
+                {locale === 'ur'
+                  ? 'لاگ ان کرنے کے لیے جی میل اور پاس ورڈ درج کریں'
+                  : 'Enter authorized Gmail & password to unlock'}
+              </span>
             </div>
           </div>
+          <span className="px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900 font-bold text-[9px] uppercase tracking-wider">
+            Protected
+          </span>
         </div>
 
         {errorMsg && (
@@ -123,10 +168,10 @@ export const AdminLogin: React.FC = () => {
         )}
 
         {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4 text-xs">
+        <form onSubmit={handleLogin} autoComplete="off" className="space-y-4 text-xs">
           <div>
             <label className="font-bold text-slate-700 block mb-1.5">
-              {locale === 'ur' ? 'ایڈمن ای میل' : 'Administrator Email'}
+              {locale === 'ur' ? 'ایڈمن جی میل (Admin Gmail)' : 'Administrator Email'}
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
@@ -136,6 +181,7 @@ export const AdminLogin: React.FC = () => {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="bearbates512@gmail.com"
                 required
+                autoComplete="off"
                 className="w-full ps-10 pe-4 py-2.5 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-[#0B1F3A] text-slate-900 font-medium"
               />
             </div>
@@ -144,9 +190,9 @@ export const AdminLogin: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="font-bold text-slate-700">
-                {locale === 'ur' ? 'پاس ورڈ' : 'Password'}
+                {locale === 'ur' ? 'پاس ورڈ (Password)' : 'Password'}
               </label>
-              <span className="text-[10px] text-slate-400">Supabase / Master Secret</span>
+              <span className="text-[10px] text-slate-400">Master Secret</span>
             </div>
             <div className="relative">
               <KeyRound className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
@@ -154,8 +200,9 @@ export const AdminLogin: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="Enter password"
+                placeholder="••••••••"
                 required
+                autoComplete="new-password"
                 className="w-full ps-10 pe-10 py-2.5 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-[#0B1F3A] text-slate-900 font-medium font-mono"
               />
               <button

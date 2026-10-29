@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { AppProvider, useApp } from './context/AppContext.tsx';
 import { Header } from './components/public/Header.tsx';
 import { Footer } from './components/public/Footer.tsx';
@@ -41,19 +42,91 @@ function MainAppContent() {
   const { currentView, setCurrentView, navigateToCar, isAdminAuthenticated } = useApp();
   const [adminTab, setAdminTab] = useState<string>('dashboard');
 
-  // Handle URL parameters (e.g. ?view=admin or ?view=cars or ?view=book)
-  useEffect(() => {
+  // Detect whether current URL or path points to /admin/panel
+  const checkIsAdminRoute = () => {
+    if (typeof window === 'undefined') return false;
+    const path = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+    const hash = window.location.hash.toLowerCase().replace(/\/+$/, '');
+    const search = window.location.search.toLowerCase();
     const params = new URLSearchParams(window.location.search);
-    const viewParam = params.get('view');
-    const carParam = params.get('car');
 
-    if (viewParam) {
-      setCurrentView(viewParam);
-    }
-    if (carParam) {
-      navigateToCar(carParam);
-    }
+    return (
+      path === '/admin/panel' ||
+      path.endsWith('/admin/panel') ||
+      path === '/admin' ||
+      hash.includes('/admin/panel') ||
+      hash === '#admin/panel' ||
+      hash === '#/admin' ||
+      hash === '#admin' ||
+      params.get('view') === 'admin' ||
+      params.get('admin') === 'panel' ||
+      search.includes('/admin/panel')
+    );
+  };
+
+  // Synchronize route from URL on mount and history navigation (popstate / hashchange)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view');
+      const carParam = params.get('car');
+
+      if (checkIsAdminRoute()) {
+        setCurrentView('admin');
+      } else if (viewParam) {
+        setCurrentView(viewParam);
+      }
+
+      if (carParam) {
+        navigateToCar(carParam);
+      }
+    };
+
+    handleLocationChange();
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
+
+  // Sync browser URL bar with currentView (keeps admin hidden unless actively on /admin/panel)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (currentView === 'admin') {
+      const currentPath = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+      if (currentPath !== '/admin/panel' && currentPath !== '/admin') {
+        window.history.replaceState(null, '', '/admin/panel');
+      }
+    } else {
+      const currentPath = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+      if (currentPath === '/admin/panel' || currentPath === '/admin') {
+        window.history.replaceState(null, '', '/');
+      }
+    }
+  }, [currentView]);
+
+  // Stealth keyboard shortcut for administrator (Ctrl+Shift+A or Cmd+Shift+A)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        if (currentView === 'admin') {
+          window.history.pushState(null, '', '/');
+          setCurrentView('home');
+        } else {
+          window.history.pushState(null, '', '/admin/panel');
+          setCurrentView('admin');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentView]);
 
   // Admin Portal View
   if (currentView === 'admin') {
@@ -96,17 +169,27 @@ function MainAppContent() {
       <Header />
 
       <main className="flex-1">
-        {currentView === 'home' && <HomeView />}
-        {currentView === 'cars' && <FleetView />}
-        {currentView === 'car-detail' && <CarDetailView />}
-        {currentView === 'book' && <BookingWizard />}
-        {currentView === 'booking-success' && <BookingSuccessView />}
-        {currentView === 'status' && <BookingStatusView />}
-        {currentView === 'services' && <ServicesView />}
-        {currentView === 'rates' && <RatesView />}
-        {currentView === 'about' && <AboutView />}
-        {currentView === 'contact' && <ContactView />}
-        {currentView === 'legal' && <LegalView />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentView}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            {currentView === 'home' && <HomeView />}
+            {currentView === 'cars' && <FleetView />}
+            {currentView === 'car-detail' && <CarDetailView />}
+            {currentView === 'book' && <BookingWizard />}
+            {currentView === 'booking-success' && <BookingSuccessView />}
+            {currentView === 'status' && <BookingStatusView />}
+            {currentView === 'services' && <ServicesView />}
+            {currentView === 'rates' && <RatesView />}
+            {currentView === 'about' && <AboutView />}
+            {currentView === 'contact' && <ContactView />}
+            {currentView === 'legal' && <LegalView />}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       <Footer />

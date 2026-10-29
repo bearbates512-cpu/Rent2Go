@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
+import { soundFX } from '../../utils/soundEffects.ts';
 import { CarCard } from './CarCard.tsx';
-import { Search, Filter, X, SlidersHorizontal, Car } from 'lucide-react';
+import { Search, Filter, X, SlidersHorizontal, Car, Radio, Sparkles } from 'lucide-react';
 import { VehicleCategory } from '../../types/index.ts';
 
 export const FleetView: React.FC = () => {
@@ -124,7 +126,25 @@ export const FleetView: React.FC = () => {
               <input
                 type="text"
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                onChange={e => {
+                  const val = e.target.value;
+                  setSearchTerm(val);
+                  const clean = val.trim().toLowerCase().replace(/\/+$/, '');
+                  if (clean === '/admin/panel' || clean === '/admin' || clean === 'admin/panel') {
+                    window.history.pushState(null, '', '/admin/panel');
+                    setCurrentView('admin');
+                  }
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    const clean = searchTerm.trim().toLowerCase().replace(/\/+$/, '');
+                    if (clean === '/admin/panel' || clean === '/admin' || clean === 'admin/panel') {
+                      e.preventDefault();
+                      window.history.pushState(null, '', '/admin/panel');
+                      setCurrentView('admin');
+                    }
+                  }
+                }}
                 placeholder={locale === 'ur' ? 'گاڑی تلاش کریں (کرولا، فارچونر...)' : 'Search car by name...'}
                 className="w-full ps-10 pe-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0B1F3A]"
               />
@@ -154,17 +174,21 @@ export const FleetView: React.FC = () => {
           {categories.map(cat => {
             const isSelected = (!filterCategory && cat.id === 'all') || filterCategory === cat.id;
             return (
-              <button
+              <motion.button
                 key={cat.id}
-                onClick={() => setFilterCategory(cat.id === 'all' ? null : cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all ${
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  soundFX.playClick();
+                  setFilterCategory(cat.id === 'all' ? null : cat.id);
+                }}
+                className={`px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#0B1F3A] text-white shadow-xs'
+                    ? 'bg-[#0B1F3A] text-white shadow-md shadow-slate-900/10'
                     : 'bg-white border border-slate-200/90 text-slate-700 hover:border-slate-300'
                 }`}
               >
                 {locale === 'ur' ? cat.ur : cat.en}
-              </button>
+              </motion.button>
             );
           })}
         </div>

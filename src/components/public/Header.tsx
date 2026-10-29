@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Car, Globe, Menu, X, Phone, ShieldCheck, Search, LayoutDashboard } from 'lucide-react';
+import { soundFX } from '../../utils/soundEffects.ts';
+import { Car, Globe, Menu, X, Phone, ShieldCheck, Search, Volume2, VolumeX } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const {
@@ -13,6 +14,12 @@ export const Header: React.FC = () => {
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAudioMuted, setIsAudioMuted] = useState(() => soundFX.getMuted());
+
+  const toggleSound = () => {
+    const muted = soundFX.toggleMute();
+    setIsAudioMuted(muted);
+  };
 
   const navLinks = [
     { id: 'home', labelEn: 'Home', labelUr: 'مرکزی صفحہ' },
@@ -25,6 +32,7 @@ export const Header: React.FC = () => {
   ];
 
   const handleNavClick = (viewId: string) => {
+    soundFX.playClick();
     setCurrentView(viewId);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -77,28 +85,32 @@ export const Header: React.FC = () => {
           </nav>
 
           {/* Actions Right */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2.5">
+            {/* Futuristic Sound FX Toggle */}
+            <button
+              onClick={toggleSound}
+              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer ${
+                !isAudioMuted
+                  ? 'bg-amber-500/10 text-amber-600 border-amber-300'
+                  : 'bg-slate-100 text-slate-400 border-slate-200 hover:text-slate-600'
+              }`}
+              title={isAudioMuted ? 'Turn Sound FX On' : 'Mute Sound FX'}
+            >
+              {!isAudioMuted ? <Volume2 className="w-3.5 h-3.5 text-amber-500" /> : <VolumeX className="w-3.5 h-3.5" />}
+              <span className="text-[10px] uppercase">{!isAudioMuted ? 'FX' : 'Muted'}</span>
+            </button>
+
             {/* Language Switch */}
             <button
-              onClick={() => setLocale(locale === 'en' ? 'ur' : 'en')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors"
+              onClick={() => {
+                soundFX.playClick();
+                setLocale(locale === 'en' ? 'ur' : 'en');
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors cursor-pointer"
               title="Change Language"
             >
               <Globe className="w-3.5 h-3.5 text-[#0B1F3A]" />
               <span className="font-semibold">{locale === 'en' ? 'Urdu' : 'English'}</span>
-            </button>
-
-            {/* Admin Switch */}
-            <button
-              onClick={() => handleNavClick('admin')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                currentView === 'admin'
-                  ? 'bg-[#0B1F3A] text-white border-[#0B1F3A]'
-                  : 'text-slate-700 bg-slate-100 border-slate-200 hover:bg-slate-200'
-              }`}
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>{locale === 'ur' ? 'ایڈمن پینل' : 'Admin Panel'}</span>
             </button>
 
             {/* Direct Call Quick Link */}
@@ -142,7 +154,7 @@ export const Header: React.FC = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-200">
-          <div className="grid grid-cols-2 gap-2 mb-3">
+          <div className="mb-3">
             <button
               onClick={() => {
                 navigateToBooking();
@@ -151,15 +163,6 @@ export const Header: React.FC = () => {
               className="w-full py-2.5 rounded-lg bg-[#0B1F3A] text-white text-sm font-bold shadow-sm text-center"
             >
               {locale === 'ur' ? 'گاڑی بک کریں' : 'Book a Car'}
-            </button>
-            <button
-              onClick={() => {
-                handleNavClick('admin');
-              }}
-              className="w-full py-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-[#0B1F3A] text-sm font-bold shadow-sm text-center flex items-center justify-center gap-1.5"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>{locale === 'ur' ? 'ایڈمن لاگ ان' : 'Admin Panel'}</span>
             </button>
           </div>
 

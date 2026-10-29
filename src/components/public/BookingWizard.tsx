@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
+import { soundFX } from '../../utils/soundEffects.ts';
 import { calculateQuote } from '../../utils/pricing.ts';
 import { normalizePkPhone } from '../../utils/phone.ts';
 import { RentalType } from '../../types/index.ts';
@@ -155,12 +157,14 @@ export const BookingWizard: React.FC = () => {
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
+      soundFX.playClick();
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
       window.scrollTo({ top: 100, behavior: 'smooth' });
     }
   };
 
   const prevStep = () => {
+    soundFX.playClick();
     setErrorMsg('');
     setCurrentStep(prev => Math.max(prev - 1, 1));
     window.scrollTo({ top: 100, behavior: 'smooth' });
@@ -261,9 +265,17 @@ export const BookingWizard: React.FC = () => {
         )}
 
         {/* Form Container */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
-          {/* STEP 1: Select Vehicle */}
-          {currentStep === 1 && (
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 12 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -12 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {/* STEP 1: Select Vehicle */}
+              {currentStep === 1 && (
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-[#0B1F3A]">
                 {locale === 'ur' ? 'مرحلہ 1: مطلوبہ گاڑی منتخب کریں' : 'Step 1: Choose Your Preferred Vehicle'}
@@ -749,6 +761,8 @@ export const BookingWizard: React.FC = () => {
               </div>
             </div>
           )}
+          </motion.div>
+        </AnimatePresence>
 
           {/* Stepper Navigation Buttons */}
           <div className="flex items-center justify-between gap-3 mt-8 pt-6 border-t border-slate-100">

@@ -128,6 +128,7 @@ export const AdminShell: React.FC<AdminShellProps> = ({
             {/* Public Website Button */}
             <button
               onClick={() => {
+                window.history.pushState(null, '', '/');
                 setCurrentView('home');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
@@ -139,7 +140,11 @@ export const AdminShell: React.FC<AdminShellProps> = ({
 
             {/* Logout Button */}
             <button
-              onClick={logoutAdmin}
+              onClick={() => {
+                logoutAdmin();
+                window.history.pushState(null, '', '/');
+                setCurrentView('home');
+              }}
               className="px-2.5 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 text-rose-300 hover:text-white text-xs font-bold transition-colors flex items-center gap-1.5"
               title="Sign Out of Admin"
             >
@@ -198,13 +203,23 @@ export const AdminShell: React.FC<AdminShellProps> = ({
             })}
           </div>
 
-          {/* Sadiqabad Hub Info Bottom */}
-          <div className="p-4 border-t border-slate-100 bg-slate-50/70 text-[11px] text-slate-500 space-y-1">
+          {/* Sadiqabad Hub Info Bottom & Logout */}
+          <div className="p-4 border-t border-slate-100 bg-slate-50/70 text-[11px] text-slate-500 space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="font-bold text-slate-700">Hub: Sadiqabad Bypass</span>
               <span className="text-emerald-600 font-bold">● Active</span>
             </div>
             <p className="text-[10px] text-slate-400">Rent2Go Fleet Operating Engine</p>
+
+            <button
+              onClick={() => {
+                logoutAdmin();
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5 text-rose-600" />
+              <span>Sign Out & Lock Panel</span>
+            </button>
           </div>
         </aside>
 

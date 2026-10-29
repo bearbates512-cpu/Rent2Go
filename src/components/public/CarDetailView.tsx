@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { checkVehicleAvailability } from '../../utils/availability.ts';
+import { soundFX } from '../../utils/soundEffects.ts';
+import { CarSpecsModal } from './CarSpecsModal.tsx';
 import {
   Users,
   Gauge,
@@ -15,7 +18,10 @@ import {
   ArrowLeft,
   ArrowRight,
   Info,
-  Car
+  Car,
+  Zap,
+  Eye,
+  Radio
 } from 'lucide-react';
 
 export const CarDetailView: React.FC = () => {
@@ -33,6 +39,7 @@ export const CarDetailView: React.FC = () => {
   const vehicle = vehicles.find(v => v.slug === selectedCarSlug) || vehicles[0];
 
   const [activePhoto, setActivePhoto] = useState<string>(vehicle?.coverImage || '');
+  const [specsModalOpen, setSpecsModalOpen] = useState<boolean>(false);
   const [checkStart, setCheckStart] = useState<string>('');
   const [checkEnd, setCheckEnd] = useState<string>('');
   const [availResult, setAvailResult] = useState<{ checked: boolean; isAvailable: boolean; message: string }>({
@@ -60,6 +67,7 @@ export const CarDetailView: React.FC = () => {
 
   const handleCheckAvailability = (e: React.FormEvent) => {
     e.preventDefault();
+    soundFX.playScan();
     if (!checkStart || !checkEnd) {
       setAvailResult({
         checked: true,
@@ -77,12 +85,14 @@ export const CarDetailView: React.FC = () => {
     );
 
     if (res.isAvailable) {
+      soundFX.playBeep(880, 0.1, 0.05);
       setAvailResult({
         checked: true,
         isAvailable: true,
         message: locale === 'ur' ? 'گاڑی ان تاریخوں کے لیے دستیاب ہے! ابھی بکنگ کی درخواست بھیجیں۔' : 'Vehicle is AVAILABLE for these dates! You can proceed to book.'
       });
     } else {
+      soundFX.playBeep(320, 0.12, 0.05);
       setAvailResult({
         checked: true,
         isAvailable: false,
@@ -386,8 +396,23 @@ export const CarDetailView: React.FC = () => {
               {/* Action Buttons */}
               <div className="space-y-2.5 pt-2">
                 <button
-                  onClick={() => navigateToBooking(vehicle.id)}
-                  className="w-full py-3.5 px-4 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-sm font-bold shadow-md shadow-slate-900/10 transition-all flex items-center justify-center gap-2 active:scale-98"
+                  type="button"
+                  onClick={() => {
+                    soundFX.playScan();
+                    setSpecsModalOpen(true);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-slate-900 to-[#0B1F3A] border border-cyan-400/40 hover:border-cyan-400 text-cyan-300 text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95"
+                >
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  <span>{locale === 'ur' ? 'گاڑی کا لائیو فئیر اور سپیکس سمولیٹر' : 'INTERACTIVE HUD & FARE ESTIMATOR'}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    soundFX.playClick();
+                    navigateToBooking(vehicle.id);
+                  }}
+                  className="w-full py-3.5 px-4 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-sm font-bold shadow-md shadow-slate-900/10 transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
                 >
                   <Car className="w-4 h-4" />
                   <span>{locale === 'ur' ? 'گاڑی بک کرنے کی درخواست بھیجیں' : 'Request Booking for this Car'}</span>
@@ -475,6 +500,14 @@ export const CarDetailView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Futuristic Specs Telemetry Modal */}
+      {specsModalOpen && (
+        <CarSpecsModal
+          vehicle={vehicle}
+          onClose={() => setSpecsModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

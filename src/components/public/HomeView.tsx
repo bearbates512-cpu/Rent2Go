@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { QuickSearchBar } from './QuickSearchBar.tsx';
 import { CarCard } from './CarCard.tsx';
+import { FuturisticShowcase } from './FuturisticShowcase.tsx';
+import { FuturisticTicker } from './FuturisticTicker.tsx';
+import { CarSpecsModal } from './CarSpecsModal.tsx';
+import { Premium3DBusinessCard } from './Premium3DBusinessCard.tsx';
+import { soundFX } from '../../utils/soundEffects.ts';
+import { Vehicle } from '../../types/index.ts';
 import {
   ShieldCheck,
   UserCheck,
@@ -14,7 +21,8 @@ import {
   ArrowLeft,
   Car,
   MessageSquare,
-  PhoneCall
+  PhoneCall,
+  Zap
 } from 'lucide-react';
 
 export const HomeView: React.FC = () => {
@@ -31,6 +39,7 @@ export const HomeView: React.FC = () => {
   } = useApp();
 
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
+  const [selectedHudCar, setSelectedHudCar] = useState<Vehicle | null>(null);
 
   const featuredCars = vehicles
     .filter(v => v.visibility === 'published' && v.isFeatured)
@@ -61,40 +70,42 @@ export const HomeView: React.FC = () => {
           const badgeText = sec.props.badgeText ? sec.props.badgeText[locale] || sec.props.badgeText.en : '';
           const primaryBtn = sec.props.primaryBtnText ? sec.props.primaryBtnText[locale] || sec.props.primaryBtnText.en : 'Explore Fleet';
           const secondaryBtn = sec.props.secondaryBtnText ? sec.props.secondaryBtnText[locale] || sec.props.secondaryBtnText.en : 'WhatsApp Us';
-          const bannerImg = sec.props.bannerImage || '/cars/civic-rs.jpg';
 
           return (
-            <section key={sec.id} className="relative bg-[#0B1F3A] text-white pt-16 pb-24 overflow-hidden">
-              {/* Clean Subtle Lighting Glows */}
-              <div className="absolute inset-0 bg-radial from-blue-900/40 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute top-0 end-0 w-96 h-96 bg-[#F5B301]/10 rounded-full blur-3xl pointer-events-none" />
+            <React.Fragment key={sec.id}>
+              <section className="relative bg-[#071324] text-white pt-10 pb-16 overflow-hidden">
+                {/* Clean Subtle Lighting Glows */}
+                <div className="absolute inset-0 bg-radial from-blue-900/30 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute top-0 end-0 w-96 h-96 bg-[#F5B301]/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                  <div className="lg:col-span-7 space-y-6 text-center lg:text-start">
-                    {badgeText && (
-                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-[#F5B301] text-xs font-bold tracking-wide">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>{badgeText}</span>
-                      </div>
-                    )}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
+                  {/* Top Intro Header */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div className="lg:col-span-8 space-y-4 text-center lg:text-start">
+                      {badgeText && (
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-[#F5B301] text-xs font-bold tracking-wide">
+                          <Zap className="w-3.5 h-3.5 text-amber-400" />
+                          <span>{badgeText}</span>
+                        </div>
+                      )}
 
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-                      {secTitle}
-                    </h1>
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
+                        {secTitle}
+                      </h1>
 
-                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0">
-                      {secSubtitle}
-                    </p>
+                      <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        {secSubtitle}
+                      </p>
+                    </div>
 
-                    {/* CTAs */}
-                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
+                    <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-center">
                       <button
                         onClick={() => {
+                          soundFX.playClick();
                           setCurrentView('cars');
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="px-6 py-3.5 rounded-xl bg-[#F5B301] hover:bg-amber-400 text-[#0B1F3A] font-extrabold text-sm shadow-lg shadow-amber-500/20 active:scale-95 transition-all flex items-center gap-2"
+                        className="w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#F5B301] to-amber-400 hover:from-amber-400 hover:to-amber-300 text-[#0B1F3A] font-black text-sm shadow-xl shadow-amber-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <Car className="w-4 h-4" />
                         <span>{primaryBtn}</span>
@@ -104,61 +115,25 @@ export const HomeView: React.FC = () => {
                         href={`https://wa.me/${settings.whatsappNumber}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-lg shadow-emerald-600/20 active:scale-95 transition-all flex items-center gap-2"
+                        onClick={() => soundFX.playClick()}
+                        className="w-full px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-xl shadow-emerald-600/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <MessageSquare className="w-4 h-4 fill-white" />
                         <span>{secondaryBtn}</span>
                       </a>
                     </div>
-
-                    {/* Trust indicators */}
-                    <div className="pt-6 border-t border-slate-700/80 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-300 font-medium">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck className="w-4 h-4 text-[#F5B301]" />
-                        <span>{locale === 'ur' ? '100% تصدیق شدہ فلیٹ' : 'Verified & Insured'}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <UserCheck className="w-4 h-4 text-[#F5B301]" />
-                        <span>{locale === 'ur' ? 'پیشہ ور بااخلاق ڈرائیورز' : 'Verified Chauffeurs'}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-[#F5B301]" />
-                        <span>{locale === 'ur' ? '24 گھنٹے روڈ سائیڈ ہیلپ' : '24/7 Road Support'}</span>
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Hero Right Visual: Car Showcase Image */}
-                  <div className="lg:col-span-5 relative">
-                    <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-700/80 group">
-                      <img
-                        src={bannerImg}
-                        alt="Rent2Go Car Rental Fleet"
-                        className="w-full h-80 lg:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/cars/civic-rs.jpg';
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-4 inset-x-4 p-4 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 flex items-center justify-between text-xs text-white">
-                        <div>
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                            Local Fleet Hub
-                          </span>
-                          <span className="font-bold text-sm text-white">
-                            Sadiqabad, Punjab (KLP Road)
-                          </span>
-                        </div>
-                        <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-[11px] flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                          Open 24/7
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                  {/* 3D Holographic Cyber Showcase with interactive tilt & vehicle selector */}
+                  <FuturisticShowcase
+                    onOpenSpecsModal={(car) => setSelectedHudCar(car)}
+                  />
                 </div>
-              </div>
-            </section>
+              </section>
+
+              {/* Real-time Cyber Telemetry Marquee */}
+              <FuturisticTicker />
+            </React.Fragment>
           );
         }
 
@@ -440,6 +415,31 @@ export const HomeView: React.FC = () => {
           const waText = sec.props.whatsappBtn ? sec.props.whatsappBtn[locale] || sec.props.whatsappBtn.en : 'Chat on WhatsApp';
 
           return (
+            <React.Fragment key={sec.id}>
+              {/* Executive 3D Business Card Showcase */}
+              <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+                <div className="bg-[#0B1523] rounded-3xl p-6 sm:p-10 border border-[#d4af68]/20 shadow-2xl relative overflow-hidden text-center">
+                  <div className="max-w-xl mx-auto space-y-2 mb-6">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d4af68]/10 border border-[#d4af68]/30 text-[#e8cb91] text-xs font-mono font-bold uppercase tracking-wider">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      {locale === 'ur' ? 'ڈائریکٹر کا مصدقہ 3D بزنس کارڈ' : 'DIRECTOR VERIFIED 3D CARD'}
+                    </span>
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-white">
+                      {locale === 'ur' ? 'ایگزیکٹو ڈائریکٹر سے براہِ راست رابطہ' : 'Direct Executive Connection'}
+                    </h2>
+                    <p className="text-slate-400 text-xs sm:text-sm">
+                      {locale === 'ur'
+                        ? 'کارڈ پر ماؤس گھمائیں اور تھری ڈی لائیو اینیمیشن کا تجربہ کریں۔ وی آئی پی پروٹوکول اور بکنگ کے لیے رابطہ کریں۔'
+                        : 'Hover and tilt the card in 3D perspective. Contact our Managing Director directly for VIP protocols & high-profile bookings.'}
+                    </p>
+                  </div>
+
+                  <Premium3DBusinessCard
+                    name="Muhammad Tariq Gondal"
+                    titleRole="MANAGING DIRECTOR & FOUNDER"
+                  />
+                </div>
+              </section>
             <section key={sec.id} className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
               <div className="bg-[#0B1F3A] rounded-3xl p-8 sm:p-12 text-center text-white space-y-5 shadow-xl relative overflow-hidden">
                 <div className="max-w-2xl mx-auto space-y-3 relative z-10">
@@ -470,11 +470,20 @@ export const HomeView: React.FC = () => {
                 </div>
               </div>
             </section>
+            </React.Fragment>
           );
         }
 
         return null;
       })}
+
+      {/* Futuristic Telemetry Specs HUD Modal */}
+      {selectedHudCar && (
+        <CarSpecsModal
+          vehicle={selectedHudCar}
+          onClose={() => setSelectedHudCar(null)}
+        />
+      )}
     </div>
   );
 };
