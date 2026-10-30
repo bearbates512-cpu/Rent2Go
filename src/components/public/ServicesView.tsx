@@ -20,17 +20,17 @@ export const ServicesView: React.FC = () => {
   const ArrowIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen py-12">
+    <div className="bg-[#F8FAFC] dark:bg-[#060D17] min-h-screen py-12 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+          <span className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-500/20">
             {locale === 'ur' ? 'ہماری خصوصی سہولیات' : 'Tailored Travel Solutions'}
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B1F3A] mt-2">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
             {locale === 'ur' ? 'رینٹ ٹو گو کی پیشہ ورانہ رینٹل سروسز' : 'Our Car Rental Services in Sadiqabad'}
           </h1>
-          <p className="text-slate-500 text-sm mt-2 leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed">
             {locale === 'ur'
               ? 'ہم صادق آباد اور ملحقہ اضلاع میں ہر قسم کے نجی، خاندانی، کاروباری اور تقریبات کے سفر کے لیے اعلیٰ معیار کی گاڑیاں مہیا کرتے ہیں۔'
               : 'Whether you need a luxury chauffeur car for a wedding, reliable airport pickup, or a month-long corporate contract, we deliver perfection.'}
@@ -49,7 +49,7 @@ export const ServicesView: React.FC = () => {
               return (
                 <div
                   key={service.id}
-                  className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group"
+                  className="bg-white dark:bg-[#0B1523] rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group"
                 >
                   <div className="relative aspect-16/10 bg-slate-900 overflow-hidden">
                     <img
@@ -67,22 +67,22 @@ export const ServicesView: React.FC = () => {
 
                   <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div>
-                      <h3 className="text-lg font-bold text-[#0B1F3A] group-hover:text-amber-600 transition-colors">
+                      <h3 className="text-lg font-bold text-[#0B1F3A] dark:text-white group-hover:text-amber-500 transition-colors">
                         {name}
                       </h3>
-                      <p className="text-xs text-slate-500 mt-2 leading-relaxed line-clamp-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed line-clamp-3">
                         {desc}
                       </p>
 
                       {/* Inclusions */}
                       {service.inclusions && service.inclusions.length > 0 && (
-                        <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 space-y-1.5">
+                          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                             {locale === 'ur' ? 'شامل سہولیات' : 'Service Inclusions'}
                           </span>
                           {service.inclusions.map((inc, i) => (
-                            <div key={i} className="flex items-center gap-1.5 text-xs text-slate-700">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <div key={i} className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                               <span>{inc[locale] || inc.en}</span>
                             </div>
                           ))}
@@ -93,7 +93,7 @@ export const ServicesView: React.FC = () => {
                     <div className="pt-2">
                       <button
                         onClick={() => navigateToBooking()}
-                        className="w-full py-2.5 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                        className="w-full py-2.5 rounded-xl bg-[#0B1F3A] dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300 hover:bg-[#142F57] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                       >
                         <span>{locale === 'ur' ? 'یہ سروس بک کریں' : 'Book this Service'}</span>
                         <ArrowIcon className="w-3.5 h-3.5" />
@@ -106,11 +106,11 @@ export const ServicesView: React.FC = () => {
         </div>
 
         {/* Custom inquiry CTA */}
-        <div className="bg-[#0B1F3A] rounded-3xl p-8 sm:p-12 text-white text-center space-y-4 shadow-xl">
-          <h2 className="text-2xl sm:text-3xl font-extrabold">
+        <div className="bg-[#0B1F3A] dark:bg-[#0B1523] border border-transparent dark:border-slate-800 rounded-3xl p-8 sm:p-12 text-white text-center space-y-4 shadow-xl">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
             {locale === 'ur' ? 'کیا آپ کو مخصوص روٹ یا طویل مدتی کرایہ درکار ہے؟' : 'Need a Custom Route or Long-term Fleet?'}
           </h2>
-          <p className="text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-300 dark:text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">
             {locale === 'ur'
               ? 'ہم کمپنیوں، ملز اور فیکٹریوں کے لیے خصوصی رعایت کے ساتھ ماہانہ پیکیجز بھی بناتے ہیں۔'
               : 'Contact our Sadiqabad operations manager directly to discuss customized corporate or wedding convoy tariffs.'}
@@ -120,13 +120,13 @@ export const ServicesView: React.FC = () => {
               href={`https://wa.me/${settings.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold transition-all flex items-center gap-2"
+              className="px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shadow-md"
             >
               <span>{locale === 'ur' ? 'واٹس ایپ پر کوٹیشن لیں' : 'Get Custom Quote on WhatsApp'}</span>
             </a>
             <a
               href={`tel:${settings.phone}`}
-              className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-2 border border-white/20"
+              className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-2 border border-white/20 cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
               <span>{settings.phoneFormatted}</span>

@@ -60,7 +60,7 @@ export const HomeView: React.FC = () => {
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <div className="bg-[#F8FAFC]">
+    <div className="bg-[#F8FAFC] dark:bg-[#060D17] text-[#0B1F3A] dark:text-slate-100 transition-colors duration-250">
       {sortedSections.map(sec => {
         const secTitle = sec.title[locale] || sec.title.en;
         const secSubtitle = sec.subtitle ? sec.subtitle[locale] || sec.subtitle.en : '';
@@ -152,13 +152,13 @@ export const HomeView: React.FC = () => {
             <section key={sec.id} className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                 <div>
-                  <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
                     {locale === 'ur' ? 'بہترین انتخاب' : 'Top Recommendations'}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] mt-2">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
                     {secTitle}
                   </h2>
-                  {secSubtitle && <p className="text-slate-500 text-sm mt-1">{secSubtitle}</p>}
+                  {secSubtitle && <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{secSubtitle}</p>}
                 </div>
 
                 <button
@@ -166,7 +166,7 @@ export const HomeView: React.FC = () => {
                     setCurrentView('cars');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0B1F3A] hover:text-amber-600 transition-colors group self-start sm:self-auto"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0B1F3A] dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 transition-colors group self-start sm:self-auto cursor-pointer"
                 >
                   <span>{locale === 'ur' ? 'تمام گاڑیاں دیکھیں' : 'View All Fleet'}</span>
                   <ArrowIcon className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -185,23 +185,23 @@ export const HomeView: React.FC = () => {
         // 4. SERVICES LIST
         if (sec.blockType === 'services_list') {
           return (
-            <section key={sec.id} className="py-16 bg-white border-y border-slate-200/80">
+            <section key={sec.id} className="py-16 bg-white dark:bg-[#081220] border-y border-slate-200/80 dark:border-slate-800 transition-colors">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-2xl mx-auto mb-12">
-                  <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
                     {locale === 'ur' ? 'ہماری سہولیات' : 'What We Offer'}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] mt-2">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
                     {secTitle}
                   </h2>
-                  {secSubtitle && <p className="text-slate-500 text-sm mt-1">{secSubtitle}</p>}
+                  {secSubtitle && <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{secSubtitle}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {services.slice(0, 3).map(srv => (
                     <div
                       key={srv.id}
-                      className="rounded-3xl border border-slate-200 p-6 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                      className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B1523] p-6 hover:shadow-md dark:hover:border-slate-700 transition-all flex flex-col justify-between space-y-4"
                     >
                       <div className="space-y-3">
                         <img
@@ -209,17 +209,17 @@ export const HomeView: React.FC = () => {
                           alt={srv.name.en}
                           className="w-full h-44 rounded-2xl object-cover"
                         />
-                        <h3 className="font-bold text-base text-[#0B1F3A]">
+                        <h3 className="font-bold text-base text-[#0B1F3A] dark:text-white">
                           {srv.name[locale] || srv.name.en}
                         </h3>
-                        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
                           {srv.shortDesc[locale] || srv.shortDesc.en}
                         </p>
                       </div>
 
                       <button
                         onClick={() => navigateToBooking()}
-                        className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-[#0B1F3A] hover:text-white text-slate-800 text-xs font-bold transition-all text-center"
+                        className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-[#0B1F3A] dark:hover:bg-[#F5B301] hover:text-white dark:hover:text-[#0B1F3A] text-slate-800 dark:text-slate-200 text-xs font-bold transition-all text-center cursor-pointer"
                       >
                         {locale === 'ur' ? 'سروس حاصل کریں' : 'Book this Service'}
                       </button>
@@ -237,13 +237,13 @@ export const HomeView: React.FC = () => {
           return (
             <section key={sec.id} className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
               <div className="text-center max-w-2xl mx-auto mb-12">
-                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
                   {locale === 'ur' ? 'ہمارا امتیازی معیار' : 'Customer First'}
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] mt-2">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
                   {secTitle}
                 </h2>
-                {secSubtitle && <p className="text-slate-500 text-sm mt-1">{secSubtitle}</p>}
+                {secSubtitle && <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{secSubtitle}</p>}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -254,13 +254,13 @@ export const HomeView: React.FC = () => {
                   return (
                     <div
                       key={i}
-                      className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all space-y-3"
+                      className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3"
                     >
-                      <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-transparent dark:border-slate-800 flex items-center justify-center">
                         {iconMap[pt.icon] || <ShieldCheck className="w-6 h-6 text-blue-600" />}
                       </div>
-                      <h3 className="font-bold text-sm text-[#0B1F3A]">{pTitle}</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">{pDesc}</p>
+                      <h3 className="font-bold text-sm text-[#0B1F3A] dark:text-white">{pTitle}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{pDesc}</p>
                     </div>
                   );
                 })}
@@ -317,10 +317,10 @@ export const HomeView: React.FC = () => {
           return (
             <section key={sec.id} className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
               <div className="text-center max-w-2xl mx-auto mb-12">
-                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
                   {locale === 'ur' ? 'صداقت اور اعتماد' : 'Genuine Feedback'}
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] mt-2">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
                   {secTitle}
                 </h2>
               </div>
@@ -329,7 +329,7 @@ export const HomeView: React.FC = () => {
                 {approvedReviews.map(rev => (
                   <div
                     key={rev.id}
-                    className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-4"
+                    className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center gap-1 text-amber-400">
@@ -337,17 +337,17 @@ export const HomeView: React.FC = () => {
                           <Star key={idx} className="w-4 h-4 fill-amber-400" />
                         ))}
                       </div>
-                      <p className="text-xs text-slate-600 italic leading-relaxed">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed">
                         "{rev.comment[locale] || rev.comment.en}"
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                       <div>
-                        <span className="font-bold text-slate-800 block">{rev.name}</span>
+                        <span className="font-bold text-slate-800 dark:text-white block">{rev.name}</span>
                         <span className="text-slate-400 text-[11px] block">{rev.trip[locale] || rev.trip.en}</span>
                       </div>
-                      <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md border border-transparent dark:border-emerald-500/20">
                         {rev.source}
                       </span>
                     </div>
@@ -362,13 +362,13 @@ export const HomeView: React.FC = () => {
         if (sec.blockType === 'faq') {
           const faqItems = sec.props.items || [];
           return (
-            <section key={sec.id} className="py-16 bg-slate-50 border-t border-slate-200/80">
+            <section key={sec.id} className="py-16 bg-slate-50 dark:bg-[#081220] border-t border-slate-200/80 dark:border-slate-800 transition-colors">
               <div className="max-w-3xl mx-auto px-4 sm:px-6">
                 <div className="text-center mb-10">
-                  <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
                     {locale === 'ur' ? 'سوال و جواب' : 'Got Questions?'}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] mt-2">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
                     {secTitle}
                   </h2>
                 </div>
@@ -382,21 +382,21 @@ export const HomeView: React.FC = () => {
                     return (
                       <div
                         key={idx}
-                        className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-2xs"
+                        className="bg-white dark:bg-[#0B1523] rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-2xs"
                       >
                         <button
                           onClick={() => setActiveFaqIndex(isOpen ? null : idx)}
-                          className="w-full text-start p-4 sm:p-5 flex items-center justify-between gap-3 text-sm font-bold text-[#0B1F3A] hover:bg-slate-50/50"
+                          className="w-full text-start p-4 sm:p-5 flex items-center justify-between gap-3 text-sm font-bold text-[#0B1F3A] dark:text-white hover:bg-slate-50/50 dark:hover:bg-slate-800/40 cursor-pointer"
                         >
                           <span>{q}</span>
                           <ChevronDown
                             className={`w-4 h-4 text-slate-400 transition-transform ${
-                              isOpen ? 'rotate-180 text-[#0B1F3A]' : ''
+                              isOpen ? 'rotate-180 text-[#0B1F3A] dark:text-amber-400' : ''
                             }`}
                           />
                         </button>
                         {isOpen && (
-                          <div className="px-4 pb-5 sm:px-5 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                          <div className="px-4 pb-5 sm:px-5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-3">
                             {a}
                           </div>
                         )}

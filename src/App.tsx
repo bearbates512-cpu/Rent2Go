@@ -164,7 +164,7 @@ function MainAppContent() {
 
   // Public Experience Views
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#060D17] text-slate-900 dark:text-slate-100 transition-colors duration-250">
       <AnnouncementBar />
       <Header />
 

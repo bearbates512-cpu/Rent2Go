@@ -113,13 +113,13 @@ export const CarDetailView: React.FC = () => {
   const allPhotos = [vehicle.coverImage, ...(vehicle.galleryImages || [])];
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen py-8 pb-24 md:pb-16">
+    <div className="bg-[#F8FAFC] dark:bg-[#060D17] text-slate-800 dark:text-slate-100 min-h-screen py-8 pb-24 md:pb-16 transition-colors duration-250">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb & Back */}
-        <div className="flex items-center gap-2 mb-6 text-sm text-slate-500">
+        <div className="flex items-center gap-2 mb-6 text-sm text-slate-500 dark:text-slate-400">
           <button
             onClick={() => setCurrentView('cars')}
-            className="flex items-center gap-1 font-semibold text-[#0B1F3A] hover:underline"
+            className="flex items-center gap-1 font-semibold text-[#0B1F3A] dark:text-amber-400 hover:underline cursor-pointer"
           >
             <ArrowBack className="w-4 h-4" />
             <span>{locale === 'ur' ? 'گاڑیوں کی فہرست' : 'Back to Fleet'}</span>
@@ -127,7 +127,7 @@ export const CarDetailView: React.FC = () => {
           <span>/</span>
           <span className="text-slate-400 capitalize">{vehicle.category}</span>
           <span>/</span>
-          <span className="text-slate-800 font-bold truncate">{title}</span>
+          <span className="text-slate-800 dark:text-white font-bold truncate">{title}</span>
         </div>
 
         {/* Main Grid */}
@@ -135,7 +135,7 @@ export const CarDetailView: React.FC = () => {
           {/* Left Column: Photos Gallery & Overview (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
             {/* Main Stage Image */}
-            <div className="bg-white rounded-3xl p-2 border border-slate-200/90 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-2 border border-slate-200/90 dark:border-slate-800 shadow-sm overflow-hidden">
               <div className="relative aspect-16/10 rounded-2xl overflow-hidden bg-slate-900">
                 <img
                   src={activePhoto || vehicle.coverImage}
@@ -164,7 +164,7 @@ export const CarDetailView: React.FC = () => {
                       onClick={() => setActivePhoto(img)}
                       className={`relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
                         (activePhoto || vehicle.coverImage) === img
-                          ? 'border-[#0B1F3A] scale-105 shadow-sm'
+                          ? 'border-[#0B1F3A] dark:border-amber-400 scale-105 shadow-sm'
                           : 'border-transparent opacity-70 hover:opacity-100'
                       }`}
                     >
@@ -183,26 +183,26 @@ export const CarDetailView: React.FC = () => {
             </div>
 
             {/* Description Card */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
-              <h2 className="text-lg font-bold text-[#0B1F3A]">
+            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+              <h2 className="text-lg font-bold text-[#0B1F3A] dark:text-white">
                 {locale === 'ur' ? 'گاڑی کا تفصیلی جائزہ' : 'Vehicle Overview'}
               </h2>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                 {description}
               </p>
 
               {/* Features Chips */}
               <div className="pt-2">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
                   {locale === 'ur' ? 'نمایاں خصوصیات' : 'Key Specifications & Features'}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {vehicle.features.map((feat, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span>{feat}</span>
                     </span>
                   ))}
@@ -211,17 +211,17 @@ export const CarDetailView: React.FC = () => {
             </div>
 
             {/* Inclusions & Policies */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
-              <h2 className="text-lg font-bold text-[#0B1F3A]">
+            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+              <h2 className="text-lg font-bold text-[#0B1F3A] dark:text-white">
                 {locale === 'ur' ? 'کرایہ میں کیا شامل ہے؟' : 'Tariff Inclusions & Exclusions'}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-2">
-                  <span className="font-bold text-emerald-800 flex items-center gap-1.5 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/40 space-y-2">
+                  <span className="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5 text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>{locale === 'ur' ? 'شامل سہولیات' : 'Included in Base Rent'}</span>
                   </span>
-                  <ul className="space-y-1.5 text-slate-600 ps-5 list-disc">
+                  <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 ps-5 list-disc">
                     <li>{locale === 'ur' ? 'گاڑی کی فل مکینیکل فٹنس اور صفائی' : 'Full mechanical inspection & sanitised vehicle'}</li>
                     <li>{locale === 'ur' ? 'صادق آباد بائی پاس پر 24 گھنٹے روڈ سائیڈ ہیلپ' : '24/7 Roadside breakdown assistance in Punjab'}</li>
                     <li>{locale === 'ur' ? 'ٹریکر اور جی پی ایس سیفٹی مانیٹرنگ' : 'Live tracker & speed monitoring'}</li>
@@ -231,12 +231,12 @@ export const CarDetailView: React.FC = () => {
                   </ul>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-100 space-y-2">
-                  <span className="font-bold text-amber-800 flex items-center gap-1.5 text-sm">
-                    <Info className="w-4 h-4 text-amber-600" />
+                <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/40 space-y-2">
+                  <span className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5 text-sm">
+                    <Info className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                     <span>{locale === 'ur' ? 'اضافی اخراجات (کسٹمر کے ذمے)' : 'Excluded (Customer Responsibility)'}</span>
                   </span>
-                  <ul className="space-y-1.5 text-slate-600 ps-5 list-disc">
+                  <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 ps-5 list-disc">
                     <li>{locale === 'ur' ? 'پیٹرول / ڈیزل (جتنے ایندھن پر گاڑی دی جائے گی اتنے پر واپسی)' : 'Fuel costs (tank-to-tank policy)'}</li>
                     <li>{locale === 'ur' ? 'موٹروے ایم 5 اور ہائی وے ٹول ٹیکس' : 'Motorway tolls & city parking fees'}</li>
                     <li>{locale === 'ur' ? 'اگر گاڑی صادق آباد سے باہر رات رکے تو ڈرائیور الاؤنس' : 'Driver night allowance (Rs. 1,000/night if outside Sadiqabad)'}</li>
@@ -249,22 +249,22 @@ export const CarDetailView: React.FC = () => {
           {/* Right Column: Pricing & Availability Checker & Booking CTA (5 cols) */}
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
             {/* Pricing Box */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-5">
-              <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-5">
+              <div className="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div>
-                  <span className="text-xs text-slate-500 block mb-0.5">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 block mb-0.5">
                     {locale === 'ur' ? 'یومیہ کرایہ کا تخمینہ' : 'Daily Tariff (Base Rate)'}
                   </span>
                   {vehicle.dailyRatePKR ? (
                     <div className="flex items-baseline gap-1.5">
-                      <span className="text-sm font-bold text-slate-700">PKR</span>
-                      <span className="text-3xl font-black text-[#0B1F3A] font-mono">
+                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300">PKR</span>
+                      <span className="text-3xl font-black text-[#0B1F3A] dark:text-white font-mono">
                         {vehicle.dailyRatePKR.toLocaleString()}
                       </span>
-                      <span className="text-xs text-slate-500">/{locale === 'ur' ? 'دن' : 'day'}</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">/{locale === 'ur' ? 'دن' : 'day'}</span>
                     </div>
                   ) : (
-                    <span className="text-lg font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-lg inline-block">
+                    <span className="text-lg font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-lg inline-block">
                       {locale === 'ur' ? 'خصوصی کوٹیشن کے لیے رابطہ کریں' : 'Custom Quote on Request'}
                     </span>
                   )}
@@ -272,7 +272,7 @@ export const CarDetailView: React.FC = () => {
 
                 <div className="text-end">
                   <span className="text-[11px] text-slate-400 block">{locale === 'ur' ? 'اسٹاک کوڈ' : 'Stock Code'}</span>
-                  <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                  <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
                     {vehicle.stockCode}
                   </span>
                 </div>
@@ -280,88 +280,88 @@ export const CarDetailView: React.FC = () => {
 
               {/* Specs Table */}
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <Users className="w-4 h-4 text-slate-600 shrink-0" />
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <Users className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'نشستیں' : 'Seating'}</span>
-                    <span className="font-bold text-slate-800">{vehicle.seats} {locale === 'ur' ? 'افراد' : 'Passengers'}</span>
+                    <span className="font-bold text-slate-800 dark:text-white">{vehicle.seats} {locale === 'ur' ? 'افراد' : 'Passengers'}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <Gauge className="w-4 h-4 text-slate-600 shrink-0" />
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <Gauge className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'ٹرانسمیشن' : 'Gearbox'}</span>
-                    <span className="font-bold text-slate-800 capitalize">{vehicle.transmission}</span>
+                    <span className="font-bold text-slate-800 dark:text-white capitalize">{vehicle.transmission}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <Snowflake className="w-4 h-4 text-blue-500 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'ایئر کنڈیشنر' : 'Air Con'}</span>
-                    <span className="font-bold text-slate-800">{vehicle.hasAC ? 'Dual Chilled AC' : 'None'}</span>
+                    <span className="font-bold text-slate-800 dark:text-white">{vehicle.hasAC ? 'Dual Chilled AC' : 'None'}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <Fuel className="w-4 h-4 text-slate-600 shrink-0" />
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <Fuel className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'ایندھن' : 'Fuel'}</span>
-                    <span className="font-bold text-slate-800 capitalize">{vehicle.fuelType}</span>
+                    <span className="font-bold text-slate-800 dark:text-white capitalize">{vehicle.fuelType}</span>
                   </div>
                 </div>
               </div>
 
               {/* Custom specs */}
               {vehicle.customFields && Object.keys(vehicle.customFields).length > 0 && (
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5 text-xs">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 space-y-1.5 text-xs">
                   {vehicle.customFields.mileageLimitPerDay && (
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-slate-600 dark:text-slate-300">
                       <span>{locale === 'ur' ? 'روزانہ مائلیج لمٹ' : 'Daily Mileage Limit'}:</span>
-                      <span className="font-bold text-slate-800">{vehicle.customFields.mileageLimitPerDay}</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{vehicle.customFields.mileageLimitPerDay}</span>
                     </div>
                   )}
                   {vehicle.customFields.extraKmRate && (
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-slate-600 dark:text-slate-300">
                       <span>{locale === 'ur' ? 'اضافی کلومیٹر ریٹ' : 'Extra KM Rate'}:</span>
-                      <span className="font-bold text-slate-800">Rs. {vehicle.customFields.extraKmRate} / KM</span>
+                      <span className="font-bold text-slate-800 dark:text-white">Rs. {vehicle.customFields.extraKmRate} / KM</span>
                     </div>
                   )}
                   {vehicle.customFields.securityDeposit ? (
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-slate-600 dark:text-slate-300">
                       <span>{locale === 'ur' ? 'سیکیورٹی ڈپازٹ (سیلف ڈرائیو)' : 'Security Deposit (Self-Drive)'}:</span>
-                      <span className="font-bold text-slate-800 font-mono">Rs. {vehicle.customFields.securityDeposit.toLocaleString()}</span>
+                      <span className="font-bold text-slate-800 dark:text-white font-mono">Rs. {vehicle.customFields.securityDeposit.toLocaleString()}</span>
                     </div>
                   ) : null}
                 </div>
               )}
 
               {/* Live Availability Checker Box */}
-              <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#0B1F3A]">
-                  <Calendar className="w-4 h-4 text-blue-600" />
+              <div className="p-4 rounded-2xl bg-blue-50/50 dark:bg-slate-900/80 border border-blue-100 dark:border-slate-800 space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#0B1F3A] dark:text-white">
+                  <Calendar className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
                   <span>{locale === 'ur' ? 'دستیابی چیک کریں (لائیو)' : 'Live Availability Checker'}</span>
                 </div>
 
                 <form onSubmit={handleCheckAvailability} className="space-y-2.5">
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <span className="text-[10px] text-slate-500 block mb-0.5">{locale === 'ur' ? 'شروع' : 'From'}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5">{locale === 'ur' ? 'شروع' : 'From'}</span>
                       <input
                         type="date"
                         value={checkStart}
                         min={new Date().toISOString().split('T')[0]}
                         onChange={e => setCheckStart(e.target.value)}
-                        className="w-full text-xs p-2 rounded-lg border border-slate-200 bg-white"
+                        className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-800 dark:text-white"
                         required
                       />
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-500 block mb-0.5">{locale === 'ur' ? 'واپسی' : 'Until'}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-0.5">{locale === 'ur' ? 'واپسی' : 'Until'}</span>
                       <input
                         type="date"
                         value={checkEnd}
                         min={checkStart || new Date().toISOString().split('T')[0]}
                         onChange={e => setCheckEnd(e.target.value)}
-                        className="w-full text-xs p-2 rounded-lg border border-slate-200 bg-white"
+                        className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-800 dark:text-white"
                         required
                       />
                     </div>
@@ -369,7 +369,7 @@ export const CarDetailView: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors"
+                    className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-cyan-600 dark:hover:bg-cyan-500 text-white text-xs font-bold transition-colors cursor-pointer"
                   >
                     {locale === 'ur' ? 'دستیابی معلوم کریں' : 'Check Dates'}
                   </button>
@@ -379,14 +379,14 @@ export const CarDetailView: React.FC = () => {
                   <div
                     className={`p-2.5 rounded-xl text-xs flex items-start gap-2 ${
                       availResult.isAvailable
-                        ? 'bg-emerald-100/70 text-emerald-900 border border-emerald-200'
-                        : 'bg-rose-100/70 text-rose-900 border border-rose-200'
+                        ? 'bg-emerald-100/70 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                        : 'bg-rose-100/70 dark:bg-rose-950/40 text-rose-900 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
                     }`}
                   >
                     {availResult.isAvailable ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                      <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                     )}
                     <span className="font-medium leading-tight">{availResult.message}</span>
                   </div>
@@ -412,7 +412,7 @@ export const CarDetailView: React.FC = () => {
                     soundFX.playClick();
                     navigateToBooking(vehicle.id);
                   }}
-                  className="w-full py-3.5 px-4 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-sm font-bold shadow-md shadow-slate-900/10 transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+                  className="w-full py-3.5 px-4 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] dark:bg-[#F5B301] dark:hover:bg-amber-400 text-[#F5B301] hover:text-white dark:text-[#0B1F3A] dark:hover:text-[#0B1F3A] text-sm font-bold shadow-md shadow-slate-900/10 transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
                 >
                   <Car className="w-4 h-4" />
                   <span>{locale === 'ur' ? 'گاڑی بک کرنے کی درخواست بھیجیں' : 'Request Booking for this Car'}</span>
@@ -422,7 +422,7 @@ export const CarDetailView: React.FC = () => {
                   href={`https://wa.me/${settings.whatsappNumber}?text=${prefilledWA}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white text-sm font-bold transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <MessageSquare className="w-4 h-4 fill-white" />
                   <span>{locale === 'ur' ? 'واٹس ایپ پر فوری رابطہ کریں' : 'Instant WhatsApp Inquiry'}</span>
@@ -430,9 +430,9 @@ export const CarDetailView: React.FC = () => {
 
                 <a
                   href={`tel:${settings.phone}`}
-                  className="w-full py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-2 text-center"
+                  className="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all flex items-center justify-center gap-2 text-center"
                 >
-                  <Phone className="w-3.5 h-3.5 text-slate-500" />
+                  <Phone className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   <span>{locale === 'ur' ? 'فون پر بات کریں' : 'Call Booking Desk'}: {settings.phoneFormatted}</span>
                 </a>
               </div>
@@ -442,8 +442,8 @@ export const CarDetailView: React.FC = () => {
 
         {/* Similar Cars Section */}
         {similarCars.length > 0 && (
-          <div className="border-t border-slate-200 pt-10">
-            <h3 className="text-xl font-bold text-[#0B1F3A] mb-6">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-10">
+            <h3 className="text-xl font-bold text-[#0B1F3A] dark:text-white mb-6">
               {locale === 'ur' ? 'اسی کیٹیگری کی دیگر گاڑیاں' : 'Similar Vehicles You May Like'}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -60,6 +60,9 @@ interface AppContextType {
   setFilterCategory: (c: string | null) => void;
   searchDates: { pickup: string; returnDate: string; service: string };
   setSearchDates: (d: { pickup: string; returnDate: string; service: string }) => void;
+  themeMode: 'light' | 'dark';
+  setThemeMode: (mode: 'light' | 'dark') => void;
+  toggleThemeMode: () => void;
   // Actions
   createBookingRequest: (bookingData: Partial<Booking>) => { success: boolean; booking?: Booking; error?: string };
   updateBookingStatus: (
@@ -123,6 +126,41 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [announcementDismissed, setAnnouncementDismissed] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [searchDates, setSearchDates] = useState({ pickup: '', returnDate: '', service: '' });
+  const [themeMode, setThemeModeState] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}themeMode`);
+    if (saved === 'dark' || saved === 'light') return saved;
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  });
+
+  const setThemeMode = (mode: 'light' | 'dark') => {
+    setThemeModeState(mode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}themeMode`, mode);
+    }
+  };
+
+  const toggleThemeMode = () => {
+    const next = themeMode === 'dark' ? 'light' : 'dark';
+    setThemeMode(next);
+  };
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    if (themeMode === 'dark') {
+      root.classList.add('dark');
+      root.setAttribute('data-theme', 'dark');
+      document.body.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
+      document.body.classList.remove('dark');
+    }
+  }, [themeMode]);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
     if (typeof window === 'undefined') return null;
     const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}adminUser`);
@@ -911,6 +949,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setFilterCategory,
         searchDates,
         setSearchDates,
+        themeMode,
+        setThemeMode,
+        toggleThemeMode,
         createBookingRequest,
         updateBookingStatus,
         updateBookingPayment,

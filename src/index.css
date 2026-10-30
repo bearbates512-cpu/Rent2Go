@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: 'Noto Nastaliq Urdu';
   font-style: normal;
@@ -22,16 +24,38 @@
     --color-primary-hover: #142F57;
     --color-accent: #F5B301;
     --color-accent-text: #0B1F3A;
-    --color-bg: #FFFFFF;
-    --color-surface: #F5F7FA;
-    --color-border: #E3E8EF;
-    --color-text: #122033;
-    --color-text-muted: #5B6B80;
+    --color-bg: #F8FAFC;
+    --color-card: #FFFFFF;
+    --color-surface: #F1F5F9;
+    --color-border: #E2E8F0;
+    --color-border-strong: #CBD5E1;
+    --color-text: #0F172A;
+    --color-text-muted: #64748B;
+    --color-text-dim: #94A3B8;
+    --color-line-bar: #E2E8F0;
+    --color-line-gold: #F5B301;
     --color-success: #1E8E5A;
     --color-warning: #B7791F;
     --color-danger: #C53030;
     --color-whatsapp: #25D366;
     --radius: 0.75rem;
+  }
+
+  .dark {
+    --color-primary: #1E293B;
+    --color-primary-hover: #334155;
+    --color-accent: #F5B301;
+    --color-accent-text: #0B1F3A;
+    --color-bg: #060D17;
+    --color-card: #0B1523;
+    --color-surface: #101F33;
+    --color-border: #1E2E44;
+    --color-border-strong: #2E4461;
+    --color-text: #F8FAFC;
+    --color-text-muted: #94A3B8;
+    --color-text-dim: #64748B;
+    --color-line-bar: #1E2E44;
+    --color-line-gold: #D4AF68;
   }
 
   [dir="rtl"] {
@@ -52,6 +76,20 @@
   font-family: 'Noto Naskh Arabic', 'Segoe UI', Tahoma, sans-serif;
 }
 
+/* Distinctive visible line bars & dividers for both Day & Night modes */
+.line-divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-border);
+  transition: background-color 0.25s ease;
+}
+
+.line-divider-gold {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+}
+
 /* Custom scrollbars for admin tables and previews */
 ::-webkit-scrollbar {
   width: 6px;
@@ -60,10 +98,19 @@
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
+.dark ::-webkit-scrollbar-track {
+  background: #0b1523;
+}
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e2e44;
+}
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334e6f;
 }

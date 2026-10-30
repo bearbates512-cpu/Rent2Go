@@ -27,14 +27,14 @@ export const QuickSearchBar: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="bg-white/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 shadow-2xl shadow-slate-900/10 border border-slate-200/90 -mt-10 relative z-30 max-w-5xl mx-auto"
+      className="bg-white/95 dark:bg-[#0B1523]/95 backdrop-blur-xl rounded-3xl p-5 sm:p-7 shadow-2xl shadow-slate-900/10 dark:shadow-black/50 border border-slate-200/90 dark:border-slate-800 -mt-10 relative z-30 max-w-5xl mx-auto transition-colors duration-250"
     >
-      <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100 text-xs">
-        <div className="flex items-center gap-2 font-mono font-bold text-[#0B1F3A]">
+      <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-2 font-mono font-bold text-[#0B1F3A] dark:text-white">
           <Sparkles className="w-4 h-4 text-amber-500" />
           <span>{locale === 'ur' ? 'گاڑی کی فوری دستیابی تلاش کریں' : 'QUICK RADAR FLEET SEARCH'}</span>
         </div>
-        <span className="text-[11px] font-mono text-slate-500 hidden sm:inline">
+        <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
           Sadiqabad & M-5 Motorway Corridor
         </span>
       </div>
@@ -42,7 +42,7 @@ export const QuickSearchBar: React.FC = () => {
       <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
         {/* Category */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-mono">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-mono">
             <Car className="w-3.5 h-3.5 text-amber-500" />
             <span>{locale === 'ur' ? 'گاڑی کی قسم' : 'Vehicle Class'}</span>
           </label>
@@ -51,21 +51,21 @@ export const QuickSearchBar: React.FC = () => {
               soundFX.playClick();
               setFilterCategory(e.target.value || null);
             }}
-            className="w-full px-3.5 py-3 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-800 bg-slate-50 hover:bg-white focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer"
+            className="w-full px-3.5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800/80 focus:bg-white dark:focus:bg-slate-900 focus:outline-hidden focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer"
           >
-            <option value="">{locale === 'ur' ? 'تمام کیٹیگریز (سیڈان، ایس یو وی وغیرہ)' : 'All Categories (Sedan, SUV, etc.)'}</option>
-            <option value="sedan">{locale === 'ur' ? 'سیڈان (کرولا، سیوک، یارس)' : 'Sedan (Corolla, Civic, Yaris)'}</option>
-            <option value="suv">{locale === 'ur' ? 'ایس یو وی 4x4 (فارچونر، پراڈو)' : 'SUV 4x4 (Fortuner, Prado)'}</option>
-            <option value="hatchback">{locale === 'ur' ? 'ہیچ بیک (آلٹو، کلٹس)' : 'Hatchback (Alto, Cultus)'}</option>
-            <option value="van">{locale === 'ur' ? 'ہائی ایس 14 سیٹر گرینڈ کیبن' : 'Grand Cabin Van (14 Seater)'}</option>
-            <option value="luxury">{locale === 'ur' ? 'وی آئی پی لگژری (پراڈو ٹی ایکس)' : 'VIP Luxury (Prado TX)'}</option>
+            <option value="" className="dark:bg-slate-900">{locale === 'ur' ? 'تمام کیٹیگریز (سیڈان، ایس یو وی وغیرہ)' : 'All Categories (Sedan, SUV, etc.)'}</option>
+            <option value="sedan" className="dark:bg-slate-900">{locale === 'ur' ? 'سیڈان (کرولا، سیوک، یارس)' : 'Sedan (Corolla, Civic, Yaris)'}</option>
+            <option value="suv" className="dark:bg-slate-900">{locale === 'ur' ? 'ایس یو وی 4x4 (فارچونر، پراڈو)' : 'SUV 4x4 (Fortuner, Prado)'}</option>
+            <option value="hatchback" className="dark:bg-slate-900">{locale === 'ur' ? 'ہیچ بیک (آلٹو، کلٹس)' : 'Hatchback (Alto, Cultus)'}</option>
+            <option value="van" className="dark:bg-slate-900">{locale === 'ur' ? 'ہائی ایس 14 سیٹر گرینڈ کیبن' : 'Grand Cabin Van (14 Seater)'}</option>
+            <option value="luxury" className="dark:bg-slate-900">{locale === 'ur' ? 'وی آئی پی لگژری (پراڈو ٹی ایکس)' : 'VIP Luxury (Prado TX)'}</option>
           </select>
         </div>
 
         {/* Pickup Date */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-mono">
-            <Calendar className="w-3.5 h-3.5 text-cyan-600" />
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-mono">
+            <Calendar className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>{locale === 'ur' ? 'پک اپ تاریخ' : 'Pickup Date'}</span>
           </label>
           <input
@@ -73,14 +73,14 @@ export const QuickSearchBar: React.FC = () => {
             min={today}
             value={searchDates.pickup}
             onChange={e => setSearchDates({ ...searchDates, pickup: e.target.value })}
-            className="w-full px-3.5 py-3 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-800 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-amber-400 transition-all font-mono"
+            className="w-full px-3.5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-900 focus:outline-hidden focus:ring-2 focus:ring-amber-400 transition-all font-mono"
           />
         </div>
 
         {/* Return Date */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-mono">
-            <Calendar className="w-3.5 h-3.5 text-cyan-600" />
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-mono">
+            <Calendar className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>{locale === 'ur' ? 'واپسی تاریخ' : 'Return Date'}</span>
           </label>
           <input
@@ -88,7 +88,7 @@ export const QuickSearchBar: React.FC = () => {
             min={searchDates.pickup || today}
             value={searchDates.returnDate}
             onChange={e => setSearchDates({ ...searchDates, returnDate: e.target.value })}
-            className="w-full px-3.5 py-3 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-800 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-amber-400 transition-all font-mono"
+            className="w-full px-3.5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-900 focus:outline-hidden focus:ring-2 focus:ring-amber-400 transition-all font-mono"
           />
         </div>
 
@@ -98,9 +98,9 @@ export const QuickSearchBar: React.FC = () => {
             whileTap={{ scale: 0.96 }}
             whileHover={{ scale: 1.02 }}
             type="submit"
-            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0B1F3A] to-[#142F57] hover:from-[#142F57] hover:to-[#0B1F3A] text-[#F5B301] text-xs font-black shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0B1F3A] to-[#142F57] hover:from-[#142F57] hover:to-[#0B1F3A] dark:from-[#F5B301] dark:to-amber-400 dark:hover:from-amber-400 dark:hover:to-amber-300 text-[#F5B301] dark:text-[#0B1F3A] text-xs font-black shadow-lg shadow-slate-900/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Search className="w-4 h-4 text-cyan-400" />
+            <Search className="w-4 h-4 text-cyan-400 dark:text-[#0B1F3A]" />
             <span>{locale === 'ur' ? 'گاڑیاں تلاش کریں' : 'FIND AVAILABLE FLEET'}</span>
           </motion.button>
         </div>

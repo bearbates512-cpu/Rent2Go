@@ -14,6 +14,7 @@ Cleanse all legacy demo records, inject an authentic Pakistani rental fleet (Eco
 - **Confirmed Decision 1**: All vehicle categories (Economy, Sedans, Luxury SUVs, and Passenger Vans) will be populated with realistic Pakistani rental rates (PKR/day with driver & self-drive, hourly overtime rates, security deposits).
 - **Confirmed Decision 2**: Admin panel will include a "Reset/Clean Demo Data" utility allowing you to purge test orders at any time without losing vehicle inventory.
 - **Confirmed Decision 3**: Photo handling in Admin will support both image file uploads directly from your computer/phone and custom image URLs, accompanied by a quick-fill preset library.
+- **Confirmed Decision 4 (Focus Mode Action)**: In response to element selection on the "3D WEBGL STUDIO" button and prompt "es ko kahtm ker do all ko", removed the procedural Three.js 3D WebGL car model and the 3D/photo mode switcher from the hero showcase, streamlining the experience to high-resolution genuine fleet photography with smooth interactive 3D perspective tilt, telemetry HUD, and instant booking.
 
 ---
 

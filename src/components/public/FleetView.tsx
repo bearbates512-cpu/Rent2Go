@@ -101,18 +101,18 @@ export const FleetView: React.FC = () => {
     maxPrice < 40000;
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen py-10">
+    <div className="bg-[#F8FAFC] dark:bg-[#060D17] text-slate-800 dark:text-slate-100 min-h-screen py-10 transition-colors duration-250">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200">
+            <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
               {locale === 'ur' ? 'صادق آباد کا مکمل فلیٹ' : 'Verified Fleet in Sadiqabad'}
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] mt-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
               {locale === 'ur' ? 'گاڑیاں اور روزانہ کا کرایہ نامہ' : 'Our Fleet & Rental Rates'}
             </h1>
-            <p className="text-slate-500 text-sm mt-1">
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
               {locale === 'ur'
                 ? 'تمام گاڑیاں مکمل جانچ شدہ، صاف ستھری اور بااخلاق ڈرائیورز کے ساتھ دستیاب ہیں۔'
                 : 'Browse inspected sedans, SUVs, and vans with transparent pricing and instant booking.'}
@@ -146,12 +146,12 @@ export const FleetView: React.FC = () => {
                   }
                 }}
                 placeholder={locale === 'ur' ? 'گاڑی تلاش کریں (کرولا، فارچونر...)' : 'Search car by name...'}
-                className="w-full ps-10 pe-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium bg-white focus:outline-hidden focus:ring-2 focus:ring-[#0B1F3A]"
+                className="w-full ps-10 pe-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium bg-white dark:bg-[#0B1523] text-slate-800 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#0B1F3A] dark:focus:ring-amber-400"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -161,7 +161,7 @@ export const FleetView: React.FC = () => {
             {/* Mobile Filter Button */}
             <button
               onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shrink-0"
+              className="lg:hidden p-2.5 rounded-xl bg-white dark:bg-[#0B1523] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 shrink-0 cursor-pointer"
               title="Filters"
             >
               <SlidersHorizontal className="w-4 h-4" />
@@ -183,8 +183,8 @@ export const FleetView: React.FC = () => {
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#0B1F3A] text-white shadow-md shadow-slate-900/10'
-                    : 'bg-white border border-slate-200/90 text-slate-700 hover:border-slate-300'
+                    ? 'bg-[#0B1F3A] dark:bg-[#F5B301] text-white dark:text-[#0B1F3A] shadow-md shadow-slate-900/10'
+                    : 'bg-white dark:bg-[#0B1523] border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 {locale === 'ur' ? cat.ur : cat.en}
@@ -196,16 +196,16 @@ export const FleetView: React.FC = () => {
         {/* Content Layout: Sidebar + Car Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Desktop Filter Sidebar */}
-          <aside className={`lg:block ${mobileFilterOpen ? 'block' : 'hidden'} bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-6`}>
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-sm font-bold text-[#0B1F3A] flex items-center gap-2">
+          <aside className={`lg:block ${mobileFilterOpen ? 'block' : 'hidden'} bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-6 transition-colors`}>
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <h2 className="text-sm font-bold text-[#0B1F3A] dark:text-white flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-amber-500" />
                 <span>{locale === 'ur' ? 'فلٹرز' : 'Filter Options'}</span>
               </h2>
               {hasActiveFilters && (
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs font-semibold text-rose-600 hover:underline"
+                  className="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
                 >
                   {locale === 'ur' ? 'تمام ختم کریں' : 'Clear All'}
                 </button>
@@ -214,7 +214,7 @@ export const FleetView: React.FC = () => {
 
             {/* Driver Option */}
             <div>
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-2">
                 {locale === 'ur' ? 'ڈرائیور آپشن' : 'Driver Preference'}
               </label>
               <div className="space-y-1.5 text-xs">
@@ -223,15 +223,15 @@ export const FleetView: React.FC = () => {
                   { id: 'with_driver', en: 'With Driver', ur: 'ڈرائیور کے ساتھ' },
                   { id: 'self_drive', en: 'Self-Drive', ur: 'سیلف ڈرائیو' }
                 ].map(opt => (
-                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
+                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60">
                     <input
                       type="radio"
                       name="driverOption"
                       checked={selectedDriverOption === opt.id}
                       onChange={() => setSelectedDriverOption(opt.id)}
-                      className="accent-[#0B1F3A]"
+                      className="accent-[#0B1F3A] dark:accent-[#F5B301]"
                     />
-                    <span className="text-slate-700">{locale === 'ur' ? opt.ur : opt.en}</span>
+                    <span className="text-slate-700 dark:text-slate-300">{locale === 'ur' ? opt.ur : opt.en}</span>
                   </label>
                 ))}
               </div>
@@ -239,7 +239,7 @@ export const FleetView: React.FC = () => {
 
             {/* Transmission */}
             <div>
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-2">
                 {locale === 'ur' ? 'ٹرانسمیشن' : 'Transmission'}
               </label>
               <div className="space-y-1.5 text-xs">
@@ -248,15 +248,15 @@ export const FleetView: React.FC = () => {
                   { id: 'automatic', en: 'Automatic', ur: 'آٹومیٹک' },
                   { id: 'manual', en: 'Manual', ur: 'مینول' }
                 ].map(opt => (
-                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
+                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60">
                     <input
                       type="radio"
                       name="transmission"
                       checked={selectedTransmission === opt.id}
                       onChange={() => setSelectedTransmission(opt.id)}
-                      className="accent-[#0B1F3A]"
+                      className="accent-[#0B1F3A] dark:accent-[#F5B301]"
                     />
-                    <span className="text-slate-700">{locale === 'ur' ? opt.ur : opt.en}</span>
+                    <span className="text-slate-700 dark:text-slate-300">{locale === 'ur' ? opt.ur : opt.en}</span>
                   </label>
                 ))}
               </div>
@@ -265,10 +265,10 @@ export const FleetView: React.FC = () => {
             {/* Max Daily Budget */}
             <div>
               <div className="flex justify-between items-center mb-1.5 text-xs font-bold">
-                <span className="text-slate-700 uppercase tracking-wider">
+                <span className="text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                   {locale === 'ur' ? 'زیادہ سے زیادہ یومیہ بجٹ' : 'Max Daily Rate'}
                 </span>
-                <span className="text-[#0B1F3A] font-mono">
+                <span className="text-[#0B1F3A] dark:text-amber-400 font-mono">
                   PKR {maxPrice.toLocaleString()}
                 </span>
               </div>
@@ -279,9 +279,9 @@ export const FleetView: React.FC = () => {
                 step={1000}
                 value={maxPrice}
                 onChange={e => setMaxPrice(parseInt(e.target.value))}
-                className="w-full accent-[#0B1F3A]"
+                className="w-full accent-[#0B1F3A] dark:accent-[#F5B301]"
               />
-              <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+              <div className="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
                 <span>Rs. 3,000</span>
                 <span>Rs. 40,000+</span>
               </div>
@@ -291,8 +291,8 @@ export const FleetView: React.FC = () => {
           {/* Cars Grid (3 cols) */}
           <main className="lg:col-span-3 space-y-6">
             {/* Sort & Count Header */}
-            <div className="flex items-center justify-between bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs text-xs">
-              <span className="font-bold text-slate-700">
+            <div className="flex items-center justify-between bg-white dark:bg-[#0B1523] rounded-2xl p-4 border border-slate-200/90 dark:border-slate-800 shadow-2xs text-xs transition-colors">
+              <span className="font-bold text-slate-700 dark:text-slate-200">
                 {filteredVehicles.length} {locale === 'ur' ? 'گاڑیاں دستیاب' : 'Vehicles Found'}
               </span>
 
@@ -301,13 +301,13 @@ export const FleetView: React.FC = () => {
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value)}
-                  className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 font-semibold text-slate-700 focus:outline-hidden"
+                  className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 font-semibold text-slate-700 dark:text-slate-200 focus:outline-hidden"
                 >
-                  <option value="featured">{locale === 'ur' ? 'نمایاں (تجویز کردہ)' : 'Featured First'}</option>
-                  <option value="price-low">{locale === 'ur' ? 'کرایہ کم سے زیادہ' : 'Price: Low to High'}</option>
-                  <option value="price-high">{locale === 'ur' ? 'کرایہ زیادہ سے کم' : 'Price: High to Low'}</option>
-                  <option value="capacity">{locale === 'ur' ? 'نشستوں کی گنجائش' : 'Seating Capacity'}</option>
-                  <option value="newest">{locale === 'ur' ? 'جدید ترین ماڈل' : 'Newest Model Year'}</option>
+                  <option value="featured" className="dark:bg-slate-900">{locale === 'ur' ? 'نمایاں (تجویز کردہ)' : 'Featured First'}</option>
+                  <option value="price-low" className="dark:bg-slate-900">{locale === 'ur' ? 'کرایہ کم سے زیادہ' : 'Price: Low to High'}</option>
+                  <option value="price-high" className="dark:bg-slate-900">{locale === 'ur' ? 'کرایہ زیادہ سے کم' : 'Price: High to Low'}</option>
+                  <option value="capacity" className="dark:bg-slate-900">{locale === 'ur' ? 'نشستوں کی گنجائش' : 'Seating Capacity'}</option>
+                  <option value="newest" className="dark:bg-slate-900">{locale === 'ur' ? 'جدید ترین ماڈل' : 'Newest Model Year'}</option>
                 </select>
               </div>
             </div>
@@ -320,19 +320,19 @@ export const FleetView: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 space-y-4">
-                <Car className="w-12 h-12 text-slate-300 mx-auto" />
-                <h3 className="text-lg font-bold text-slate-800">
+              <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-4">
+                <Car className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
+                <h3 className="text-lg font-bold text-slate-800 dark:text-white">
                   {locale === 'ur' ? 'کوئی گاڑی نہیں ملی' : 'No vehicles match your criteria'}
                 </h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
                   {locale === 'ur'
                     ? 'براہِ کرم فلٹرز میں ردوبدل کریں یا ہمارے مینیجر سے براہِ راست رابطہ کریں۔'
                     : 'Try clearing your filters or contact our 24/7 Sadiqabad booking desk directly.'}
                 </p>
                 <button
                   onClick={clearAllFilters}
-                  className="px-5 py-2.5 rounded-xl bg-[#0B1F3A] text-white text-xs font-bold"
+                  className="px-5 py-2.5 rounded-xl bg-[#0B1F3A] dark:bg-[#F5B301] text-white dark:text-[#0B1F3A] text-xs font-bold cursor-pointer"
                 >
                   {locale === 'ur' ? 'تمام فلٹرز ری سیٹ کریں' : 'Reset All Filters'}
                 </button>

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Vehicle } from '../../types/index.ts';
 import { useApp } from '../../context/AppContext.tsx';
 import { soundFX } from '../../utils/soundEffects.ts';
-import { ThreeCarShowroom } from './ThreeCarShowroom.tsx';
 import {
   Navigation,
   ShieldCheck,
@@ -11,15 +10,10 @@ import {
   Gauge,
   Snowflake,
   Radio,
-  SlidersHorizontal,
-  ChevronRight,
   Eye,
   CheckCircle2,
   Sparkles,
-  Layers,
-  ArrowRight,
-  Rotate3d,
-  Camera
+  ArrowRight
 } from 'lucide-react';
 
 interface FuturisticShowcaseProps {
@@ -35,7 +29,6 @@ export const FuturisticShowcase: React.FC<FuturisticShowcaseProps> = ({
   const publishedVehicles = vehicles.filter(v => v.visibility === 'published');
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [viewMode, setViewMode] = useState<'3d' | 'photo'>('3d');
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -179,56 +172,27 @@ export const FuturisticShowcase: React.FC<FuturisticShowcaseProps> = ({
       {/* Futuristic Hologram Header Bar */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/10 text-xs">
         <div className="flex items-center gap-2">
-          {/* Segmented View Switcher: 3D WebGL vs Real Photos */}
-          <div className="flex items-center gap-1 p-1 bg-black/60 rounded-xl border border-white/15">
-            <button
-              onClick={() => {
-                soundFX.playClick();
-                setViewMode('3d');
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                viewMode === '3d'
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-[#0B1F3A] shadow-md shadow-amber-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Rotate3d className="w-3.5 h-3.5" />
-              <span>3D WEBGL STUDIO</span>
-            </button>
-            <button
-              onClick={() => {
-                soundFX.playClick();
-                setViewMode('photo');
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                viewMode === 'photo'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md shadow-cyan-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Camera className="w-3.5 h-3.5" />
-              <span>PHOTO TELEMETRY</span>
-            </button>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/30 text-amber-300 font-mono text-xs font-bold shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>VERIFIED FLEET SHOWCASE</span>
           </div>
 
           <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 font-mono text-[11px] font-bold">
             <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>LIVE SATELLITE HUD</span>
+            <span>LIVE VEHICLE TELEMETRY</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {viewMode === 'photo' && (
-            <button
-              onClick={triggerLaserScan}
-              disabled={isScanning}
-              onMouseEnter={() => soundFX.playHover()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
-            >
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span>{isScanning ? 'Scanning Hardware...' : 'Laser Diagnostic Scan'}</span>
-            </button>
-          )}
+          <button
+            onClick={triggerLaserScan}
+            disabled={isScanning}
+            onMouseEnter={() => soundFX.playHover()}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+          >
+            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            <span>{isScanning ? 'Scanning Hardware...' : 'Diagnostic Scan'}</span>
+          </button>
 
           {onOpenSpecsModal && (
             <button
@@ -245,16 +209,7 @@ export const FuturisticShowcase: React.FC<FuturisticShowcaseProps> = ({
         </div>
       </div>
 
-      {viewMode === '3d' ? (
-        <ThreeCarShowroom
-          onBookCar={(type) => {
-            const matched = publishedVehicles.find(v => v.category === type) || publishedVehicles[0];
-            navigateToBooking(matched.id);
-          }}
-        />
-      ) : (
-        <>
-          {/* Main 3D Stage with Tilt Perspective */}
+      {/* Main 3D Stage with Tilt Perspective */}
       <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -471,8 +426,6 @@ export const FuturisticShowcase: React.FC<FuturisticShowcaseProps> = ({
           </button>
         </div>
       </div>
-      </>
-      )}
     </div>
   );
 };
