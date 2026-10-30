@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Car, Phone, MessageSquare, MapPin, Clock, ShieldCheck, Mail } from 'lucide-react';
+import { Car, Phone, MessageSquare, MapPin, Clock, ShieldCheck, Mail, Lock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { locale, settings, setCurrentView } = useApp();
@@ -160,17 +160,28 @@ export const Footer: React.FC = () => {
           <p>
             © {new Date().getFullYear()} Rent2Go. {locale === 'ur' ? 'جملہ حقوق محفوظ ہیں۔' : 'All rights reserved.'} Sadiqabad, Punjab.
           </p>
-          <div className="flex items-center gap-4">
-            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline">
+          <div className="flex flex-wrap items-center gap-4">
+            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline cursor-pointer">
               {locale === 'ur' ? 'شرائط و ضوابط' : 'Terms & Conditions'}
             </button>
             <span>•</span>
-            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline">
+            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline cursor-pointer">
               {locale === 'ur' ? 'پرائیویسی پالیسی' : 'Privacy Policy'}
             </button>
             <span>•</span>
-            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline">
+            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline cursor-pointer">
               {locale === 'ur' ? 'منسوخی کی پالیسی' : 'Cancellation Policy'}
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => {
+                window.history.pushState(null, '', '/admin/panel');
+                setCurrentView('admin');
+              }}
+              className="text-amber-400/90 hover:text-amber-300 hover:underline flex items-center gap-1 cursor-pointer font-semibold"
+            >
+              <Lock className="w-3 h-3 text-amber-400" />
+              <span>{locale === 'ur' ? 'ایڈمن پینل' : 'Admin Panel'}</span>
             </button>
           </div>
         </div>

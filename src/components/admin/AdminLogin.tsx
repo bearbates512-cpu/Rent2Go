@@ -139,25 +139,38 @@ export const AdminLogin: React.FC = () => {
         </div>
 
         {/* Security Banner with Lock indicator */}
-        <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-start flex items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
-              <Lock className="w-4 h-4" />
+        <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-start space-y-2">
+          <div className="flex items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="font-extrabold text-xs text-amber-950 block">
+                  {locale === 'ur' ? 'ایڈمن پینل مقفل ہے' : 'Admin Panel Locked'}
+                </span>
+                <span className="text-[10px] text-amber-800">
+                  {locale === 'ur'
+                    ? 'صرف رجسٹرڈ ایڈمن جی میل اور پاس ورڈ سے کھلے گا'
+                    : 'Secured exclusively for registered administrator'}
+                </span>
+              </div>
             </div>
-            <div>
-              <span className="font-extrabold text-xs text-amber-950 block">
-                {locale === 'ur' ? 'ایڈمن پینل مقفل ہے' : 'Admin Panel Locked'}
-              </span>
-              <span className="text-[10px] text-amber-800">
-                {locale === 'ur'
-                  ? 'لاگ ان کرنے کے لیے جی میل اور پاس ورڈ درج کریں'
-                  : 'Enter authorized Gmail & password to unlock'}
-              </span>
-            </div>
+            <span className="px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900 font-bold text-[9px] uppercase tracking-wider shrink-0">
+              Authorized Only
+            </span>
           </div>
-          <span className="px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900 font-bold text-[9px] uppercase tracking-wider">
-            Protected
-          </span>
+
+          <div className="pt-2 border-t border-amber-500/20 text-[11px] text-amber-900/90 leading-relaxed">
+            <span className="font-bold block mb-0.5">
+              {locale === 'ur' ? 'لاگ ان کے بعد آپ یہ تبدیلیاں کر سکتے ہیں:' : 'Once unlocked, you can change:'}
+            </span>
+            <ul className="list-disc list-inside space-y-0.5 text-[10px] text-amber-800">
+              <li>{locale === 'ur' ? 'گاڑیاں شامل کرنا، ہٹانا، اور روزانہ کرایہ (PKR) تبدیل کرنا' : 'Add/edit cars, daily rental rates, and photos'}</li>
+              <li>{locale === 'ur' ? 'کسٹمرز کی بکنگز منظور یا منسوخ کرنا' : 'Approve or manage customer booking requests'}</li>
+              <li>{locale === 'ur' ? 'ویب سائٹ کے فون نمبر، واٹس ایپ، پتہ اور تحریریں بدلنا' : 'Update phone, WhatsApp, office address & CMS banners'}</li>
+            </ul>
+          </div>
         </div>
 
         {errorMsg && (
@@ -170,9 +183,18 @@ export const AdminLogin: React.FC = () => {
         {/* Login Form */}
         <form onSubmit={handleLogin} autoComplete="off" className="space-y-4 text-xs">
           <div>
-            <label className="font-bold text-slate-700 block mb-1.5">
-              {locale === 'ur' ? 'ایڈمن جی میل (Admin Gmail)' : 'Administrator Email'}
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="font-bold text-slate-700 block">
+                {locale === 'ur' ? 'ایڈمن جی میل (Admin Gmail)' : 'Administrator Gmail'}
+              </label>
+              <button
+                type="button"
+                onClick={() => setEmail(AUTHORIZED_ADMIN_EMAIL)}
+                className="text-[10px] text-blue-600 hover:text-blue-800 font-bold hover:underline cursor-pointer"
+              >
+                {locale === 'ur' ? 'جی میل خودکار درج کریں' : 'Auto-fill Gmail'}
+              </button>
+            </div>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
               <input
@@ -192,7 +214,7 @@ export const AdminLogin: React.FC = () => {
               <label className="font-bold text-slate-700">
                 {locale === 'ur' ? 'پاس ورڈ (Password)' : 'Password'}
               </label>
-              <span className="text-[10px] text-slate-400">Master Secret</span>
+              <span className="text-[10px] text-slate-400 font-mono">Master Secret</span>
             </div>
             <div className="relative">
               <KeyRound className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
@@ -208,7 +230,7 @@ export const AdminLogin: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -222,7 +244,7 @@ export const AdminLogin: React.FC = () => {
             className="w-full py-3 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] text-[#F5B301] text-xs font-extrabold tracking-wide uppercase transition-all shadow-md shadow-slate-900/10 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer mt-2"
           >
             <Lock className="w-3.5 h-3.5" />
-            <span>{loading ? 'Authenticating...' : locale === 'ur' ? 'ایڈمن لاگ ان کریں' : 'Secure Admin Sign In'}</span>
+            <span>{loading ? 'Authenticating...' : locale === 'ur' ? 'ایڈمن لاگ ان اور پینل کھولیں' : 'Unlock & Open Admin Panel'}</span>
           </button>
         </form>
 
