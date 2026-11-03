@@ -16,6 +16,8 @@ import { RatesView } from './components/public/RatesView.tsx';
 import { AboutView } from './components/public/AboutView.tsx';
 import { ContactView } from './components/public/ContactView.tsx';
 import { LegalView } from './components/public/LegalView.tsx';
+import { LiquidGasCanvas } from './components/effects/LiquidGasCanvas.tsx';
+import { ThunderBlastSystem } from './components/effects/ThunderBlastSystem.tsx';
 
 // Admin Components
 import { AdminShell } from './components/admin/AdminShell.tsx';
@@ -164,36 +166,44 @@ function MainAppContent() {
 
   // Public Experience Views
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#060D17] text-slate-900 dark:text-slate-100 transition-colors duration-250">
-      <AnnouncementBar />
-      <Header />
+    <div className="relative min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#060D17] text-slate-900 dark:text-slate-100 transition-colors duration-250 overflow-x-hidden">
+      {/* Liquid Gas Plasma Canvas (Ambient fluid background layer) */}
+      <LiquidGasCanvas />
 
-      <main className="flex-1">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentView}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-          >
-            {currentView === 'home' && <HomeView />}
-            {currentView === 'cars' && <FleetView />}
-            {currentView === 'car-detail' && <CarDetailView />}
-            {currentView === 'book' && <BookingWizard />}
-            {currentView === 'booking-success' && <BookingSuccessView />}
-            {currentView === 'status' && <BookingStatusView />}
-            {currentView === 'services' && <ServicesView />}
-            {currentView === 'rates' && <RatesView />}
-            {currentView === 'about' && <AboutView />}
-            {currentView === 'contact' && <ContactView />}
-            {currentView === 'legal' && <LegalView />}
-          </motion.div>
-        </AnimatePresence>
-      </main>
+      {/* Global Interactive Thunder Blast FX System */}
+      <ThunderBlastSystem />
 
-      <Footer />
-      <FloatingWhatsApp />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <AnnouncementBar />
+        <Header />
+
+        <main className="flex-1">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentView}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {currentView === 'home' && <HomeView />}
+              {currentView === 'cars' && <FleetView />}
+              {currentView === 'car-detail' && <CarDetailView />}
+              {currentView === 'book' && <BookingWizard />}
+              {currentView === 'booking-success' && <BookingSuccessView />}
+              {currentView === 'status' && <BookingStatusView />}
+              {currentView === 'services' && <ServicesView />}
+              {currentView === 'rates' && <RatesView />}
+              {currentView === 'about' && <AboutView />}
+              {currentView === 'contact' && <ContactView />}
+              {currentView === 'legal' && <LegalView />}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+
+        <Footer />
+        <FloatingWhatsApp />
+      </div>
     </div>
   );
 }

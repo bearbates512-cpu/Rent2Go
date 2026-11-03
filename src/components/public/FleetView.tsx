@@ -5,6 +5,7 @@ import { soundFX } from '../../utils/soundEffects.ts';
 import { CarCard } from './CarCard.tsx';
 import { Search, Filter, X, SlidersHorizontal, Car, Radio, Sparkles } from 'lucide-react';
 import { VehicleCategory } from '../../types/index.ts';
+import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
 
 export const FleetView: React.FC = () => {
   const {
@@ -106,17 +107,23 @@ export const FleetView: React.FC = () => {
         {/* Title Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-xs font-bold text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full uppercase tracking-wider border border-amber-200 dark:border-amber-400/30">
-              {locale === 'ur' ? 'صادق آباد کا مکمل فلیٹ' : 'Verified Fleet in Sadiqabad'}
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2">
+            <LiquidGasBadge className="text-amber-600 dark:text-amber-300">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>{locale === 'ur' ? 'صادق آباد کا مکمل فلیٹ' : 'Verified Fleet in Sadiqabad'}</span>
+            </LiquidGasBadge>
+            <SpinInHeading
+              as="h1"
+              splitWords
+              axis="x"
+              className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2"
+            >
               {locale === 'ur' ? 'گاڑیاں اور روزانہ کا کرایہ نامہ' : 'Our Fleet & Rental Rates'}
-            </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+            </SpinInHeading>
+            <SpinInText as="p" className="text-slate-500 dark:text-slate-400 text-sm mt-1">
               {locale === 'ur'
                 ? 'تمام گاڑیاں مکمل جانچ شدہ، صاف ستھری اور بااخلاق ڈرائیورز کے ساتھ دستیاب ہیں۔'
                 : 'Browse inspected sedans, SUVs, and vans with transparent pricing and instant booking.'}
-            </p>
+            </SpinInText>
           </div>
 
           {/* Search Input Desktop */}

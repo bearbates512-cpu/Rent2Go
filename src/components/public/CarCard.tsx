@@ -39,16 +39,16 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle }) => {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        whileHover={{ y: -6 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
+        initial={{ opacity: 0, y: 40, rotateY: 45, scale: 0.92 }}
+        whileInView={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
+        viewport={{ once: false, amount: 0.15 }}
+        whileHover={{ y: -8, rotateY: -3, scale: 1.01 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         onMouseEnter={() => soundFX.playHover()}
-        className="bg-white dark:bg-[#0B1523] rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-900/10 dark:hover:shadow-cyan-950/30 hover:border-amber-400/50 dark:hover:border-amber-400/50 transition-all duration-300 overflow-hidden flex flex-col group relative"
+        className="bg-white dark:bg-[#0B1523] rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-slate-900/15 dark:hover:shadow-amber-500/10 hover:border-amber-400/60 dark:hover:border-amber-400/60 transition-all duration-300 overflow-hidden flex flex-col group relative perspective-1000 will-change-transform"
       >
-        {/* Subtle Ambient Top Border Highlight on Hover */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+        {/* Electric Thunder Spark Sweep on Hover */}
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400 via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
         {/* Photo Container */}
         <div className="relative aspect-16/10 bg-slate-950 overflow-hidden">
