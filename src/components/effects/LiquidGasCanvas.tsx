@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Droplet, Sparkles, Wind } from 'lucide-react';
 
 interface LiquidParticle {
   x: number;
@@ -23,11 +22,25 @@ interface FluidWave {
   alpha: number;
 }
 
+/**
+ * Dispatches a global liquid gas splash ripple event that causes
+ * luminous plasma waves and particle surges across the canvas.
+ */
+export const triggerLiquidGasSplash = (originX?: number, originY?: number, intensity: number = 1) => {
+  if (typeof window === 'undefined') return;
+  const event = new CustomEvent('rent2go:liquid-gas-splash', {
+    detail: {
+      x: originX ?? window.innerWidth / 2,
+      y: originY ?? (typeof window !== 'undefined' ? window.innerHeight / 3 : 300),
+      intensity
+    }
+  });
+  window.dispatchEvent(event);
+};
+
 export const LiquidGasCanvas: React.FC = () => {
   const { themeMode } = useApp();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [gasActive, setGasActive] = useState<boolean>(true);
-  const [pulseCount, setPulseCount] = useState<number>(0);
 
   const mouseRef = useRef<{ x: number; y: number; active: boolean; radius: number }>({
     x: 0,
@@ -40,17 +53,26 @@ export const LiquidGasCanvas: React.FC = () => {
   const isDark = themeMode === 'dark';
 
   // Splash interactive wave
-  const splashLiquidGas = (x?: number, y?: number) => {
+  const splashLiquidGas = (x?: number, y?: number, intensity: number = 1) => {
     const splashX = x ?? window.innerWidth / 2;
     const splashY = y ?? window.innerHeight / 2;
     wavesRef.current.push({
       x: splashX,
       y: splashY,
       radius: 10,
-      maxRadius: 280,
-      alpha: 0.65
+      maxRadius: 360 * intensity,
+      alpha: 0.85
     });
-    setPulseCount(prev => prev + 1);
+    // add secondary delayed wave
+    setTimeout(() => {
+      wavesRef.current.push({
+        x: splashX,
+        y: splashY,
+        radius: 15,
+        maxRadius: 260 * intensity,
+        alpha: 0.55
+      });
+    }, 120);
   };
 
   useEffect(() => {
@@ -104,9 +126,30 @@ export const LiquidGasCanvas: React.FC = () => {
       }
     };
 
+    // Global event listener for programmatic splash triggers (e.g. Opening Car Details or Booking Form)
+    const handleSplashEvent = (e: Event) => {
+      const detail = (e as CustomEvent).detail || {};
+      splashLiquidGas(detail.x, detail.y, detail.intensity || 1);
+
+      // Impart explosive radial outward velocity to neighboring particles
+      const sx = detail.x ?? width / 2;
+      const sy = detail.y ?? height / 2;
+      for (let i = 0; i < particles.length; i++) {
+        const dx = particles[i].x - sx;
+        const dy = particles[i].y - sy;
+        const dist = Math.hypot(dx, dy) || 1;
+        if (dist < 500) {
+          const power = (1 - dist / 500) * 3.5;
+          particles[i].vx += (dx / dist) * power;
+          particles[i].vy += (dy / dist) * power;
+        }
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseleave', handleMouseLeave);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('rent2go:liquid-gas-splash', handleSplashEvent);
 
     // Initialize rich liquid gas particles
     const particleCount = Math.min(Math.floor(width / 24), 55);
@@ -145,7 +188,7 @@ export const LiquidGasCanvas: React.FC = () => {
       // Update and draw liquid fluid waves/ripples
       for (let w = wavesRef.current.length - 1; w >= 0; w--) {
         const wave = wavesRef.current[w];
-        wave.radius += 4.5;
+        wave.radius += 5.2;
         wave.alpha *= 0.955;
 
         if (wave.alpha < 0.01 || wave.radius > wave.maxRadius) {
@@ -155,9 +198,9 @@ export const LiquidGasCanvas: React.FC = () => {
 
         ctx.save();
         ctx.strokeStyle = isDark
-          ? `hsla(190, 100%, 70%, ${wave.alpha * 0.8})`
-          : `hsla(38, 95%, 50%, ${wave.alpha * 0.45})`;
-        ctx.lineWidth = 2.5;
+          ? `hsla(190, 100%, 70%, ${wave.alpha * 0.85})`
+          : `hsla(38, 95%, 50%, ${wave.alpha * 0.55})`;
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -249,8 +292,9 @@ export const LiquidGasCanvas: React.FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('rent2go:liquid-gas-splash', handleSplashEvent);
     };
-  }, [isDark, gasActive]);
+  }, [isDark]);
 
   return (
     <div
@@ -261,6 +305,24 @@ export const LiquidGasCanvas: React.FC = () => {
         ref={canvasRef}
         className="w-full h-full filter blur-[18px] opacity-85 dark:opacity-90"
       />
+    </div>
+  );
+};
+
+/**
+ * Ambient Liquid Gas Aura component to wrap or place behind
+ * modals, booking wizards, or car detail cards for an undeniable glowing fluid effect.
+ */
+export const LiquidGasAura: React.FC<{ className?: string }> = ({ className = '' }) => {
+  return (
+    <div
+      className={`absolute inset-0 pointer-events-none overflow-hidden rounded-3xl ${className}`}
+      aria-hidden="true"
+    >
+      {/* Floating fluid plasma nebulas */}
+      <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-gradient-to-br from-amber-400/20 via-cyan-400/15 to-transparent blur-3xl animate-pulse pointer-events-none" />
+      <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-gradient-to-tl from-cyan-400/20 via-purple-500/15 to-transparent blur-3xl animate-pulse pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
     </div>
   );
 };

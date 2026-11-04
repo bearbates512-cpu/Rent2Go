@@ -4,6 +4,8 @@ import { Vehicle } from '../../types/index.ts';
 import { useApp } from '../../context/AppContext.tsx';
 import { soundFX } from '../../utils/soundEffects.ts';
 import { CarSpecsModal } from './CarSpecsModal.tsx';
+import { triggerLiquidGasSplash, LiquidGasAura } from '../effects/LiquidGasCanvas.tsx';
+import { SpinInHeading, SpinInText } from '../effects/SpinInTypography.tsx';
 import {
   Users,
   Fuel,
@@ -96,6 +98,7 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle }) => {
               onClick={(e) => {
                 e.stopPropagation();
                 soundFX.playScan();
+                triggerLiquidGasSplash(window.innerWidth / 2, window.innerHeight / 2, 1.3);
                 setSpecsModalOpen(true);
               }}
               className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-amber-300 border border-amber-400/40 text-[10px] font-mono font-bold hover:bg-amber-500 hover:text-[#0B1F3A] transition-all flex items-center gap-1 shadow-sm active:scale-95 cursor-pointer"
@@ -106,9 +109,10 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle }) => {
           </div>
         </div>
 
-        {/* Card Content */}
-        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
-          <div>
+        {/* Card Content with subtle Liquid Gas glow */}
+        <div className="relative p-4 sm:p-5 flex-1 flex flex-col justify-between overflow-hidden">
+          <LiquidGasAura className="opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
+          <div className="relative z-10">
             <div className="flex items-baseline justify-between gap-2 mb-1">
               <h3
                 onClick={() => {

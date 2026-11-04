@@ -27,6 +27,7 @@ import {
 import { generateBookingReference } from '../utils/reference.ts';
 import { checkVehicleAvailability } from '../utils/availability.ts';
 import { getSupabaseClient, AUTHORIZED_ADMIN_EMAIL, AUTHORIZED_ADMIN_PASSWORD } from '../utils/supabase.ts';
+import { triggerLiquidGasSplash } from '../components/effects/LiquidGasCanvas.tsx';
 
 interface AppContextType {
   locale: Locale;
@@ -902,6 +903,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSelectedCarSlug(slug);
     setCurrentView('car-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    triggerLiquidGasSplash(window.innerWidth / 2, 220, 1.35);
   };
 
   const navigateToBooking = (vehicleId?: string) => {
@@ -913,6 +915,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     setCurrentView('book');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    triggerLiquidGasSplash(window.innerWidth / 2, 240, 1.4);
   };
 
   return (

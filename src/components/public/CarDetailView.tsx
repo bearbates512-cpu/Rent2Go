@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { checkVehicleAvailability } from '../../utils/availability.ts';
 import { soundFX } from '../../utils/soundEffects.ts';
 import { CarSpecsModal } from './CarSpecsModal.tsx';
+import { triggerLiquidGasSplash, LiquidGasAura } from '../effects/LiquidGasCanvas.tsx';
+import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
 import {
   Users,
   Gauge,
@@ -47,6 +49,11 @@ export const CarDetailView: React.FC = () => {
     isAvailable: false,
     message: ''
   });
+
+  // Trigger liquid gas splash immediately whenever car detail view opens or vehicle changes
+  useEffect(() => {
+    triggerLiquidGasSplash(window.innerWidth / 2, 220, 1.35);
+  }, [vehicle?.id]);
 
   if (!vehicle) {
     return (
@@ -127,16 +134,19 @@ export const CarDetailView: React.FC = () => {
           <span>/</span>
           <span className="text-slate-400 capitalize">{vehicle.category}</span>
           <span>/</span>
-          <span className="text-slate-800 dark:text-white font-bold truncate">{title}</span>
+          <SpinInText as="span" className="text-slate-800 dark:text-white font-bold truncate">
+            {title}
+          </SpinInText>
         </div>
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
           {/* Left Column: Photos Gallery & Overview (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Main Stage Image */}
-            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-2 border border-slate-200/90 dark:border-slate-800 shadow-sm overflow-hidden">
-              <div className="relative aspect-16/10 rounded-2xl overflow-hidden bg-slate-900">
+            {/* Main Stage Image with Liquid Gas Aura */}
+            <div className="relative bg-white dark:bg-[#0B1523] rounded-3xl p-2 border border-slate-200/90 dark:border-slate-800 shadow-sm overflow-hidden group">
+              <LiquidGasAura className="opacity-70" />
+              <div className="relative aspect-16/10 rounded-2xl overflow-hidden bg-slate-900 z-10">
                 <img
                   src={activePhoto || vehicle.coverImage}
                   alt={title}
@@ -145,10 +155,10 @@ export const CarDetailView: React.FC = () => {
                     (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
                   }}
                 />
-                <div className="absolute top-4 start-4 flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-md bg-[#0B1F3A]/90 text-white text-xs font-bold uppercase tracking-wider">
+                <div className="absolute top-4 start-4 flex items-center gap-2 z-20">
+                  <LiquidGasBadge className="bg-[#0B1F3A]/90 text-white">
                     {vehicle.category}
-                  </span>
+                  </LiquidGasBadge>
                   <span className="px-3 py-1 rounded-md bg-amber-500 text-[#0B1F3A] text-xs font-bold">
                     {vehicle.modelYear}
                   </span>
@@ -157,14 +167,18 @@ export const CarDetailView: React.FC = () => {
 
               {/* Thumbnails */}
               {allPhotos.length > 1 && (
-                <div className="flex items-center gap-2.5 p-3 overflow-x-auto">
+                <div className="relative z-10 flex items-center gap-2.5 p-3 overflow-x-auto">
                   {allPhotos.map((img, idx) => (
                     <button
                       key={idx}
-                      onClick={() => setActivePhoto(img)}
+                      onClick={() => {
+                        soundFX.playClick();
+                        setActivePhoto(img);
+                        triggerLiquidGasSplash(window.innerWidth / 3, 260, 0.9);
+                      }}
                       className={`relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
                         (activePhoto || vehicle.coverImage) === img
-                          ? 'border-[#0B1F3A] dark:border-amber-400 scale-105 shadow-sm'
+                          ? 'border-[#0B1F3A] dark:border-amber-400 scale-105 shadow-sm ring-2 ring-cyan-400/30'
                           : 'border-transparent opacity-70 hover:opacity-100'
                       }`}
                     >
@@ -182,65 +196,72 @@ export const CarDetailView: React.FC = () => {
               )}
             </div>
 
-            {/* Description Card */}
-            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
-              <h2 className="text-lg font-bold text-[#0B1F3A] dark:text-white">
-                {locale === 'ur' ? 'گاڑی کا تفصیلی جائزہ' : 'Vehicle Overview'}
-              </h2>
-              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                {description}
-              </p>
+            {/* Description Card with Liquid Gas Glow */}
+            <div className="relative bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4 overflow-hidden">
+              <LiquidGasAura className="opacity-35" />
+              <div className="relative z-10 space-y-3">
+                <SpinInHeading as="h2" className="text-xl font-bold text-[#0B1F3A] dark:text-white" splitWords>
+                  {locale === 'ur' ? 'گاڑی کا تفصیلی جائزہ' : 'Vehicle Overview'}
+                </SpinInHeading>
+                <SpinInText className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                  {description}
+                </SpinInText>
 
-              {/* Features Chips */}
-              <div className="pt-2">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
-                  {locale === 'ur' ? 'نمایاں خصوصیات' : 'Key Specifications & Features'}
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {vehicle.features.map((feat, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span>{feat}</span>
-                    </span>
-                  ))}
+                {/* Features Chips */}
+                <div className="pt-2">
+                  <SpinInText as="span" className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2.5">
+                    {locale === 'ur' ? 'نمایاں خصوصیات' : 'Key Specifications & Features'}
+                  </SpinInText>
+                  <div className="flex flex-wrap gap-2">
+                    {vehicle.features.map((feat, i) => (
+                      <LiquidGasBadge
+                        key={i}
+                        delay={i * 0.04}
+                        className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold py-1 px-3 normal-case"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <span>{feat}</span>
+                      </LiquidGasBadge>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Inclusions & Policies */}
-            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
-              <h2 className="text-lg font-bold text-[#0B1F3A] dark:text-white">
-                {locale === 'ur' ? 'کرایہ میں کیا شامل ہے؟' : 'Tariff Inclusions & Exclusions'}
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/40 space-y-2">
-                  <span className="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                    <span>{locale === 'ur' ? 'شامل سہولیات' : 'Included in Base Rent'}</span>
-                  </span>
-                  <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 ps-5 list-disc">
-                    <li>{locale === 'ur' ? 'گاڑی کی فل مکینیکل فٹنس اور صفائی' : 'Full mechanical inspection & sanitised vehicle'}</li>
-                    <li>{locale === 'ur' ? 'صادق آباد بائی پاس پر 24 گھنٹے روڈ سائیڈ ہیلپ' : '24/7 Roadside breakdown assistance in Punjab'}</li>
-                    <li>{locale === 'ur' ? 'ٹریکر اور جی پی ایس سیفٹی مانیٹرنگ' : 'Live tracker & speed monitoring'}</li>
-                    {vehicle.driverOption !== 'self_drive' && (
-                      <li>{locale === 'ur' ? 'تربیت یافتہ تصدیق شدہ ڈرائیور' : 'Verified polite local driver'}</li>
-                    )}
-                  </ul>
-                </div>
+            <div className="relative bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4 overflow-hidden">
+              <LiquidGasAura className="opacity-25" />
+              <div className="relative z-10 space-y-4">
+                <SpinInHeading as="h2" className="text-lg font-bold text-[#0B1F3A] dark:text-white" splitWords>
+                  {locale === 'ur' ? 'کرایہ میں کیا شامل ہے؟' : 'Tariff Inclusions & Exclusions'}
+                </SpinInHeading>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/40 space-y-2">
+                    <SpinInText as="span" className="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5 text-sm">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <span>{locale === 'ur' ? 'شامل سہولیات' : 'Included in Base Rent'}</span>
+                    </SpinInText>
+                    <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 ps-5 list-disc">
+                      <li><SpinInText as="span">{locale === 'ur' ? 'گاڑی کی فل مکینیکل فٹنس اور صفائی' : 'Full mechanical inspection & sanitised vehicle'}</SpinInText></li>
+                      <li><SpinInText as="span">{locale === 'ur' ? 'صادق آباد بائی پاس پر 24 گھنٹے روڈ سائیڈ ہیلپ' : '24/7 Roadside breakdown assistance in Punjab'}</SpinInText></li>
+                      <li><SpinInText as="span">{locale === 'ur' ? 'ٹریکر اور جی پی ایس سیفٹی مانیٹرنگ' : 'Live tracker & speed monitoring'}</SpinInText></li>
+                      {vehicle.driverOption !== 'self_drive' && (
+                        <li><SpinInText as="span">{locale === 'ur' ? 'تربیت یافتہ تصدیق شدہ ڈرائیور' : 'Verified polite local driver'}</SpinInText></li>
+                      )}
+                    </ul>
+                  </div>
 
-                <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/40 space-y-2">
-                  <span className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5 text-sm">
-                    <Info className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                    <span>{locale === 'ur' ? 'اضافی اخراجات (کسٹمر کے ذمے)' : 'Excluded (Customer Responsibility)'}</span>
-                  </span>
-                  <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 ps-5 list-disc">
-                    <li>{locale === 'ur' ? 'پیٹرول / ڈیزل (جتنے ایندھن پر گاڑی دی جائے گی اتنے پر واپسی)' : 'Fuel costs (tank-to-tank policy)'}</li>
-                    <li>{locale === 'ur' ? 'موٹروے ایم 5 اور ہائی وے ٹول ٹیکس' : 'Motorway tolls & city parking fees'}</li>
-                    <li>{locale === 'ur' ? 'اگر گاڑی صادق آباد سے باہر رات رکے تو ڈرائیور الاؤنس' : 'Driver night allowance (Rs. 1,000/night if outside Sadiqabad)'}</li>
-                  </ul>
+                  <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/40 space-y-2">
+                    <SpinInText as="span" className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5 text-sm">
+                      <Info className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                      <span>{locale === 'ur' ? 'اضافی اخراجات (کسٹمر کے ذمے)' : 'Excluded (Customer Responsibility)'}</span>
+                    </SpinInText>
+                    <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 ps-5 list-disc">
+                      <li><SpinInText as="span">{locale === 'ur' ? 'پیٹرول / ڈیزل (جتنے ایندھن پر گاڑی دی جائے گی اتنے پر واپسی)' : 'Fuel costs (tank-to-tank policy)'}</SpinInText></li>
+                      <li><SpinInText as="span">{locale === 'ur' ? 'موٹروے ایم 5 اور ہائی وے ٹول ٹیکس' : 'Motorway tolls & city parking fees'}</SpinInText></li>
+                      <li><SpinInText as="span">{locale === 'ur' ? 'اگر گاڑی صادق آباد سے باہر رات رکے تو ڈرائیور الاؤنس' : 'Driver night allowance (Rs. 1,000/night if outside Sadiqabad)'}</SpinInText></li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -248,25 +269,27 @@ export const CarDetailView: React.FC = () => {
 
           {/* Right Column: Pricing & Availability Checker & Booking CTA (5 cols) */}
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-            {/* Pricing Box */}
-            <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-5">
-              <div className="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            {/* Pricing Box with Liquid Gas Aura */}
+            <div className="relative bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-5 overflow-hidden">
+              <LiquidGasAura className="opacity-40" />
+
+              <div className="relative z-10 flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 block mb-0.5">
+                  <SpinInText as="span" className="text-xs text-slate-500 dark:text-slate-400 block mb-0.5">
                     {locale === 'ur' ? 'یومیہ کرایہ کا تخمینہ' : 'Daily Tariff (Base Rate)'}
-                  </span>
+                  </SpinInText>
                   {vehicle.dailyRatePKR ? (
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-sm font-bold text-slate-700 dark:text-slate-300">PKR</span>
-                      <span className="text-3xl font-black text-[#0B1F3A] dark:text-white font-mono">
+                      <SpinInHeading as="h3" className="text-3xl font-black text-[#0B1F3A] dark:text-white font-mono inline-block">
                         {vehicle.dailyRatePKR.toLocaleString()}
-                      </span>
+                      </SpinInHeading>
                       <span className="text-xs text-slate-500 dark:text-slate-400">/{locale === 'ur' ? 'دن' : 'day'}</span>
                     </div>
                   ) : (
-                    <span className="text-lg font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-lg inline-block">
+                    <LiquidGasBadge className="text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10">
                       {locale === 'ur' ? 'خصوصی کوٹیشن کے لیے رابطہ کریں' : 'Custom Quote on Request'}
-                    </span>
+                    </LiquidGasBadge>
                   )}
                 </div>
 
@@ -279,40 +302,48 @@ export const CarDetailView: React.FC = () => {
               </div>
 
               {/* Specs Table */}
-              <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="relative z-10 grid grid-cols-2 gap-3 text-xs">
                 <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <Users className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'نشستیں' : 'Seating'}</span>
-                    <span className="font-bold text-slate-800 dark:text-white">{vehicle.seats} {locale === 'ur' ? 'افراد' : 'Passengers'}</span>
+                    <SpinInText as="span" className="font-bold text-slate-800 dark:text-white">
+                      {vehicle.seats} {locale === 'ur' ? 'افراد' : 'Passengers'}
+                    </SpinInText>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <Gauge className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'ٹرانسمیشن' : 'Gearbox'}</span>
-                    <span className="font-bold text-slate-800 dark:text-white capitalize">{vehicle.transmission}</span>
+                    <SpinInText as="span" className="font-bold text-slate-800 dark:text-white capitalize">
+                      {vehicle.transmission}
+                    </SpinInText>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <Snowflake className="w-4 h-4 text-blue-500 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'ایئر کنڈیشنر' : 'Air Con'}</span>
-                    <span className="font-bold text-slate-800 dark:text-white">{vehicle.hasAC ? 'Dual Chilled AC' : 'None'}</span>
+                    <SpinInText as="span" className="font-bold text-slate-800 dark:text-white">
+                      {vehicle.hasAC ? 'Dual Chilled AC' : 'None'}
+                    </SpinInText>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <Fuel className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
                   <div>
                     <span className="text-slate-400 block text-[10px]">{locale === 'ur' ? 'ایندھن' : 'Fuel'}</span>
-                    <span className="font-bold text-slate-800 dark:text-white capitalize">{vehicle.fuelType}</span>
+                    <SpinInText as="span" className="font-bold text-slate-800 dark:text-white capitalize">
+                      {vehicle.fuelType}
+                    </SpinInText>
                   </div>
                 </div>
               </div>
 
               {/* Custom specs */}
               {vehicle.customFields && Object.keys(vehicle.customFields).length > 0 && (
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 space-y-1.5 text-xs">
+                <div className="relative z-10 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 space-y-1.5 text-xs">
                   {vehicle.customFields.mileageLimitPerDay && (
                     <div className="flex justify-between text-slate-600 dark:text-slate-300">
                       <span>{locale === 'ur' ? 'روزانہ مائلیج لمٹ' : 'Daily Mileage Limit'}:</span>
@@ -335,10 +366,12 @@ export const CarDetailView: React.FC = () => {
               )}
 
               {/* Live Availability Checker Box */}
-              <div className="p-4 rounded-2xl bg-blue-50/50 dark:bg-slate-900/80 border border-blue-100 dark:border-slate-800 space-y-3">
+              <div className="relative z-10 p-4 rounded-2xl bg-blue-50/50 dark:bg-slate-900/80 border border-blue-100 dark:border-slate-800 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-bold text-[#0B1F3A] dark:text-white">
                   <Calendar className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                  <span>{locale === 'ur' ? 'دستیابی چیک کریں (لائیو)' : 'Live Availability Checker'}</span>
+                  <SpinInHeading as="h4" className="text-xs font-bold inline-block">
+                    {locale === 'ur' ? 'دستیابی چیک کریں (لائیو)' : 'Live Availability Checker'}
+                  </SpinInHeading>
                 </div>
 
                 <form onSubmit={handleCheckAvailability} className="space-y-2.5">
@@ -394,11 +427,12 @@ export const CarDetailView: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-2.5 pt-2">
+              <div className="relative z-10 space-y-2.5 pt-2">
                 <button
                   type="button"
                   onClick={() => {
                     soundFX.playScan();
+                    triggerLiquidGasSplash(window.innerWidth / 2, window.innerHeight / 2, 1.4);
                     setSpecsModalOpen(true);
                   }}
                   className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-slate-900 to-[#0B1F3A] border border-cyan-400/40 hover:border-cyan-400 text-cyan-300 text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95"
@@ -410,6 +444,7 @@ export const CarDetailView: React.FC = () => {
                 <button
                   onClick={() => {
                     soundFX.playClick();
+                    triggerLiquidGasSplash(window.innerWidth / 2, 240, 1.3);
                     navigateToBooking(vehicle.id);
                   }}
                   className="w-full py-3.5 px-4 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] dark:bg-[#F5B301] dark:hover:bg-amber-400 text-[#F5B301] hover:text-white dark:text-[#0B1F3A] dark:hover:text-[#0B1F3A] text-sm font-bold shadow-md shadow-slate-900/10 transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
@@ -443,31 +478,34 @@ export const CarDetailView: React.FC = () => {
         {/* Similar Cars Section */}
         {similarCars.length > 0 && (
           <div className="border-t border-slate-200 dark:border-slate-800 pt-10">
-            <h3 className="text-xl font-bold text-[#0B1F3A] dark:text-white mb-6">
+            <SpinInHeading as="h3" className="text-xl font-bold text-[#0B1F3A] dark:text-white mb-6">
               {locale === 'ur' ? 'اسی کیٹیگری کی دیگر گاڑیاں' : 'Similar Vehicles You May Like'}
-            </h3>
+            </SpinInHeading>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {similarCars.map(sim => (
                 <div
                   key={sim.id}
                   onClick={() => {
+                    soundFX.playClick();
+                    triggerLiquidGasSplash(window.innerWidth / 2, 220, 1.2);
                     setCurrentView('car-detail');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="bg-white rounded-2xl border border-slate-200 p-4 hover:shadow-md cursor-pointer transition-all flex items-center gap-4"
+                  className="relative group bg-white dark:bg-[#0B1523] rounded-2xl border border-slate-200 dark:border-slate-800 p-4 hover:shadow-lg cursor-pointer transition-all flex items-center gap-4 overflow-hidden"
                 >
+                  <LiquidGasAura className="opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
                   <img
                     src={sim.coverImage}
                     alt={sim.make}
-                    className="w-24 h-16 rounded-xl object-cover shrink-0"
+                    className="w-24 h-16 rounded-xl object-cover shrink-0 relative z-10"
                   />
-                  <div>
-                    <h4 className="font-bold text-sm text-[#0B1F3A]">
+                  <div className="relative z-10">
+                    <SpinInHeading as="h4" className="font-bold text-sm text-[#0B1F3A] dark:text-white">
                       {sim.make} {sim.model}
-                    </h4>
-                    <span className="text-xs text-slate-500 block">
+                    </SpinInHeading>
+                    <SpinInText as="span" className="text-xs text-slate-500 dark:text-slate-400 block">
                       PKR {sim.dailyRatePKR?.toLocaleString() || 'Quote'}/day
-                    </span>
+                    </SpinInText>
                   </div>
                 </div>
               ))}

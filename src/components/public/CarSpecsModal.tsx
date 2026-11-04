@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Vehicle } from '../../types/index.ts';
 import { useApp } from '../../context/AppContext.tsx';
 import { soundFX } from '../../utils/soundEffects.ts';
+import { triggerLiquidGasSplash, LiquidGasAura } from '../effects/LiquidGasCanvas.tsx';
+import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
 import {
   X,
   ShieldCheck,
@@ -30,6 +32,17 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
   const [rentalDays, setRentalDays] = useState<number>(3);
   const [withDriver, setWithDriver] = useState<boolean>(true);
 
+  // Trigger glowing liquid gas splash when modal opens
+  useEffect(() => {
+    if (vehicle) {
+      triggerLiquidGasSplash(
+        typeof window !== 'undefined' ? window.innerWidth / 2 : 400,
+        typeof window !== 'undefined' ? window.innerHeight / 2 : 300,
+        1.3
+      );
+    }
+  }, [vehicle]);
+
   if (!vehicle) return null;
 
   const title = vehicle.title[locale] || vehicle.title.en;
@@ -49,25 +62,30 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-md perspective-1000">
       <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.94, y: 16 }}
-        transition={{ duration: 0.24, ease: 'easeOut' }}
-        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-gradient-to-b from-[#0F223D] via-[#0B1A2E] to-[#07111E] border border-cyan-500/30 rounded-3xl shadow-2xl shadow-cyan-950/80 p-5 sm:p-7 text-white space-y-5"
+        initial={{ opacity: 0, scale: 0.9, rotateX: 18 }}
+        animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+        exit={{ opacity: 0, scale: 0.9, rotateX: -18 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-gradient-to-b from-[#0F223D] via-[#0B1A2E] to-[#07111E] border border-cyan-500/40 rounded-3xl shadow-2xl shadow-cyan-950/90 p-5 sm:p-7 text-white space-y-5 will-change-transform"
       >
-        {/* Holographic Header */}
-        <div className="flex items-center justify-between border-b border-cyan-500/20 pb-4">
+        {/* Glowing Liquid Gas Ambient Aura */}
+        <LiquidGasAura className="opacity-60" />
+
+        {/* Holographic Header with 3D Spin-In */}
+        <div className="relative z-10 flex items-center justify-between border-b border-cyan-500/20 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-cyan-500/15 border border-cyan-400/40 text-cyan-300">
+            <div className="p-2.5 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 shadow-lg shadow-cyan-500/20">
               <Zap className="w-5 h-5 text-cyan-400 animate-pulse" />
             </div>
             <div>
-              <span className="text-[10px] font-mono tracking-widest text-cyan-400 uppercase block">
-                VEHICLE TELEMETRY HUD · SADIQABAD HUB
-              </span>
-              <h2 className="text-lg sm:text-xl font-black text-white leading-tight">{title}</h2>
+              <LiquidGasBadge className="text-cyan-300 mb-1">
+                <span>VEHICLE TELEMETRY HUD · SADIQABAD</span>
+              </LiquidGasBadge>
+              <SpinInHeading as="h2" splitWords axis="x" className="text-lg sm:text-xl font-black text-white leading-tight">
+                {title}
+              </SpinInHeading>
             </div>
           </div>
 
@@ -76,14 +94,14 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
               soundFX.playClick();
               onClose();
             }}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Vehicle Showcase Image with HUD badges */}
-        <div className="relative aspect-16/9 rounded-2xl overflow-hidden bg-slate-950 border border-white/10">
+        <div className="relative z-10 aspect-16/9 rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-lg">
           <img
             src={vehicle.coverImage}
             alt={title}
@@ -92,13 +110,13 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
               (e.target as HTMLImageElement).src = '/cars/corolla-grande.jpg';
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent pointer-events-none" />
 
           <div className="absolute top-3 left-3 flex items-center gap-2">
-            <span className="px-3 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-cyan-400/40 text-cyan-300 font-mono text-[11px] font-bold uppercase">
+            <span className="px-3 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-cyan-400/40 text-cyan-300 font-mono text-[11px] font-bold uppercase">
               {vehicle.category}
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-[#0B1F3A] font-mono text-[11px] font-bold">
+            <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-[#0B1F3A] font-mono text-[11px] font-bold shadow-xs">
               {vehicle.modelYear}
             </span>
           </div>
@@ -114,43 +132,63 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
           </div>
         </div>
 
-        {/* Specs Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+        {/* Specs Grid with 3D Spin-In */}
+        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono">
+          <motion.div
+            initial={{ opacity: 0, rotateY: 30 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.4 }}
+            className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1"
+          >
             <span className="text-[10px] text-slate-400 block uppercase">Transmission</span>
             <div className="flex items-center gap-1.5 font-bold text-white capitalize">
               <Gauge className="w-3.5 h-3.5 text-cyan-400" />
               <span>{vehicle.transmission}</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+          <motion.div
+            initial={{ opacity: 0, rotateY: 30 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.4, delay: 0.05 }}
+            className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1"
+          >
             <span className="text-[10px] text-slate-400 block uppercase">Air Condition</span>
             <div className="flex items-center gap-1.5 font-bold text-emerald-400">
               <Snowflake className="w-3.5 h-3.5 text-blue-400" />
               <span>Chilled Cool</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+          <motion.div
+            initial={{ opacity: 0, rotateY: 30 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1"
+          >
             <span className="text-[10px] text-slate-400 block uppercase">Seating</span>
             <div className="flex items-center gap-1.5 font-bold text-white">
               <Users className="w-3.5 h-3.5 text-amber-400" />
               <span>{vehicle.seats} Passengers</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+          <motion.div
+            initial={{ opacity: 0, rotateY: 30 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1"
+          >
             <span className="text-[10px] text-slate-400 block uppercase">Fuel Type</span>
             <div className="flex items-center gap-1.5 font-bold text-white capitalize">
               <Fuel className="w-3.5 h-3.5 text-purple-400" />
               <span>{vehicle.fuelType}</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Interactive Real-Time Fare Calculator HUD */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white/5 border border-amber-500/30 space-y-3.5">
+        <div className="relative z-10 p-4 sm:p-5 rounded-2xl bg-white/5 border border-amber-500/30 space-y-3.5 shadow-md">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
               <SlidersHorizontal className="w-4 h-4" />
@@ -202,7 +240,7 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
           </div>
 
           {/* Total Output */}
-          <div className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between font-mono">
+          <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between font-mono">
             <div>
               <span className="text-[10px] text-slate-400 uppercase block">Estimated Total</span>
               <span className="text-xs text-slate-300">
@@ -218,13 +256,13 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
         </div>
 
         {/* Modal Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-2 border-t border-white/10">
+        <div className="relative z-10 flex flex-col sm:flex-row items-center gap-2.5 pt-2 border-t border-white/10">
           <a
             href={`https://wa.me/${settings.whatsappNumber}?text=${prefilledWA}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => soundFX.playClick()}
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95"
+            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 cursor-pointer"
           >
             <MessageSquare className="w-4 h-4 fill-white" />
             <span>Confirm on WhatsApp</span>
@@ -236,7 +274,7 @@ export const CarSpecsModal: React.FC<CarSpecsModalProps> = ({ vehicle, onClose }
               onClose();
               navigateToBooking(vehicle.id);
             }}
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#F5B301] to-amber-400 hover:from-amber-400 hover:to-amber-300 text-[#0B1F3A] text-xs font-black shadow-lg shadow-amber-500/20 active:scale-95 transition-all text-center flex items-center justify-center gap-1.5"
+            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#F5B301] to-amber-400 hover:from-amber-400 hover:to-amber-300 text-[#0B1F3A] text-xs font-black shadow-lg shadow-amber-500/20 active:scale-95 transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <span>Proceed to Online Booking</span>
             <ArrowRight className="w-4 h-4" />
