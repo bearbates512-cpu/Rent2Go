@@ -18,6 +18,7 @@ import { ContactView } from './components/public/ContactView.tsx';
 import { LegalView } from './components/public/LegalView.tsx';
 import { LiquidGasCanvas } from './components/effects/LiquidGasCanvas.tsx';
 import { ThunderBlastSystem } from './components/effects/ThunderBlastSystem.tsx';
+import { UniversalSpinInObserver } from './components/effects/UniversalSpinInObserver.tsx';
 
 // Admin Components
 import { AdminShell } from './components/admin/AdminShell.tsx';
@@ -133,40 +134,51 @@ function MainAppContent() {
   // Admin Portal View
   if (currentView === 'admin') {
     if (!isAdminAuthenticated) {
-      return <AdminLogin />;
+      return (
+        <>
+          <UniversalSpinInObserver />
+          <AdminLogin />
+        </>
+      );
     }
 
     return (
-      <AdminShell currentTab={adminTab} setCurrentTab={setAdminTab}>
-        {adminTab === 'dashboard' && (
-          <AdminDashboard
-            onNavigateTab={tab => setAdminTab(tab)}
-            onOpenNewBookingModal={() => setAdminTab('bookings')}
-          />
-        )}
-        {adminTab === 'bookings' && <AdminBookings />}
-        {adminTab === 'calendar' && <AdminCalendar />}
-        {adminTab === 'vehicles' && <AdminVehicles />}
-        {adminTab === 'cms' && <AdminCMS />}
-        {adminTab === 'navigation' && <AdminNavigation />}
-        {adminTab === 'pricing' && <AdminPricing />}
-        {adminTab === 'enquiries' && <AdminEnquiries />}
-        {adminTab === 'reviews' && <AdminReviews />}
-        {adminTab === 'media' && <AdminMediaLibrary />}
-        {adminTab === 'translations' && <AdminTranslations />}
-        {adminTab === 'formbuilder' && <AdminFormBuilder />}
-        {adminTab === 'reports' && <AdminReports />}
-        {adminTab === 'theme' && <AdminTheme />}
-        {adminTab === 'team' && <AdminTeam />}
-        {adminTab === 'settings' && <AdminSettings />}
-        {adminTab === 'audit' && <AdminAudit />}
-      </AdminShell>
+      <>
+        <UniversalSpinInObserver currentTab={adminTab} />
+        <AdminShell currentTab={adminTab} setCurrentTab={setAdminTab}>
+          {adminTab === 'dashboard' && (
+            <AdminDashboard
+              onNavigateTab={tab => setAdminTab(tab)}
+              onOpenNewBookingModal={() => setAdminTab('bookings')}
+            />
+          )}
+          {adminTab === 'bookings' && <AdminBookings />}
+          {adminTab === 'calendar' && <AdminCalendar />}
+          {adminTab === 'vehicles' && <AdminVehicles />}
+          {adminTab === 'cms' && <AdminCMS />}
+          {adminTab === 'navigation' && <AdminNavigation />}
+          {adminTab === 'pricing' && <AdminPricing />}
+          {adminTab === 'enquiries' && <AdminEnquiries />}
+          {adminTab === 'reviews' && <AdminReviews />}
+          {adminTab === 'media' && <AdminMediaLibrary />}
+          {adminTab === 'translations' && <AdminTranslations />}
+          {adminTab === 'formbuilder' && <AdminFormBuilder />}
+          {adminTab === 'reports' && <AdminReports />}
+          {adminTab === 'theme' && <AdminTheme />}
+          {adminTab === 'team' && <AdminTeam />}
+          {adminTab === 'settings' && <AdminSettings />}
+          {adminTab === 'audit' && <AdminAudit />}
+        </AdminShell>
+      </>
     );
   }
 
   // Public Experience Views
   return (
     <div className="relative min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#060D17] text-slate-900 dark:text-slate-100 transition-colors duration-250 overflow-x-hidden">
+      {/* Universal 3D Spin-In Typography Observer for Every Font on Website */}
+      <UniversalSpinInObserver />
+
       {/* Liquid Gas Plasma Canvas (Ambient fluid background layer) */}
       <LiquidGasCanvas />
 

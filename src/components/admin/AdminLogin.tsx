@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
 import { AUTHORIZED_ADMIN_EMAIL, getSupabaseClient, setCustomSupabaseConfig } from '../../utils/supabase.ts';
+import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
+import { LiquidGasCanvas, LiquidGasAura } from '../effects/LiquidGasCanvas.tsx';
 import {
   Lock,
   Mail,
@@ -92,30 +94,36 @@ export const AdminLogin: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col justify-center items-center p-4 sm:p-6 relative overflow-hidden">
+      {/* Background Liquid Gas Layer */}
+      <LiquidGasCanvas />
+
       {/* Subtle Background Glows */}
       <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 end-1/4 w-96 h-96 bg-[#F5B301]/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Back to Site Button */}
-      <div className="w-full max-w-md mb-4 flex items-center justify-between">
+      <div className="w-full max-w-md mb-4 flex items-center justify-between relative z-10">
         <button
           onClick={() => {
             window.history.pushState(null, '', '/');
             setCurrentView('home');
           }}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer"
         >
           {dir === 'rtl' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
           <span>{locale === 'ur' ? 'مرکزی ویب سائٹ پر واپس جائیں' : 'Back to Public Website'}</span>
         </button>
 
-        <span className="text-[10px] font-mono text-slate-500 uppercase">
+        <LiquidGasBadge className="text-[10px] text-amber-300">
           Sadiqabad Fleet Portal
-        </span>
+        </LiquidGasBadge>
       </div>
 
-      {/* Card */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-800/20 p-6 sm:p-8 space-y-6 relative z-10">
+      {/* Card with Liquid Gas Aura and 3D Spin */}
+      <div className="w-full max-w-md bg-white dark:bg-[#0B1523] rounded-3xl shadow-2xl border border-slate-800/20 p-6 sm:p-8 space-y-6 relative z-10 overflow-hidden group">
+        <LiquidGasAura className="opacity-40" />
+
+        <div className="relative z-10 space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <div className="inline-flex p-3 rounded-2xl bg-[#0B1F3A] shadow-md shadow-slate-900/20">
@@ -127,14 +135,14 @@ export const AdminLogin: React.FC = () => {
           </div>
 
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#0B1F3A] tracking-tight">
+            <SpinInHeading as="h1" splitWords className="text-xl sm:text-2xl font-black text-[#0B1F3A] dark:text-white tracking-tight">
               Rent<span className="text-[#F5B301]">2Go</span> Admin Portal
-            </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            </SpinInHeading>
+            <SpinInText as="p" className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               {locale === 'ur'
                 ? 'محفوظ ایڈمن پینل - صرف تصدیق شدہ ایڈمن رسائی'
                 : 'Secured Management Console & Fleet CMS'}
-            </p>
+            </SpinInText>
           </div>
         </div>
 
@@ -308,6 +316,7 @@ export const AdminLogin: React.FC = () => {
               </button>
             </form>
           )}
+        </div>
         </div>
       </div>
     </div>
