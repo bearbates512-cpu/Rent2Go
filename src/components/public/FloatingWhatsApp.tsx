@@ -20,7 +20,7 @@ export const FloatingWhatsApp: React.FC = () => {
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${prefilledMessage}`;
 
   return (
-    <aside aria-label="WhatsApp quick chat" className="fixed bottom-6 sm:bottom-8 end-6 z-40 flex items-center group">
+    <aside aria-label="WhatsApp quick chat" className="fixed bottom-20 sm:bottom-8 end-4 sm:end-6 z-40 flex items-center group">
       {/* Subtle pulsing radar ring */}
       <div className="absolute inset-0 rounded-full bg-emerald-500/30 animate-ping pointer-events-none" />
 

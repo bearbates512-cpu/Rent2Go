@@ -115,63 +115,101 @@
   background: #334e6f;
 }
 
-/* Universal 3D Spin-In Animations for Every Font across Website and Admin Panel */
+/* Mobile Touch & Hardware Acceleration */
+html, body {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prevent iOS Safari auto-zoom on input focus by guaranteeing 16px min font size */
+@media screen and (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area bottom padding for notchless and home-bar mobile devices */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+}
+
+.pt-safe {
+  padding-top: max(0.5rem, env(safe-area-inset-top, 0.5rem));
+}
+
+/* Smooth, GPU-efficient Typography Animations */
 @keyframes spinInHeading3D {
   0% {
     opacity: 0;
-    transform: perspective(900px) rotateX(-50deg) translateY(22px) scale(0.92);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
-    transform: perspective(900px) rotateX(0deg) translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 @keyframes spinInBody3D {
   0% {
     opacity: 0;
-    transform: perspective(900px) rotateY(35deg) translateY(12px) scale(0.95);
+    transform: translateY(8px);
   }
   100% {
     opacity: 1;
-    transform: perspective(900px) rotateY(0deg) translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 @keyframes spinInBadge3D {
   0% {
     opacity: 0;
-    transform: perspective(900px) rotateX(45deg) rotateY(-25deg) scale(0.85);
+    transform: scale(0.96);
   }
   100% {
     opacity: 1;
-    transform: perspective(900px) rotateX(0deg) rotateY(0deg) scale(1);
+    transform: scale(1);
   }
 }
 
 .spin-in-active-heading {
-  animation: spinInHeading3D 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-  transform-origin: center bottom;
+  animation: spinInHeading3D 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   backface-visibility: hidden;
-  will-change: transform, opacity;
 }
 
 .spin-in-active-body {
-  animation: spinInBody3D 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-  transform-origin: left center;
+  animation: spinInBody3D 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
   backface-visibility: hidden;
-  will-change: transform, opacity;
 }
 
 .spin-in-active-badge {
-  animation: spinInBadge3D 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-  transform-origin: center center;
+  animation: spinInBadge3D 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   backface-visibility: hidden;
-  will-change: transform, opacity;
 }
 
 /* 3D perspective utilities */
 .perspective-1000 {
   perspective: 1000px;
+}
+
+/* Mobile blur filter performance optimization */
+@media (max-width: 768px) {
+  .blur-3xl {
+    filter: blur(14px) !important;
+  }
+  .blur-2xl {
+    filter: blur(10px) !important;
+  }
+}
+
+/* Accessibility: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 

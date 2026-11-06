@@ -5,7 +5,6 @@ import { AdminRole } from '../../types/index.ts';
 import { soundFX } from '../../utils/soundEffects.ts';
 import { triggerThunderBlast } from '../effects/ThunderBlastSystem.tsx';
 import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
-import { LiquidGasCanvas } from '../effects/LiquidGasCanvas.tsx';
 import {
   LayoutDashboard,
   Calendar,
@@ -93,8 +92,6 @@ export const AdminShell: React.FC<AdminShellProps> = ({
 
   return (
     <div className="min-h-screen relative flex flex-col bg-[#F8FAFC] dark:bg-[#060D17] text-slate-800 dark:text-slate-100 transition-colors duration-250 antialiased overflow-x-hidden" dir="ltr">
-      {/* Liquid Gas Plasma Canvas in Admin Panel */}
-      <LiquidGasCanvas />
 
       {/* Top Navbar with Website Gold & Navy Theme */}
       <header className="relative z-40 bg-[#0B1F3A] dark:bg-[#07101E] text-white sticky top-0 border-b border-slate-800 shadow-xl backdrop-blur-md">

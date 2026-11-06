@@ -514,25 +514,26 @@ export const CarDetailView: React.FC = () => {
         )}
       </div>
 
-      {/* Sticky Bottom Action Bar on Mobile (per Design Brief Section 3 & 5.3) */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-40 shadow-xl flex items-center justify-between gap-2">
+      {/* Sticky Bottom Action Bar on Mobile (with Safe Area and High Contrast) */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 dark:bg-[#0B1523]/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 p-3 pb-safe z-40 shadow-2xl flex items-center justify-between gap-3">
         <div className="shrink-0">
-          <span className="text-[10px] text-slate-400 block">{locale === 'ur' ? 'کرایہ' : 'Tariff'}</span>
-          <span className="text-sm font-extrabold text-[#0B1F3A] font-mono">
+          <span className="text-[10px] text-slate-400 dark:text-slate-400 block font-medium">{locale === 'ur' ? 'روزانہ کرایہ' : 'Tariff'}</span>
+          <span className="text-sm font-extrabold text-[#0B1F3A] dark:text-[#F5B301] font-mono">
             {vehicle.dailyRatePKR ? `Rs. ${vehicle.dailyRatePKR.toLocaleString()}` : 'Quote'}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 flex-1 justify-end">
+        <div className="flex items-center gap-2 flex-1 justify-end">
           <a
             href={`https://wa.me/${settings.whatsappNumber}?text=${prefilledWA}`}
-            className="p-2.5 rounded-xl bg-[#25D366] text-white shrink-0"
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-[#25D366] text-white shrink-0 shadow-sm active:scale-95 transition-transform"
             title="WhatsApp"
+            aria-label="WhatsApp"
           >
             <MessageSquare className="w-5 h-5 fill-current" />
           </a>
           <button
             onClick={() => navigateToBooking(vehicle.id)}
-            className="px-4 py-2.5 rounded-xl bg-[#0B1F3A] text-white text-xs font-bold shrink-0 flex-1 text-center truncate"
+            className="min-h-[44px] px-4 py-2.5 rounded-xl bg-[#0B1F3A] hover:bg-[#142F57] dark:bg-[#F5B301] dark:hover:bg-amber-400 text-white dark:text-[#0B1F3A] text-xs font-extrabold shrink-0 flex-1 text-center truncate shadow-sm active:scale-98 transition-all cursor-pointer"
           >
             {locale === 'ur' ? 'گاڑی بک کریں' : 'Request Booking'}
           </button>
