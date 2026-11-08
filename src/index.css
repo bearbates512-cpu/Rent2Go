@@ -139,71 +139,55 @@ html, body {
   padding-top: max(0.5rem, env(safe-area-inset-top, 0.5rem));
 }
 
-/* Smooth, GPU-efficient Typography Animations */
-@keyframes spinInHeading3D {
+/* Marquee Infinite Scrolling for Drkst-style Ticker */
+@keyframes marquee {
   0% {
-    opacity: 0;
-    transform: translateY(12px);
+    transform: translateX(0%);
   }
   100% {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%);
   }
 }
 
-@keyframes spinInBody3D {
+@keyframes marqueeRtl {
   0% {
-    opacity: 0;
-    transform: translateY(8px);
+    transform: translateX(-50%);
   }
   100% {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0%);
   }
 }
 
-@keyframes spinInBadge3D {
-  0% {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+  will-change: transform;
 }
 
-.spin-in-active-heading {
-  animation: spinInHeading3D 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-  backface-visibility: hidden;
+[dir="rtl"] .animate-marquee {
+  animation: marqueeRtl 32s linear infinite;
 }
 
-.spin-in-active-body {
-  animation: spinInBody3D 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-  backface-visibility: hidden;
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
-.spin-in-active-badge {
-  animation: spinInBadge3D 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-  backface-visibility: hidden;
+/* Subtle reveal mask */
+.mask-reveal {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 3D perspective utilities */
-.perspective-1000 {
-  perspective: 1000px;
+/* Editorial hairline dividers */
+.border-hairline {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+.dark .border-hairline {
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Mobile blur filter performance optimization */
-@media (max-width: 768px) {
-  .blur-3xl {
-    filter: blur(14px) !important;
-  }
-  .blur-2xl {
-    filter: blur(10px) !important;
-  }
-}
-
-/* Accessibility: prefers-reduced-motion */
+/* Accessibility: prefers-reduced-motion fallback */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;

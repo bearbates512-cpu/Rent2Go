@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AppProvider, useApp } from './context/AppContext.tsx';
+import { PageLoader } from './components/public/PageLoader.tsx';
 import { Header } from './components/public/Header.tsx';
 import { Footer } from './components/public/Footer.tsx';
 import { AnnouncementBar } from './components/public/AnnouncementBar.tsx';
@@ -164,7 +165,10 @@ function MainAppContent() {
 
   // Public Experience Views
   return (
-    <div className="relative min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#060D17] text-slate-900 dark:text-slate-100 transition-colors duration-250 overflow-x-hidden">
+    <div className="relative min-h-screen flex flex-col bg-[#FAF9F6] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 transition-colors duration-250 overflow-x-hidden">
+      {/* Drkst Initial Page Loading Screen */}
+      <PageLoader />
+
       <div className="relative z-10 flex flex-col min-h-screen">
         <AnnouncementBar />
         <Header />
@@ -173,10 +177,10 @@ function MainAppContent() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentView}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
             >
               {currentView === 'home' && <HomeView />}
               {currentView === 'cars' && <FleetView />}

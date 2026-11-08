@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { soundFX } from '../../utils/soundEffects.ts';
 import {
@@ -8,12 +9,12 @@ import {
   X,
   Phone,
   ShieldCheck,
-  Search,
   Volume2,
   VolumeX,
   Sun,
   Moon,
-  Lock
+  Lock,
+  Clock
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -26,12 +27,31 @@ export const Header: React.FC = () => {
     navigateToBooking,
     themeMode,
     toggleThemeMode,
-    isAdminAuthenticated,
-    adminUser
+    isAdminAuthenticated
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(() => soundFX.getMuted());
+  const [currentTime, setCurrentTime] = useState('');
+
+  // Live Sadiqabad / Pakistan Time (Drkst signature feature)
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      // Format to Pakistan Standard Time (PKT)
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'Asia/Karachi',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      };
+      setCurrentTime(new Intl.DateTimeFormat('en-US', options).format(now));
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const toggleSound = () => {
     const muted = soundFX.toggleMute();
@@ -45,12 +65,12 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { id: 'home', labelEn: 'Home', labelUr: 'مرکزی صفحہ' },
-    { id: 'cars', labelEn: 'Fleet & Cars', labelUr: 'ہماری گاڑیاں' },
+    { id: 'cars', labelEn: 'Fleet', labelUr: 'گاڑیاں' },
+    { id: 'about', labelEn: 'About', labelUr: 'ہمارے متعلق' },
     { id: 'services', labelEn: 'Services', labelUr: 'سروسز' },
-    { id: 'rates', labelEn: 'Rates', labelUr: 'کرایہ نامہ' },
-    { id: 'about', labelEn: 'About Us', labelUr: 'ہمارے متعلق' },
-    { id: 'contact', labelEn: 'Contact', labelUr: 'رابطہ کریں' },
-    { id: 'status', labelEn: 'Track Booking', labelUr: 'بکنگ کا احوال' }
+    { id: 'rates', labelEn: 'Tariff', labelUr: 'کرایہ نامہ' },
+    { id: 'contact', labelEn: 'Contact', labelUr: 'رابطہ' },
+    { id: 'status', labelEn: 'Track', labelUr: 'احوال' }
   ];
 
   const handleNavClick = (viewId: string) => {
@@ -63,91 +83,87 @@ export const Header: React.FC = () => {
   const isDark = themeMode === 'dark';
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#071324]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/90 shadow-xs transition-colors duration-250">
+    <header className="sticky top-0 z-40 bg-white/85 dark:bg-[#070D18]/85 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-colors duration-250">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-18">
-          {/* Logo */}
+        <div className="flex items-center justify-between h-20">
+          {/* Logo with Drkst minimalist typography */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2.5 cursor-pointer select-none group py-1"
+            className="flex items-center gap-3 cursor-pointer select-none group"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#0B1F3A] dark:bg-slate-800 border border-transparent dark:border-slate-700 flex items-center justify-center p-1.5 shadow-md shadow-slate-900/10 group-hover:scale-105 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 transition-transform">
               <img
                 src="/assets/aistudio/Rent2Go_icon_transparent.png"
-                alt="Rent2Go Logo"
-                className="w-full h-full object-contain brightness-110"
+                alt="Rent2Go"
+                className="w-full h-full object-contain brightness-125"
               />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-1 leading-none">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-[#0B1F3A] dark:text-white">
-                  Rent<span className="text-[#F5B301]">2Go</span>
-                </span>
-              </div>
-              <span className="text-[10px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase mt-0.5">
-                {locale === 'ur' ? 'صادق آباد کار رینٹل' : 'Sadiqabad Rental'}
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-950 dark:text-white font-mono">
+                Rent<span className="text-[#F5B301]">2Go</span><span className="text-xs font-normal text-slate-400">®</span>
+              </span>
+              <span className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">
+                {locale === 'ur' ? 'صادق آباد پریمیم فلیٹ' : 'Sadiqabad · Motorway'}
               </span>
             </div>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2">
+          {/* Desktop Nav Links (Drkst editorial text style with animated underline) */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium">
             {navLinks.map(link => {
               const isActive = currentView === link.id;
               return (
                 <button
                   key={link.id}
                   onClick={() => handleNavClick(link.id)}
-                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${
+                  className={`relative py-2 text-sm tracking-tight transition-colors cursor-pointer group ${
                     isActive
-                      ? 'text-[#0B1F3A] dark:text-white bg-slate-100 dark:bg-slate-800/90 font-bold shadow-2xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-[#0B1F3A] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                      ? 'text-slate-950 dark:text-white font-bold'
+                      : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'
                   }`}
                 >
-                  {locale === 'ur' ? link.labelUr : link.labelEn}
+                  <span>{locale === 'ur' ? link.labelUr : link.labelEn}</span>
+                  {/* Subtle animated underline */}
+                  <span
+                    className={`absolute bottom-0 inset-x-0 h-[2px] bg-slate-950 dark:bg-amber-400 transition-all duration-300 ${
+                      isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                  />
                 </button>
               );
             })}
           </nav>
 
-          {/* Actions Right */}
-          <div className="hidden sm:flex items-center gap-2.5">
+          {/* Right Controls: Live Time (Drkst signature), Theme, Language, CTA */}
+          <div className="hidden sm:flex items-center gap-3">
+            {/* Live Time Clock (Drkst Signature) */}
+            <div className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-black/5 dark:border-white/10 text-xs font-mono text-slate-600 dark:text-slate-300 select-none">
+              <Clock className="w-3.5 h-3.5 text-amber-500" />
+              <span>{currentTime || 'PKT 05:45 PM'}</span>
+            </div>
+
             {/* Day / Night Mode Switcher Toggle */}
             <button
               onClick={handleThemeToggle}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 ${
-                isDark
-                  ? 'bg-amber-500/15 border-amber-400/40 text-amber-300 hover:bg-amber-500/25'
-                  : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200/80 hover:text-slate-900'
-              }`}
-              title={isDark ? (locale === 'ur' ? 'ڈے موڈ آن کریں' : 'Switch to Day Mode') : (locale === 'ur' ? 'نائٹ موڈ آن کریں' : 'Switch to Night Mode')}
+              className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-amber-400 transition-all cursor-pointer active:scale-95"
+              title={isDark ? 'Day Mode' : 'Night Mode'}
               aria-label="Toggle theme mode"
             >
-              {isDark ? (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
-                  <span className="font-mono text-[11px] uppercase tracking-wide">{locale === 'ur' ? 'دن' : 'Day'}</span>
-                </>
-              ) : (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-indigo-600 fill-indigo-600/10" />
-                  <span className="font-mono text-[11px] uppercase tracking-wide">{locale === 'ur' ? 'رات' : 'Night'}</span>
-                </>
-              )}
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-slate-800" />}
             </button>
 
-            {/* Futuristic Sound FX Toggle */}
+            {/* Sound FX Toggle */}
             <button
               onClick={toggleSound}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`p-2.5 rounded-full transition-all cursor-pointer active:scale-95 ${
                 !isAudioMuted
-                  ? 'bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-300 dark:border-amber-400/30'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-600 dark:hover:text-slate-200'
+                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                  : 'bg-slate-100 dark:bg-slate-900 text-slate-400'
               }`}
               title={isAudioMuted ? 'Turn Sound FX On' : 'Mute Sound FX'}
+              aria-label="Toggle sound FX"
             >
-              {!isAudioMuted ? <Volume2 className="w-3.5 h-3.5 text-amber-500" /> : <VolumeX className="w-3.5 h-3.5" />}
-              <span className="text-[10px] uppercase">{!isAudioMuted ? 'FX' : 'Muted'}</span>
+              {!isAudioMuted ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
             </button>
 
             {/* Language Switch */}
@@ -156,175 +172,114 @@ export const Header: React.FC = () => {
                 soundFX.playClick();
                 setLocale(locale === 'en' ? 'ur' : 'en');
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
               title="Change Language"
             >
-              <Globe className="w-3.5 h-3.5 text-[#0B1F3A] dark:text-amber-400" />
-              <span className="font-semibold">{locale === 'en' ? 'Urdu' : 'English'}</span>
+              <Globe className="w-3.5 h-3.5 text-amber-500" />
+              <span>{locale === 'en' ? 'اردو' : 'EN'}</span>
             </button>
 
-            {/* Direct Call Quick Link */}
-            <a
-              href={`tel:${settings.phone}`}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-[#0B1F3A] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="font-mono">{settings.phoneFormatted}</span>
-            </a>
-
-            {/* Admin Panel Button (Secured for Admin) */}
+            {/* Stealth Admin Button */}
             <button
               onClick={() => {
                 soundFX.playClick();
                 window.history.pushState(null, '', '/admin/panel');
                 setCurrentView('admin');
               }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer active:scale-95 ${
+              className={`p-2.5 rounded-full transition-all cursor-pointer active:scale-95 ${
                 isAdminAuthenticated
-                  ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/25'
-                  : 'bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-amber-400 hover:text-amber-600 dark:hover:text-amber-400'
+                  ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/40'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 text-slate-500 dark:text-slate-400'
               }`}
-              title={
-                isAdminAuthenticated
-                  ? (locale === 'ur' ? 'ایڈمن پینل لاگ ان ہے' : 'Admin Panel (Logged In)')
-                  : (locale === 'ur' ? 'ایڈمن پینل لاگ ان کریں' : 'Admin Panel Login')
-              }
+              title={isAdminAuthenticated ? 'Admin Panel (Unlocked)' : 'Admin Access'}
+              aria-label="Admin Portal"
             >
-              {isAdminAuthenticated ? (
-                <>
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span>{locale === 'ur' ? 'ایڈمن پینل' : 'Admin Panel'}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <Lock className="w-3.5 h-3.5 text-amber-500" />
-                  <span>{locale === 'ur' ? 'ایڈمن پینل' : 'Admin Panel'}</span>
-                </>
-              )}
+              {isAdminAuthenticated ? <ShieldCheck className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
             </button>
 
-            {/* Primary Book CTA */}
+            {/* Primary Editorial "Book Now" CTA */}
             <button
               onClick={() => navigateToBooking()}
-              className="px-4 py-2 rounded-lg bg-[#0B1F3A] hover:bg-[#142F57] dark:bg-[#F5B301] dark:hover:bg-amber-400 text-white dark:text-[#0B1F3A] text-sm font-bold shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
+              className="px-5 py-2.5 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold tracking-tight shadow-md transition-all active:scale-95 cursor-pointer"
             >
               {locale === 'ur' ? 'گاڑی بک کریں' : 'Book a Car'}
             </button>
           </div>
 
-          {/* Mobile Right Bar (Theme toggle + Menu) */}
-          <div className="flex sm:hidden items-center gap-2">
+          {/* Mobile Right Bar (Theme toggle + Menu toggle) */}
+          <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={handleThemeToggle}
-              className={`p-2 rounded-lg border text-xs font-bold transition-all ${
-                isDark
-                  ? 'bg-amber-500/15 border-amber-400/40 text-amber-300'
-                  : 'bg-slate-100 border-slate-200 text-slate-700'
-              }`}
-              aria-label="Toggle theme mode"
+              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-amber-400 cursor-pointer"
+              aria-label="Toggle theme"
             >
-              {isDark ? (
-                <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20" />
-              ) : (
-                <Moon className="w-4 h-4 text-indigo-600 fill-indigo-600/10" />
-              )}
-            </button>
-
-            <button
-              onClick={() => setLocale(locale === 'en' ? 'ur' : 'en')}
-              className="px-2.5 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800"
-            >
-              {locale === 'en' ? 'اردو' : 'EN'}
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
-              aria-label="Toggle navigation menu"
+              className="p-2.5 rounded-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 cursor-pointer"
+              aria-label="Open navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B1523] px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-200">
-          <div className="mb-3 space-y-2">
-            <button
-              onClick={() => {
-                navigateToBooking();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full py-2.5 rounded-lg bg-[#0B1F3A] dark:bg-[#F5B301] text-white dark:text-[#0B1F3A] text-sm font-bold shadow-sm text-center cursor-pointer"
-            >
-              {locale === 'ur' ? 'گاڑی بک کریں' : 'Book a Car'}
-            </button>
-
-            {/* Admin Panel button for Mobile */}
-            <button
-              onClick={() => {
-                soundFX.playClick();
-                setMobileMenuOpen(false);
-                window.history.pushState(null, '', '/admin/panel');
-                setCurrentView('admin');
-              }}
-              className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-between border transition-all cursor-pointer ${
-                isAdminAuthenticated
-                  ? 'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/40'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                {isAdminAuthenticated ? (
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                ) : (
-                  <Lock className="w-4 h-4 text-amber-500" />
-                )}
-                <span>
-                  {isAdminAuthenticated
-                    ? (locale === 'ur' ? 'ایڈمن کنٹرول پینل (فعال)' : 'Admin Control Panel (Active)')
-                    : (locale === 'ur' ? 'ایڈمن پینل لاگ ان' : 'Admin Panel (Sign In)')}
-                </span>
-              </div>
-              <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
-                isAdminAuthenticated
-                  ? 'bg-emerald-200/80 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200'
-                  : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-              }`}>
-                {isAdminAuthenticated ? 'UNLOCKED' : 'PROTECTED'}
-              </span>
-            </button>
-          </div>
-
-          {navLinks.map(link => (
-            <button
-              key={link.id}
-              onClick={() => handleNavClick(link.id)}
-              className={`w-full text-start px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-between ${
-                currentView === link.id
-                  ? 'bg-slate-100 dark:bg-slate-800 text-[#0B1F3A] dark:text-white font-bold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-              }`}
-            >
-              <span>{locale === 'ur' ? link.labelUr : link.labelEn}</span>
-              {currentView === link.id && (
-                <span className="w-2 h-2 rounded-full bg-[#F5B301]" />
-              )}
-            </button>
-          ))}
-
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>{settings.phoneFormatted}</span>
+      {/* Mobile Drawer (Drkst Minimalist Full-Width) */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:hidden border-t border-black/5 dark:border-white/10 bg-white/95 dark:bg-[#070D18]/95 backdrop-blur-2xl px-6 py-6 space-y-4 shadow-2xl"
+          >
+            <div className="flex flex-col space-y-3">
+              {navLinks.map((link, idx) => (
+                <motion.button
+                  key={link.id}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.04 }}
+                  onClick={() => handleNavClick(link.id)}
+                  className={`text-start py-2 text-base font-bold tracking-tight transition-colors ${
+                    currentView === link.id
+                      ? 'text-[#F5B301]'
+                      : 'text-slate-800 dark:text-slate-200'
+                  }`}
+                >
+                  {locale === 'ur' ? link.labelUr : link.labelEn}
+                </motion.button>
+              ))}
             </div>
-            <span>{settings.city}, Punjab</span>
-          </div>
-        </div>
-      )}
+
+            <div className="pt-4 border-t border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
+              <button
+                onClick={() => {
+                  soundFX.playClick();
+                  setLocale(locale === 'en' ? 'ur' : 'en');
+                }}
+                className="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-200"
+              >
+                {locale === 'en' ? 'اردو زبان' : 'English'}
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigateToBooking();
+                }}
+                className="flex-1 px-5 py-3 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-xs font-bold text-center tracking-tight"
+              >
+                {locale === 'ur' ? 'گاڑی بک کریں' : 'Book a Ride'}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

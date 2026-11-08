@@ -1,233 +1,448 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Car, Phone, MessageSquare, MapPin, Clock, ShieldCheck, Mail, Lock, Sparkles } from 'lucide-react';
-import { SpinInHeading, SpinInText } from '../effects/SpinInTypography.tsx';
+import { soundFX } from '../../utils/soundEffects.ts';
+import { normalizePkPhone } from '../../utils/phone.ts';
+import {
+  Phone,
+  MessageSquare,
+  MapPin,
+  Clock,
+  ArrowUp,
+  ArrowRight,
+  CheckCircle2,
+  Lock,
+  Mail,
+  Send,
+  Sparkles
+} from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { locale, settings, setCurrentView } = useApp();
+  const { locale, settings, setCurrentView, submitEnquiry } = useApp();
+
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [sent, setSent] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Drkst Newsletter state
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSent, setNewsletterSent] = useState(false);
 
   const handleLink = (view: string) => {
+    soundFX.playClick();
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const quickLinks = [
-    { id: 'cars', ur: 'گاڑیاں اور فلیٹ', en: 'Our Fleet & Cars' },
-    { id: 'services', ur: 'ہماری سروسز', en: 'Services Catalogue' },
-    { id: 'rates', ur: 'کرایہ نامہ اور پیکیجز', en: 'Rates & Packages' },
-    { id: 'status', ur: 'آن لائن بکنگ کا احوال', en: 'Track Booking Status' },
-    { id: 'about', ur: 'ہمارے متعلق', en: 'About Rent2Go Sadiqabad' }
+  const scrollToTop = () => {
+    soundFX.playClick();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleQuickContact = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg('');
+
+    if (!name.trim()) {
+      setErrorMsg(locale === 'ur' ? 'براہِ کرم نام درج کریں۔' : 'Please provide your name.');
+      return;
+    }
+
+    const norm = normalizePkPhone(phone);
+    if (!norm.isValid) {
+      setErrorMsg(norm.error || 'Please enter a valid Pakistani mobile number.');
+      return;
+    }
+
+    submitEnquiry({
+      name: name.trim(),
+      phone: norm.formatted,
+      service: 'Footer Quick Request',
+      message: message.trim() || 'Inquiring about car availability and rental quote'
+    });
+
+    setSent(true);
+    setName('');
+    setPhone('');
+    setMessage('');
+    setTimeout(() => setSent(false), 5000);
+  };
+
+  const handleNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    soundFX.playClick();
+    setNewsletterSent(true);
+    setNewsletterEmail('');
+    setTimeout(() => setNewsletterSent(false), 4000);
+  };
+
+  const navLinks = [
+    { id: 'home', en: 'Home', ur: 'مرکزی صفحہ' },
+    { id: 'cars', en: 'Fleet Collection', ur: 'گاڑیاں اور فلیٹ' },
+    { id: 'about', en: 'About Rent2Go', ur: 'ہمارے متعلق' },
+    { id: 'services', en: 'Services', ur: 'سروسز' },
+    { id: 'rates', en: 'Tariff & Rates', ur: 'کرایہ نامہ' },
+    { id: 'contact', en: 'Contact Desk', ur: 'رابطہ' },
+    { id: 'status', en: 'Track Booking', ur: 'بکنگ کا احوال' },
+    { id: 'legal', en: 'Rental Policies', ur: 'پالیسی و شرائط' }
   ];
 
-  const popularRoutes = [
-    { ur: 'صادق آباد تا سکھر ائیرپورٹ', en: 'Sadiqabad to Sukkur Airport' },
-    { ur: 'شادی بیاہ اور بارات کے لیے فارچونر', en: 'Wedding Luxury Fleet (Fortuner & Civic)' },
-    { ur: 'صادق آباد تا ملتان موٹروے M-5', en: 'Sadiqabad to Multan via M-5' },
-    { ur: 'ایف ایف سی اور فاطمہ فرٹیلائزر کارپوریٹ', en: 'Corporate Rental (FFC & Machi Goth)' },
-    { ur: '14 سیٹر ہائی ایس فیملی ٹور', en: '14-Seater Hiace Family Tours' }
-  ];
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 35, filter: 'blur(3px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const }
+    }
+  };
 
   return (
-    <footer className="bg-[#0B1F3A] text-slate-300 pt-14 pb-8 border-t border-slate-800 relative overflow-hidden perspective-1000">
-      {/* Subtle Liquid Gas glow aura inside footer */}
-      <div className="absolute inset-0 bg-radial from-amber-500/5 via-cyan-500/5 to-transparent pointer-events-none" />
+    <footer className="bg-slate-950 text-white border-t border-white/10 relative overflow-hidden select-none">
+      {/* Drkst Signature Editorial CTA Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Left Column: Massive Editorial Heading */}
+          <motion.div
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
+            className="lg:col-span-7 space-y-6"
+          >
+            <span className="text-xs font-mono font-bold tracking-widest uppercase text-amber-400">
+              {locale === 'ur' ? 'ہم سے رابطہ کریں' : 'REACH OUT'}
+            </span>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-          {/* Brand Info */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, x: -20, rotateY: 25 }}
-              whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-              viewport={{ once: false, amount: 0.15 }}
-              transition={{ duration: 0.55 }}
-              className="flex items-center gap-3"
-            >
-              <div className="w-10 h-10 rounded-xl bg-white/10 p-1.5 flex items-center justify-center shrink-0">
-                <img
-                  src="/assets/aistudio/Rent2Go_icon_transparent.png"
-                  alt="Rent2Go Logo"
-                  className="w-full h-full object-contain brightness-125"
-                />
+            <h2 className="text-4xl sm:text-6xl xl:text-7xl font-black tracking-tight leading-[0.95] font-mono text-white">
+              {locale === 'ur' ? (
+                <>
+                  اپنا سفر آسان بنائیں。<br />
+                  <span className="text-[#F5B301]">ہمہ وقت دستیاب۔</span>
+                </>
+              ) : (
+                <>
+                  REFINE YOUR<br />
+                  JOURNEY.<br />
+                  <span className="text-[#F5B301]">WHEREVER YOU ARE.</span>
+                </>
+              )}
+            </h2>
+
+            <p className="text-slate-400 text-sm sm:text-base max-w-xl leading-relaxed">
+              {locale === 'ur'
+                ? 'صادق آباد اور موٹروے پر لگژری گاڑیوں کی بکنگ، کرایہ کی معلومات، یا کارپوریٹ معاہدوں کے لیے ابھی رابطہ کریں۔'
+                : 'Experience effortless travel with our verified fleet in Sadiqabad, Rahim Yar Khan, and M-5 Motorway corridor.'}
+            </p>
+
+            {/* Direct Contact Links */}
+            <div className="pt-4 flex flex-wrap items-center gap-6 text-sm font-mono">
+              <a
+                href={`tel:${settings.phone}`}
+                className="flex items-center gap-2 text-white hover:text-amber-400 transition-colors"
+              >
+                <Phone className="w-4 h-4 text-amber-400" />
+                <span>{settings.phoneFormatted}</span>
+              </a>
+
+              <a
+                href={`https://wa.me/${settings.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
+              >
+                <MessageSquare className="w-4 h-4 fill-current" />
+                <span>WhatsApp 24/7</span>
+              </a>
+
+              <div className="flex items-center gap-2 text-slate-400">
+                <MapPin className="w-4 h-4 text-amber-400" />
+                <span className="truncate">{settings.address[locale] || settings.address.en}</span>
               </div>
-              <div className="flex flex-col">
-                <SpinInHeading as="h4" axis="y" className="flex items-center gap-1 text-xl font-extrabold text-white">
-                  <span>Rent</span>
-                  <span className="text-[#F5B301]">2Go</span>
-                </SpinInHeading>
-                <SpinInText as="span" className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                  {locale === 'ur' ? 'صادق آباد کار رینٹل' : 'Sadiqabad Rental'}
-                </SpinInText>
-              </div>
-            </motion.div>
-
-            <SpinInText as="p" className="text-sm text-slate-400 leading-relaxed">
-              {settings.tagline[locale] || settings.tagline.en}
-            </SpinInText>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, rotateY: 30 }}
-              whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-              viewport={{ once: false, amount: 0.15 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>{locale === 'ur' ? 'حکومت سے تصدیق شدہ فلیٹ' : 'Verified & Insured Local Fleet'}</span>
-            </motion.div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <SpinInHeading as="h3" splitWords axis="x" className="text-sm font-bold uppercase tracking-wider text-white mb-4">
-              {locale === 'ur' ? 'اہم لنکس' : 'Explore'}
-            </SpinInHeading>
-            <ul className="space-y-2.5 text-sm">
-              {quickLinks.map((item, idx) => (
-                <motion.li
-                  key={item.id}
-                  initial={{ opacity: 0, x: -18, rotateY: 35 }}
-                  whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                  viewport={{ once: false, amount: 0.15 }}
-                  transition={{ duration: 0.45, delay: idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <button
-                    onClick={() => handleLink(item.id)}
-                    className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors hover:translate-x-1 inline-flex items-center gap-1.5 cursor-pointer text-slate-300"
-                  >
-                    <span className="text-[#F5B301] text-xs">›</span>
-                    <span>{locale === 'ur' ? item.ur : item.en}</span>
-                  </button>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Popular Services */}
-          <div>
-            <SpinInHeading as="h3" splitWords axis="x" className="text-sm font-bold uppercase tracking-wider text-white mb-4">
-              {locale === 'ur' ? 'مشہور سروسز' : 'Popular Routes'}
-            </SpinInHeading>
-            <ul className="space-y-2.5 text-sm">
-              {popularRoutes.map((route, idx) => (
-                <motion.li
-                  key={idx}
-                  initial={{ opacity: 0, x: -18, rotateY: 35 }}
-                  whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                  viewport={{ once: false, amount: 0.15 }}
-                  transition={{ duration: 0.45, delay: idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                  className="text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1.5"
-                >
-                  <span className="text-cyan-400 text-xs">›</span>
-                  <span>{locale === 'ur' ? route.ur : route.en}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact Details */}
-          <div>
-            <SpinInHeading as="h3" splitWords axis="x" className="text-sm font-bold uppercase tracking-wider text-white mb-4">
-              {locale === 'ur' ? 'رابطہ اور پتہ' : 'Contact & Office'}
-            </SpinInHeading>
-            <div className="space-y-3 text-sm">
-              <motion.div
-                initial={{ opacity: 0, y: 15, rotateX: -25 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
-                transition={{ duration: 0.45 }}
-                className="flex items-start gap-2.5"
-              >
-                <MapPin className="w-4 h-4 text-[#F5B301] shrink-0 mt-1" />
-                <span className="text-slate-300">
-                  {settings.address[locale] || settings.address.en}
-                </span>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 15, rotateX: -25 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
-                transition={{ duration: 0.45, delay: 0.05 }}
-                className="flex items-center gap-2.5"
-              >
-                <Phone className="w-4 h-4 text-[#F5B301] shrink-0" />
-                <a href={`tel:${settings.phone}`} className="font-mono text-white hover:text-amber-400 transition-colors">
-                  {settings.phoneFormatted}
-                </a>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 15, rotateX: -25 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
-                transition={{ duration: 0.45, delay: 0.1 }}
-                className="flex items-center gap-2.5"
-              >
-                <MessageSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                <a
-                  href={`https://wa.me/${settings.whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-emerald-400 hover:text-emerald-300 hover:underline"
-                >
-                  +{settings.whatsappNumber} (WhatsApp)
-                </a>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 15, rotateX: -25 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
-                transition={{ duration: 0.45, delay: 0.15 }}
-                className="flex items-center gap-2.5"
-              >
-                <Clock className="w-4 h-4 text-[#F5B301] shrink-0" />
-                <span className="text-slate-400 text-xs">
-                  {settings.businessHours[locale] || settings.businessHours.en}
-                </span>
-              </motion.div>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Right Column: Sleek Editorial Quick Inquiry Box */}
+          <motion.div
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
+            className="lg:col-span-5 bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl"
+          >
+            <h3 className="text-lg font-bold text-white mb-2 font-mono">
+              {locale === 'ur' ? 'فوری پیغام بھیجیں' : 'Direct Inquiry'}
+            </h3>
+            <p className="text-xs text-slate-400 mb-6">
+              {locale === 'ur'
+                ? 'نام اور فون درج کریں، ہماری ٹیم 5 منٹ میں رابطہ کرے گی۔'
+                : 'Fill out this quick form and our fleet dispatch will respond immediately.'}
+            </p>
+
+            {sent ? (
+              <div className="p-4 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-2.5">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span>{locale === 'ur' ? 'شکریہ! آپ کی درخواست موصول ہو گئی۔' : 'Inquiry sent! We will reach out shortly.'}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleQuickContact} className="space-y-4 text-xs font-mono">
+                {errorMsg && (
+                  <p className="text-rose-400 text-xs font-bold">{errorMsg}</p>
+                )}
+
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-slate-400 block mb-1">
+                    {locale === 'ur' ? 'مکمل نام *' : 'Your Name *'}
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={locale === 'ur' ? 'مثال: محمد احمد' : 'e.g. Tariq Malik'}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-slate-500 focus:outline-hidden focus:border-amber-400"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-slate-400 block mb-1">
+                    {locale === 'ur' ? 'موبائل نمبر *' : 'Mobile / WhatsApp *'}
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="03001234567"
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-slate-500 focus:outline-hidden focus:border-amber-400"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-slate-400 block mb-1">
+                    {locale === 'ur' ? 'گاڑی یا سفر کی تفصیل' : 'Vehicle or Journey Notes'}
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder={locale === 'ur' ? 'مطلوبہ گاڑی، تاریخ اور منزل...' : 'Interested in Fortuner / Civic, dates, destination...'}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-slate-500 focus:outline-hidden focus:border-amber-400"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 px-6 rounded-xl bg-[#F5B301] hover:bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{locale === 'ur' ? 'پیغام ارسال کریں' : 'Send Inquiry'}</span>
+                </button>
+              </form>
+            )}
+          </motion.div>
         </div>
 
-        {/* Bottom bar */}
+        {/* Drkst Signature Template: Weekly Newsletter & Highway Travel Deals */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 0.55 }}
-          className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500"
+          className="mt-16 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 bg-white/[0.02] p-8 rounded-3xl border border-white/5"
         >
-          <SpinInText as="p">
-            © {new Date().getFullYear()} Rent2Go. {locale === 'ur' ? 'جملہ حقوق محفوظ ہیں۔' : 'All rights reserved.'} Sadiqabad, Punjab.
-          </SpinInText>
-          <div className="flex flex-wrap items-center gap-4">
-            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline cursor-pointer">
-              {locale === 'ur' ? 'شرائط و ضوابط' : 'Terms & Conditions'}
+          <div className="space-y-1">
+            <h3 className="text-xl sm:text-2xl font-bold font-mono text-white flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-amber-400" />
+              <span>{locale === 'ur' ? 'ہفتہ وار رعایت اور نئی گاڑیوں کے اپڈیٹس' : 'Join Our Weekly Fleet Dispatch!'}</span>
+            </h3>
+            <p className="text-xs text-slate-400">
+              {locale === 'ur'
+                ? 'موٹروے ڈیلز اور نئی گاڑیوں کی آمد کی بروقت اطلاع اپنے ان باکس میں پائیں۔'
+                : 'Receive exclusive M-5 highway tariffs, wedding season specials, and instant fleet alerts.'}
+            </p>
+          </div>
+
+          {newsletterSent ? (
+            <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold px-5 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>{locale === 'ur' ? 'شکریہ! آپ شامل ہو چکے ہیں۔' : 'Subscribed successfully!'}</span>
+            </div>
+          ) : (
+            <form onSubmit={handleNewsletter} className="flex items-center gap-2 w-full md:w-auto">
+              <input
+                type="email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder={locale === 'ur' ? 'ای میل درج کریں' : 'Enter your email'}
+                className="px-4 py-3 rounded-full bg-white/10 border border-white/15 text-white text-xs font-mono placeholder:text-slate-500 focus:outline-hidden focus:border-amber-400 w-full sm:w-64"
+                required
+              />
+              <button
+                type="submit"
+                className="px-6 py-3 rounded-full bg-white text-slate-950 hover:bg-amber-400 font-mono text-xs font-bold uppercase transition-all shrink-0 cursor-pointer shadow-md active:scale-95"
+              >
+                {locale === 'ur' ? 'سبسکرائب' : 'Subscribe'}
+              </button>
+            </form>
+          )}
+        </motion.div>
+
+        {/* Drkst Signature Vertical Lines Grid / Rhythm Barcode Pattern */}
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          className="mt-16 pt-12 flex items-center justify-between gap-1 overflow-hidden opacity-30 select-none pointer-events-none"
+        >
+          {Array.from({ length: 64 }).map((_, idx) => (
+            <div
+              key={idx}
+              className={`w-[1px] bg-white transition-all duration-500 ${
+                idx % 4 === 0 ? 'h-8 opacity-90' : idx % 2 === 0 ? 'h-5 opacity-50' : 'h-3 opacity-25'
+              }`}
+            />
+          ))}
+        </motion.div>
+
+        {/* Drkst Brand Statement Columns */}
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs font-mono text-slate-400 border-b border-white/10 pb-12"
+        >
+          <p className="leading-relaxed">
+            {locale === 'ur'
+              ? 'ہم ایسا سفر تشکیل دیتے ہیں جہاں آرام، اعتماد اور معیار ہر کلومیٹر پر نمایاں ہو۔'
+              : 'We craft automotive journeys where comfort, mechanical perfection, and peace of mind resonate on every journey.'}
+          </p>
+          <p className="leading-relaxed">
+            {locale === 'ur'
+              ? 'ہمارا فلیٹ لگژری اور عام رسائی کے درمیان ایک پُراعتماد توازن قائم کرتا ہے۔'
+              : 'Our fleet exists in the effortless balance between executive prestige and transparent, family-friendly accessibility.'}
+          </p>
+        </motion.div>
+
+        {/* Middle Navigation & Information Links */}
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          className="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-xs font-mono"
+        >
+          <div>
+            <span className="text-slate-400 uppercase tracking-widest block mb-4">
+              {locale === 'ur' ? 'نیویگیشن' : 'NAVIGATION'}
+            </span>
+            <ul className="space-y-2">
+              {navLinks.slice(0, 4).map((link) => (
+                <li key={link.id}>
+                  <button
+                    onClick={() => handleLink(link.id)}
+                    className="text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {locale === 'ur' ? link.ur : link.en}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <span className="text-slate-400 uppercase tracking-widest block mb-4">
+              {locale === 'ur' ? 'سروسز' : 'SERVICES'}
+            </span>
+            <ul className="space-y-2">
+              {navLinks.slice(4).map((link) => (
+                <li key={link.id}>
+                  <button
+                    onClick={() => handleLink(link.id)}
+                    className="text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {locale === 'ur' ? link.ur : link.en}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <span className="text-slate-400 uppercase tracking-widest block mb-4">
+              {locale === 'ur' ? 'مشہور روٹس' : 'POPULAR ROUTES'}
+            </span>
+            <ul className="space-y-2 text-slate-400">
+              <li>Sadiqabad · M-5 Motorway</li>
+              <li>Rahim Yar Khan · Airport</li>
+              <li>Sukkur · Multan Highway</li>
+              <li>Corporate Convoy · Machi Goth</li>
+            </ul>
+          </div>
+
+          <div className="flex flex-col justify-between">
+            <div>
+              <span className="text-slate-400 uppercase tracking-widest block mb-4">
+                {locale === 'ur' ? 'دفتر' : 'HQ OFFICE'}
+              </span>
+              <p className="text-slate-400 leading-relaxed">
+                KLP Road, Bypass Chowk, Sadiqabad, Punjab.
+              </p>
+            </div>
+
+            {/* Back to Top Button (Drkst style) */}
+            <button
+              onClick={scrollToTop}
+              className="mt-6 inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-bold transition-colors cursor-pointer self-start"
+            >
+              <span>{locale === 'ur' ? 'اوپر جائیں' : 'Back to top'}</span>
+              <ArrowUp className="w-4 h-4" />
             </button>
-            <span>•</span>
-            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline cursor-pointer">
-              {locale === 'ur' ? 'پرائیویسی پالیسی' : 'Privacy Policy'}
+          </div>
+        </motion.div>
+
+        {/* Drkst Signature Watermark Logo */}
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.15 }}
+          className="pt-16 pb-4 flex justify-center overflow-hidden pointer-events-none select-none opacity-20 hover:opacity-30 transition-opacity"
+        >
+          <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-black tracking-tighter text-white font-mono whitespace-nowrap">
+            Rent2Go®
+          </h1>
+        </motion.div>
+
+        {/* Bottom Bar: Copyright & Stealth Admin */}
+        <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
+          <p>© {new Date().getFullYear()} Rent2Go®. All rights reserved. Sadiqabad, Pakistan.</p>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => handleLink('legal')}
+              className="hover:text-slate-300 transition-colors cursor-pointer"
+            >
+              Privacy & Terms
             </button>
-            <span>•</span>
-            <button onClick={() => handleLink('legal')} className="hover:text-slate-300 hover:underline cursor-pointer">
-              {locale === 'ur' ? 'منسوخی کی پالیسی' : 'Cancellation Policy'}
-            </button>
-            <span>•</span>
+            <span>·</span>
             <button
               onClick={() => {
                 window.history.pushState(null, '', '/admin/panel');
                 setCurrentView('admin');
               }}
-              className="text-amber-400/90 hover:text-amber-300 hover:underline flex items-center gap-1 cursor-pointer font-semibold"
+              className="text-amber-400/80 hover:text-amber-400 transition-colors inline-flex items-center gap-1 cursor-pointer font-bold"
             >
               <Lock className="w-3 h-3 text-amber-400" />
-              <span>{locale === 'ur' ? 'ایڈمن پینل' : 'Admin Panel'}</span>
+              <span>Admin Access</span>
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

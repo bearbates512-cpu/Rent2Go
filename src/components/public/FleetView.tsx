@@ -3,41 +3,39 @@ import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { soundFX } from '../../utils/soundEffects.ts';
 import { CarCard } from './CarCard.tsx';
-import { Search, Filter, X, SlidersHorizontal, Car, Radio, Sparkles } from 'lucide-react';
+import { Search, X, SlidersHorizontal, ArrowLeft, ArrowRight } from 'lucide-react';
 import { VehicleCategory } from '../../types/index.ts';
-import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
 
 export const FleetView: React.FC = () => {
   const {
     vehicles,
     locale,
+    dir,
     filterCategory,
     setFilterCategory,
-    setCurrentView,
-    navigateToBooking
+    setCurrentView
   } = useApp();
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedTransmission, setSelectedTransmission] = useState<string>('all');
   const [selectedDriverOption, setSelectedDriverOption] = useState<string>('all');
-  const [maxPrice, setMaxPrice] = useState<number>(40000);
+  const [maxPrice, setMaxPrice] = useState<number>(45000);
   const [sortBy, setSortBy] = useState<string>('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
 
   const categories: { id: VehicleCategory | 'all'; en: string; ur: string }[] = [
-    { id: 'all', en: 'All Vehicles', ur: 'تمام گاڑیاں' },
-    { id: 'sedan', en: 'Sedan', ur: 'سیڈان' },
-    { id: 'suv', en: 'SUV 4x4', ur: 'ایس یو وی 4x4' },
-    { id: 'hatchback', en: 'Hatchback', ur: 'ہیچ بیک' },
-    { id: 'van', en: 'Passenger Van', ur: 'وین / ہائی ایس' },
-    { id: 'luxury', en: 'Luxury VIP', ur: 'وی آئی پی لگژری' }
+    { id: 'all', en: 'All Fleet', ur: 'تمام گاڑیاں' },
+    { id: 'suv', en: 'SUVs & 4x4', ur: 'ایس یو وی' },
+    { id: 'sedan', en: 'Executive Sedans', ur: 'سیڈان' },
+    { id: 'luxury', en: 'Luxury VIP', ur: 'وی آئی پی' },
+    { id: 'hatchback', en: 'Economy & City', ur: 'اکانومی' },
+    { id: 'van', en: 'Passenger Vans', ur: 'ہائی ایس وین' }
   ];
 
   // Filtering logic
   const filteredVehicles = useMemo(() => {
     return vehicles
       .filter(v => {
-        // Public only sees published non-maintenance
         if (v.visibility !== 'published') return false;
 
         if (filterCategory && filterCategory !== 'all' && v.category !== filterCategory) {
@@ -80,7 +78,6 @@ export const FleetView: React.FC = () => {
         if (sortBy === 'newest') {
           return b.modelYear - a.modelYear;
         }
-        // Default: featured
         return (a.featuredOrder || 99) - (b.featuredOrder || 99);
       });
   }, [vehicles, filterCategory, selectedTransmission, selectedDriverOption, maxPrice, searchTerm, sortBy]);
@@ -90,7 +87,7 @@ export const FleetView: React.FC = () => {
     setSearchTerm('');
     setSelectedTransmission('all');
     setSelectedDriverOption('all');
-    setMaxPrice(40000);
+    setMaxPrice(45000);
     setSortBy('featured');
   };
 
@@ -99,254 +96,135 @@ export const FleetView: React.FC = () => {
     Boolean(searchTerm) ||
     selectedTransmission !== 'all' ||
     selectedDriverOption !== 'all' ||
-    maxPrice < 40000;
+    maxPrice < 45000;
 
   return (
-    <div className="bg-[#F8FAFC] dark:bg-[#060D17] text-slate-800 dark:text-slate-100 min-h-screen py-10 transition-colors duration-250">
+    <div className="bg-[#FAF9F6] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 min-h-screen py-16 transition-colors duration-250 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <LiquidGasBadge className="text-amber-600 dark:text-amber-300">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>{locale === 'ur' ? 'صادق آباد کا مکمل فلیٹ' : 'Verified Fleet in Sadiqabad'}</span>
-            </LiquidGasBadge>
-            <SpinInHeading
-              as="h1"
-              splitWords
-              axis="x"
-              className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2"
-            >
-              {locale === 'ur' ? 'گاڑیاں اور روزانہ کا کرایہ نامہ' : 'Our Fleet & Rental Rates'}
-            </SpinInHeading>
-            <SpinInText as="p" className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-              {locale === 'ur'
-                ? 'تمام گاڑیاں مکمل جانچ شدہ، صاف ستھری اور بااخلاق ڈرائیورز کے ساتھ دستیاب ہیں۔'
-                : 'Browse inspected sedans, SUVs, and vans with transparent pricing and instant booking.'}
-            </SpinInText>
+        {/* Title Header with Drkst Editorial Typography */}
+        <div className="space-y-4 mb-12 border-b border-black/5 dark:border-white/10 pb-8">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-amber-400" />
+            <span>{locale === 'ur' ? 'صادق آباد پریمیم فلیٹ گیلری' : 'SADIQABAD VERIFIED FLEET'}</span>
           </div>
 
-          {/* Search Input Desktop */}
-          <div className="flex items-center gap-2">
-            <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={e => {
-                  const val = e.target.value;
-                  setSearchTerm(val);
-                  const clean = val.trim().toLowerCase().replace(/\/+$/, '');
-                  if (clean === '/admin/panel' || clean === '/admin' || clean === 'admin/panel') {
-                    window.history.pushState(null, '', '/admin/panel');
-                    setCurrentView('admin');
-                  }
-                }}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    const clean = searchTerm.trim().toLowerCase().replace(/\/+$/, '');
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+              <h1 className="text-4xl sm:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white">
+                {locale === 'ur' ? 'گاڑیاں اور روزانہ کا کرایہ نامہ' : 'The Fleet Collection.'}
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base mt-2 max-w-2xl leading-relaxed">
+                {locale === 'ur'
+                  ? 'صادق آباد، رحیم یار خان اور موٹروے کے لیے مکمل جانچ شدہ گاڑیاں شفاف یومیہ ریٹس کے ساتھ۔'
+                  : 'Engineered for highway endurance and executive travel. Transparent daily tariffs with zero hidden surcharges.'}
+              </p>
+            </div>
+
+            {/* Search Input with Stealth Admin Route Detection */}
+            <div className="flex items-center gap-2 w-full lg:w-72">
+              <div className="relative w-full">
+                <Search className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setSearchTerm(val);
+                    const clean = val.trim().toLowerCase().replace(/\/+$/, '');
                     if (clean === '/admin/panel' || clean === '/admin' || clean === 'admin/panel') {
-                      e.preventDefault();
                       window.history.pushState(null, '', '/admin/panel');
                       setCurrentView('admin');
                     }
-                  }
-                }}
-                placeholder={locale === 'ur' ? 'گاڑی تلاش کریں (کرولا، فارچونر...)' : 'Search car by name...'}
-                className="w-full ps-10 pe-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium bg-white dark:bg-[#0B1523] text-slate-800 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#0B1F3A] dark:focus:ring-amber-400"
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      const clean = searchTerm.trim().toLowerCase().replace(/\/+$/, '');
+                      if (clean === '/admin/panel' || clean === '/admin' || clean === 'admin/panel') {
+                        e.preventDefault();
+                        window.history.pushState(null, '', '/admin/panel');
+                        setCurrentView('admin');
+                      }
+                    }
+                  }}
+                  placeholder={locale === 'ur' ? 'گاڑی تلاش کریں (کرولا، فارچونر...)' : 'Search by model name...'}
+                  className="w-full ps-10 pe-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 text-xs font-bold bg-white dark:bg-[#0C121E] text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-slate-950 dark:focus:ring-white"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
 
-            {/* Mobile Filter Button */}
-            <button
-              onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-white dark:bg-[#0B1523] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 shrink-0 cursor-pointer"
-              title="Filters"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-            </button>
+              <button
+                onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+                className="lg:hidden p-3 rounded-2xl bg-white dark:bg-[#0C121E] border border-black/10 dark:border-white/10 text-slate-700 dark:text-slate-300"
+                aria-label="Filter"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Category Filter Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto pt-4 no-scrollbar">
+            {categories.map(cat => {
+              const isActive = (filterCategory === cat.id) || (cat.id === 'all' && (!filterCategory || filterCategory === 'all'));
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    soundFX.playClick();
+                    setFilterCategory(cat.id === 'all' ? null : cat.id);
+                  }}
+                  className={`px-4 py-2 rounded-full text-xs font-mono font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-slate-950 dark:bg-white text-white dark:text-slate-950 shadow-md'
+                      : 'bg-white dark:bg-[#0C121E] border border-black/5 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
+                  }`}
+                >
+                  {locale === 'ur' ? cat.ur : cat.en}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Category Pills Header */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar">
-          {categories.map(cat => {
-            const isSelected = (!filterCategory && cat.id === 'all') || filterCategory === cat.id;
-            return (
-              <motion.button
-                key={cat.id}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  soundFX.playClick();
-                  setFilterCategory(cat.id === 'all' ? null : cat.id);
-                }}
-                className={`px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-[#0B1F3A] dark:bg-[#F5B301] text-white dark:text-[#0B1F3A] shadow-md shadow-slate-900/10'
-                    : 'bg-white dark:bg-[#0B1523] border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
-                }`}
-              >
-                {locale === 'ur' ? cat.ur : cat.en}
-              </motion.button>
-            );
-          })}
+        {/* Cars Grid & Results count */}
+        <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-6">
+          <span>{filteredVehicles.length} {locale === 'ur' ? 'گاڑیاں دستیاب' : 'Vehicles Available'}</span>
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="text-amber-500 hover:underline font-bold"
+            >
+              {locale === 'ur' ? 'فلٹرز ری سیٹ کریں' : 'Reset Filters'}
+            </button>
+          )}
         </div>
 
-        {/* Content Layout: Sidebar + Car Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-          {/* Desktop Filter Sidebar */}
-          <aside className={`lg:block ${mobileFilterOpen ? 'block' : 'hidden'} bg-white dark:bg-[#0B1523] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-6 transition-colors`}>
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <h2 className="text-sm font-bold text-[#0B1F3A] dark:text-white flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-amber-500" />
-                <span>{locale === 'ur' ? 'فلٹرز' : 'Filter Options'}</span>
-              </h2>
-              {hasActiveFilters && (
-                <button
-                  onClick={clearAllFilters}
-                  className="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
-                >
-                  {locale === 'ur' ? 'تمام ختم کریں' : 'Clear All'}
-                </button>
-              )}
-            </div>
-
-            {/* Driver Option */}
-            <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-2">
-                {locale === 'ur' ? 'ڈرائیور آپشن' : 'Driver Preference'}
-              </label>
-              <div className="space-y-1.5 text-xs">
-                {[
-                  { id: 'all', en: 'All Options', ur: 'تمام آپشنز' },
-                  { id: 'with_driver', en: 'With Driver', ur: 'ڈرائیور کے ساتھ' },
-                  { id: 'self_drive', en: 'Self-Drive', ur: 'سیلف ڈرائیو' }
-                ].map(opt => (
-                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                    <input
-                      type="radio"
-                      name="driverOption"
-                      checked={selectedDriverOption === opt.id}
-                      onChange={() => setSelectedDriverOption(opt.id)}
-                      className="accent-[#0B1F3A] dark:accent-[#F5B301]"
-                    />
-                    <span className="text-slate-700 dark:text-slate-300">{locale === 'ur' ? opt.ur : opt.en}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Transmission */}
-            <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-2">
-                {locale === 'ur' ? 'ٹرانسمیشن' : 'Transmission'}
-              </label>
-              <div className="space-y-1.5 text-xs">
-                {[
-                  { id: 'all', en: 'All Gears', ur: 'تمام' },
-                  { id: 'automatic', en: 'Automatic', ur: 'آٹومیٹک' },
-                  { id: 'manual', en: 'Manual', ur: 'مینول' }
-                ].map(opt => (
-                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                    <input
-                      type="radio"
-                      name="transmission"
-                      checked={selectedTransmission === opt.id}
-                      onChange={() => setSelectedTransmission(opt.id)}
-                      className="accent-[#0B1F3A] dark:accent-[#F5B301]"
-                    />
-                    <span className="text-slate-700 dark:text-slate-300">{locale === 'ur' ? opt.ur : opt.en}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Max Daily Budget */}
-            <div>
-              <div className="flex justify-between items-center mb-1.5 text-xs font-bold">
-                <span className="text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  {locale === 'ur' ? 'زیادہ سے زیادہ یومیہ بجٹ' : 'Max Daily Rate'}
-                </span>
-                <span className="text-[#0B1F3A] dark:text-amber-400 font-mono">
-                  PKR {maxPrice.toLocaleString()}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={3000}
-                max={40000}
-                step={1000}
-                value={maxPrice}
-                onChange={e => setMaxPrice(parseInt(e.target.value))}
-                className="w-full accent-[#0B1F3A] dark:accent-[#F5B301]"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
-                <span>Rs. 3,000</span>
-                <span>Rs. 40,000+</span>
-              </div>
-            </div>
-          </aside>
-
-          {/* Cars Grid (3 cols) */}
-          <main className="lg:col-span-3 space-y-6">
-            {/* Sort & Count Header */}
-            <div className="flex items-center justify-between bg-white dark:bg-[#0B1523] rounded-2xl p-4 border border-slate-200/90 dark:border-slate-800 shadow-2xs text-xs transition-colors">
-              <span className="font-bold text-slate-700 dark:text-slate-200">
-                {filteredVehicles.length} {locale === 'ur' ? 'گاڑیاں دستیاب' : 'Vehicles Found'}
-              </span>
-
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400 hidden sm:inline">{locale === 'ur' ? 'ترتیب:' : 'Sort by:'}</span>
-                <select
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value)}
-                  className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 font-semibold text-slate-700 dark:text-slate-200 focus:outline-hidden"
-                >
-                  <option value="featured" className="dark:bg-slate-900">{locale === 'ur' ? 'نمایاں (تجویز کردہ)' : 'Featured First'}</option>
-                  <option value="price-low" className="dark:bg-slate-900">{locale === 'ur' ? 'کرایہ کم سے زیادہ' : 'Price: Low to High'}</option>
-                  <option value="price-high" className="dark:bg-slate-900">{locale === 'ur' ? 'کرایہ زیادہ سے کم' : 'Price: High to Low'}</option>
-                  <option value="capacity" className="dark:bg-slate-900">{locale === 'ur' ? 'نشستوں کی گنجائش' : 'Seating Capacity'}</option>
-                  <option value="newest" className="dark:bg-slate-900">{locale === 'ur' ? 'جدید ترین ماڈل' : 'Newest Model Year'}</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Cards Grid */}
-            {filteredVehicles.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredVehicles.map(vehicle => (
-                  <CarCard key={vehicle.id} vehicle={vehicle} />
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white dark:bg-[#0B1523] rounded-3xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-4">
-                <Car className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
-                <h3 className="text-lg font-bold text-slate-800 dark:text-white">
-                  {locale === 'ur' ? 'کوئی گاڑی نہیں ملی' : 'No vehicles match your criteria'}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                  {locale === 'ur'
-                    ? 'براہِ کرم فلٹرز میں ردوبدل کریں یا ہمارے مینیجر سے براہِ راست رابطہ کریں۔'
-                    : 'Try clearing your filters or contact our 24/7 Sadiqabad booking desk directly.'}
-                </p>
-                <button
-                  onClick={clearAllFilters}
-                  className="px-5 py-2.5 rounded-xl bg-[#0B1F3A] dark:bg-[#F5B301] text-white dark:text-[#0B1F3A] text-xs font-bold cursor-pointer"
-                >
-                  {locale === 'ur' ? 'تمام فلٹرز ری سیٹ کریں' : 'Reset All Filters'}
-                </button>
-              </div>
-            )}
-          </main>
-        </div>
+        {filteredVehicles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredVehicles.map((car, idx) => (
+              <CarCard key={car.id} vehicle={car} index={idx} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 text-center space-y-4">
+            <p className="text-base text-slate-500 font-mono">
+              {locale === 'ur' ? 'مطلوبہ معیار کے مطابق کوئی گاڑی نہیں ملی۔' : 'No vehicles matched your search filter.'}
+            </p>
+            <button
+              onClick={clearAllFilters}
+              className="px-6 py-2.5 rounded-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 text-xs font-mono font-bold"
+            >
+              {locale === 'ur' ? 'تمام گاڑیاں دیکھیں' : 'Show All Fleet'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -222,25 +222,25 @@ export const BookingWizard: React.FC = () => {
   const ArrowPrev = dir === 'rtl' ? ArrowRight : ArrowLeft;
 
   return (
-    <div className="bg-[#F8FAFC] dark:bg-[#060D17] min-h-screen py-10 transition-colors duration-200">
+    <div className="bg-[#FAF9F6] dark:bg-[#070D18] min-h-screen py-14 transition-colors duration-200 select-none">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        {/* Header Title with Liquid Gas Aura Badge */}
-        <div className="text-center mb-8">
-          <LiquidGasBadge className="text-amber-700 dark:text-amber-400">
-            {locale === 'ur' ? 'آن لائن بکنگ فارم' : 'Online Booking Request'}
-          </LiquidGasBadge>
-          <SpinInHeading as="h1" className="text-2xl sm:text-3xl font-extrabold text-[#0B1F3A] dark:text-white mt-2" splitWords>
-            {locale === 'ur' ? 'آسان اور شفاف کار رینٹل بکنگ' : 'Book Your Vehicle in Sadiqabad'}
-          </SpinInHeading>
-          <SpinInText className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+        {/* Header Title */}
+        <div className="text-center mb-10 space-y-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-bold">
+            {locale === 'ur' ? 'آن لائن بکنگ فارم' : 'STEP-BY-STEP RESERVATION'}
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-black font-mono tracking-tight text-slate-950 dark:text-white">
+            {locale === 'ur' ? 'آسان اور شفاف کار رینٹل بکنگ' : 'Book Your Vehicle.'}
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
             {locale === 'ur'
               ? 'مرحلہ وار تفصیلات درج کریں، فوری تخمینہ دیکھیں اور درخواست بھیجیں۔'
               : 'Complete the steps below. We verify every request and confirm with you personally.'}
-          </SpinInText>
+          </p>
         </div>
 
         {/* Stepper Indicator */}
-        <div className="relative bg-white dark:bg-[#0B1523] rounded-2xl p-4 sm:p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm mb-6 overflow-hidden">
+        <div className="relative bg-white dark:bg-[#0B131F] rounded-3xl p-6 border border-black/5 dark:border-white/10 shadow-xl mb-8 overflow-hidden">
           <LiquidGasAura className="opacity-20" />
           <div className="relative z-10 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 mb-2.5">
             <SpinInText as="span">

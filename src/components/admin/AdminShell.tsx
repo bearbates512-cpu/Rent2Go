@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { AdminRole } from '../../types/index.ts';
 import { soundFX } from '../../utils/soundEffects.ts';
-import { triggerThunderBlast } from '../effects/ThunderBlastSystem.tsx';
 import { SpinInHeading, SpinInText, LiquidGasBadge } from '../effects/SpinInTypography.tsx';
 import {
   LayoutDashboard,
@@ -111,13 +109,8 @@ export const AdminShell: React.FC<AdminShellProps> = ({
               {sidebarOpen ? <X className="w-5 h-5 text-amber-400" /> : <Menu className="w-5 h-5" />}
             </button>
 
-            {/* Brand Logo with 3D Spin */}
-            <motion.div
-              initial={{ opacity: 0, rotateY: 45 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center gap-2.5"
-            >
+            {/* Brand Logo */}
+            <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-white/10 p-1.5 flex items-center justify-center shrink-0 border border-white/15 shadow-inner">
                 <img
                   src="/assets/aistudio/Rent2Go_icon_transparent.png"
@@ -130,11 +123,11 @@ export const AdminShell: React.FC<AdminShellProps> = ({
                   Rent<span className="text-[#F5B301]">2Go</span>
                 </span>
                 <span className="text-[10px] font-mono font-bold text-amber-300 uppercase px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center gap-1">
-                  <Zap className="w-2.5 h-2.5 text-amber-400 animate-pulse" />
+                  <Zap className="w-2.5 h-2.5 text-amber-400" />
                   <span>HQ ADMIN</span>
                 </span>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right Header Controls */}
@@ -149,7 +142,7 @@ export const AdminShell: React.FC<AdminShellProps> = ({
               title="Toggle Day / Night Mode"
             >
               {themeMode === 'dark' ? (
-                <Sun className="w-4 h-4 text-amber-400 animate-spin-slow" />
+                <Sun className="w-4 h-4 text-amber-400" />
               ) : (
                 <Moon className="w-4 h-4 text-cyan-300" />
               )}
@@ -196,15 +189,13 @@ export const AdminShell: React.FC<AdminShellProps> = ({
 
             {/* Logout Button */}
             <button
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                triggerThunderBlast(rect.left + rect.width / 2, rect.top);
+              onClick={() => {
                 soundFX.playClick();
                 logoutAdmin();
                 window.history.pushState(null, '', '/');
                 setCurrentView('home');
               }}
-              className="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-md shadow-rose-950/20"
+              className="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-md shadow-rose-950/20"
               title="Sign Out and Lock Panel"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -214,8 +205,8 @@ export const AdminShell: React.FC<AdminShellProps> = ({
         </div>
       </header>
 
-      {/* Main Body Layout with 3D Perspective */}
-      <div className="relative z-10 flex-1 flex overflow-hidden perspective-1000">
+      {/* Main Body Layout */}
+      <div className="relative z-10 flex-1 flex overflow-hidden">
         {/* Sidebar */}
         <aside
           className={`fixed lg:static inset-y-0 start-0 z-30 w-72 bg-white/95 dark:bg-[#0B1523]/95 backdrop-blur-xl border-e border-slate-200/90 dark:border-slate-800 flex flex-col justify-between transition-all duration-300 shadow-2xl lg:shadow-none ${
@@ -227,20 +218,16 @@ export const AdminShell: React.FC<AdminShellProps> = ({
               <span className="text-[10px] font-mono font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block">
                 ADMINISTRATION MODULES
               </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
             </div>
 
-            {navItems.map((item, idx) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
 
               return (
-                <motion.button
+                <button
                   key={item.id}
-                  initial={{ opacity: 0, x: -20, rotateY: 25 }}
-                  animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                  transition={{ duration: 0.35, delay: idx * 0.02 }}
-                  whileHover={{ x: 4, scale: 1.01 }}
                   onClick={() => handleNavClick(item.id)}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                     isActive
@@ -263,7 +250,7 @@ export const AdminShell: React.FC<AdminShellProps> = ({
                       {item.badge}
                     </span>
                   )}
-                </motion.button>
+                </button>
               );
             })}
           </div>
@@ -276,19 +263,17 @@ export const AdminShell: React.FC<AdminShellProps> = ({
                 <span className="font-bold text-slate-700 dark:text-slate-200 font-mono">Sadiqabad Hub</span>
               </div>
               <span className="text-emerald-500 dark:text-emerald-400 font-bold font-mono text-[10px] flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                 ONLINE
               </span>
             </div>
 
             <button
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                triggerThunderBlast(rect.left + rect.width / 2, rect.top);
+              onClick={() => {
                 soundFX.playClick();
                 logoutAdmin();
               }}
-              className="w-full py-2.5 px-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs active:scale-95"
+              className="w-full py-2.5 px-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-95"
             >
               <LogOut className="w-3.5 h-3.5 text-rose-500" />
               <span>Lock Admin Session</span>
@@ -304,20 +289,9 @@ export const AdminShell: React.FC<AdminShellProps> = ({
           />
         )}
 
-        {/* Content Area with 3D Spin-In container */}
+        {/* Content Area */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTab}
-              initial={{ opacity: 0, y: 20, rotateX: -6 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              exit={{ opacity: 0, y: -20, rotateX: 6 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="will-change-transform"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          {children}
         </main>
       </div>
     </div>

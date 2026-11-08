@@ -120,33 +120,32 @@ export const CarDetailView: React.FC = () => {
   const allPhotos = [vehicle.coverImage, ...(vehicle.galleryImages || [])];
 
   return (
-    <div className="bg-[#F8FAFC] dark:bg-[#060D17] text-slate-800 dark:text-slate-100 min-h-screen py-8 pb-24 md:pb-16 transition-colors duration-250">
+    <div className="bg-[#FAF9F6] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 min-h-screen py-10 pb-28 md:pb-16 transition-colors duration-250 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb & Back */}
-        <div className="flex items-center gap-2 mb-6 text-sm text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-2 mb-8 text-xs font-mono text-slate-400">
           <button
             onClick={() => setCurrentView('cars')}
-            className="flex items-center gap-1 font-semibold text-[#0B1F3A] dark:text-amber-400 hover:underline cursor-pointer"
+            className="flex items-center gap-1 font-bold text-slate-900 dark:text-white hover:text-amber-500 cursor-pointer"
           >
-            <ArrowBack className="w-4 h-4" />
-            <span>{locale === 'ur' ? 'گاڑیوں کی فہرست' : 'Back to Fleet'}</span>
+            <ArrowBack className="w-3.5 h-3.5" />
+            <span>{locale === 'ur' ? 'گاڑیوں کی فہرست' : 'Fleet Collection'}</span>
           </button>
           <span>/</span>
-          <span className="text-slate-400 capitalize">{vehicle.category}</span>
+          <span className="capitalize">{vehicle.category}</span>
           <span>/</span>
-          <SpinInText as="span" className="text-slate-800 dark:text-white font-bold truncate">
+          <span className="text-slate-900 dark:text-white font-bold truncate">
             {title}
-          </SpinInText>
+          </span>
         </div>
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
           {/* Left Column: Photos Gallery & Overview (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Main Stage Image with Liquid Gas Aura */}
-            <div className="relative bg-white dark:bg-[#0B1523] rounded-3xl p-2 border border-slate-200/90 dark:border-slate-800 shadow-sm overflow-hidden group">
-              <LiquidGasAura className="opacity-70" />
-              <div className="relative aspect-16/10 rounded-2xl overflow-hidden bg-slate-900 z-10">
+            {/* Main Stage Image */}
+            <div className="relative bg-white dark:bg-[#0B131F] rounded-3xl p-3 border border-black/5 dark:border-white/10 shadow-xl overflow-hidden group">
+              <div className="relative aspect-16/10 rounded-2xl overflow-hidden bg-slate-950 z-10">
                 <img
                   src={activePhoto || vehicle.coverImage}
                   alt={title}
@@ -156,10 +155,10 @@ export const CarDetailView: React.FC = () => {
                   }}
                 />
                 <div className="absolute top-4 start-4 flex items-center gap-2 z-20">
-                  <LiquidGasBadge className="bg-[#0B1F3A]/90 text-white">
+                  <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-white text-[11px] font-mono uppercase tracking-wider">
                     {vehicle.category}
-                  </LiquidGasBadge>
-                  <span className="px-3 py-1 rounded-md bg-amber-500 text-[#0B1F3A] text-xs font-bold">
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-[11px] font-mono font-bold">
                     {vehicle.modelYear}
                   </span>
                 </div>

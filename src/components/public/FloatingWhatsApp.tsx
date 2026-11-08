@@ -1,8 +1,7 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { soundFX } from '../../utils/soundEffects.ts';
-import { MessageSquare, Radio } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 export const FloatingWhatsApp: React.FC = () => {
   const { settings, locale } = useApp();
@@ -21,25 +20,20 @@ export const FloatingWhatsApp: React.FC = () => {
 
   return (
     <aside aria-label="WhatsApp quick chat" className="fixed bottom-20 sm:bottom-8 end-4 sm:end-6 z-40 flex items-center group">
-      {/* Subtle pulsing radar ring */}
-      <div className="absolute inset-0 rounded-full bg-emerald-500/30 animate-ping pointer-events-none" />
-
-      <motion.a
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.94 }}
+      <a
         onMouseEnter={() => soundFX.playHover()}
         onClick={() => soundFX.playClick()}
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        className="relative z-10 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-bold shadow-xl shadow-emerald-950/30 border border-white/20 transition-all cursor-pointer"
+        className="relative z-10 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-bold shadow-xl border border-white/20 cursor-pointer"
       >
         <MessageSquare className="w-5 h-5 fill-current" />
         <span className="hidden sm:inline-block text-xs font-mono font-bold">
           {locale === 'ur' ? '24/7 واٹس ایپ ڈیسک' : '24/7 LIVE DESK'}
         </span>
-      </motion.a>
+      </a>
     </aside>
   );
 };
