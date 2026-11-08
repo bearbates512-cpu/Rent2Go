@@ -20,9 +20,7 @@ import {
   Zap,
   CheckCircle2,
   Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight
+  Pause
 } from 'lucide-react';
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -127,15 +125,6 @@ export const HomeView: React.FC = () => {
     setIsAutoPlaying(!isAutoPlaying);
   };
 
-  const handleNextBanner = () => {
-    soundFX.playClick();
-    setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
-  };
-
-  const handlePrevBanner = () => {
-    soundFX.playClick();
-    setCurrentBannerIndex((prev) => (prev - 1 + banners.length) % banners.length);
-  };
 
   const ArrowIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
 
@@ -421,82 +410,28 @@ export const HomeView: React.FC = () => {
                   className="w-full h-full object-cover object-center"
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
-
-                {/* Banner Caption & Animation Tag */}
-                <div className="absolute bottom-6 start-6 z-10 flex flex-col gap-2 text-white">
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-[#F5B301] text-slate-950 text-[10px] font-mono font-black uppercase tracking-wider">
-                      {activeBanner.animation === 'fade' && (locale === 'ur' ? 'اینیمیشن: فیڈ ان' : 'Fade In')}
-                      {activeBanner.animation === 'spin' && (locale === 'ur' ? 'اینیمیشن: سپن ان' : '3D Spin In')}
-                      {activeBanner.animation === 'jump' && (locale === 'ur' ? 'اینیمیشن: جمپ ان' : 'Jump Bounce')}
-                    </span>
-                    <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-mono">
-                      {locale === 'ur' ? activeBanner.badgeUr : activeBanner.badgeEn}
-                    </span>
-                  </div>
-                  <h3 className="text-lg sm:text-2xl font-bold font-mono tracking-tight text-white drop-shadow-md">
-                    {locale === 'ur' ? activeBanner.titleUr : activeBanner.titleEn}
-                  </h3>
-                </div>
               </motion.div>
             </AnimatePresence>
 
-            {/* Controls Bar: Pause/Play Button & Arrow Navigation */}
-            <div className="absolute top-4 end-4 z-20 flex items-center gap-2">
-              {/* Visitor Pause / Play control as requested */}
+            {/* ONLY the Pause / Play control as requested */}
+            <div className="absolute top-4 end-4 z-20">
               <button
                 onClick={toggleAutoPlay}
-                className="px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white backdrop-blur-md border border-white/20 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg active:scale-95"
+                className="px-3.5 py-2 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white backdrop-blur-md border border-white/20 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg active:scale-95"
                 title={isAutoPlaying ? "Pause slideshow" : "Play slideshow"}
               >
                 {isAutoPlaying ? (
                   <>
                     <Pause className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                    <span className="text-[11px] hidden sm:inline">{locale === 'ur' ? 'روکیں' : 'Pause'}</span>
+                    <span className="text-[11px]">{locale === 'ur' ? 'روکیں' : 'Pause'}</span>
                   </>
                 ) : (
                   <>
                     <Play className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
-                    <span className="text-[11px] hidden sm:inline">{locale === 'ur' ? 'چلائیں' : 'Play'}</span>
+                    <span className="text-[11px]">{locale === 'ur' ? 'چلائیں' : 'Play'}</span>
                   </>
                 )}
               </button>
-
-              <button
-                onClick={handlePrevBanner}
-                aria-label="Previous banner"
-                className="p-2 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-lg active:scale-90"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={handleNextBanner}
-                aria-label="Next banner"
-                className="p-2 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-lg active:scale-90"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Banner Dots Indicators */}
-            <div className="absolute bottom-4 end-6 z-20 flex items-center gap-2">
-              {banners.map((b, idx) => (
-                <button
-                  key={b.id}
-                  onClick={() => {
-                    soundFX.playClick();
-                    setCurrentBannerIndex(idx);
-                  }}
-                  className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                    currentBannerIndex === idx
-                      ? 'w-8 bg-[#F5B301]'
-                      : 'w-2 bg-white/40 hover:bg-white/70'
-                  }`}
-                  aria-label={`Go to banner ${idx + 1}`}
-                />
-              ))}
             </div>
           </motion.div>
         </div>
