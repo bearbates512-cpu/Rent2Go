@@ -539,7 +539,7 @@ export const HomeView: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.15 }}
-              className="lg:col-span-7 space-y-6"
+              className="lg:col-span-6 space-y-6"
             >
               <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-bold block">
                 {locale === 'ur' ? 'ہماری سوچ اور معیار' : 'LESS FRICTION. MORE JOURNEY.'}
@@ -591,19 +591,19 @@ export const HomeView: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Right Column: High-Res Supporting Automotive Photo */}
+            {/* Right Column: Perfectly Framed Full Banner (16:9 aspect ratio matching banner) */}
             <motion.div
               variants={bidirectionalScroll}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.15 }}
-              className="lg:col-span-5"
+              className="lg:col-span-6 flex items-center justify-center"
             >
-              <div className="aspect-4/5 rounded-3xl overflow-hidden bg-slate-950 shadow-2xl border border-black/5 dark:border-white/10 group">
+              <div className="w-full aspect-16/9 rounded-3xl overflow-hidden bg-slate-950 shadow-2xl border border-black/5 dark:border-white/10 group relative flex items-center justify-center">
                 <img
                   src="/assets/aistudio/Rent2Go_Family_Travel_Banner_efd52a90.png"
                   alt="Rent2Go Family Journeys"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-contain sm:object-cover object-center transition-transform duration-700 ease-out group-hover:scale-102"
                 />
               </div>
             </motion.div>
