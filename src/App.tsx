@@ -169,6 +169,15 @@ function MainAppContent() {
       {/* Drkst Initial Page Loading Screen */}
       <PageLoader />
 
+      {/* Route Navigation Top Progress Indicator */}
+      <motion.div
+        key={currentView + '-loader-line'}
+        initial={{ width: '0%', opacity: 1 }}
+        animate={{ width: '100%', opacity: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="fixed top-0 left-0 h-[2.5px] bg-gradient-to-r from-amber-500 via-[#F5B301] to-amber-200 z-[9999] pointer-events-none shadow-[0_0_10px_rgba(245,179,1,0.8)]"
+      />
+
       <div className="relative z-10 flex flex-col min-h-screen">
         <AnnouncementBar />
         <Header />
