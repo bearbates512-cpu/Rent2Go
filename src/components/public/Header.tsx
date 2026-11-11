@@ -93,17 +93,20 @@ export const Header: React.FC = () => {
           >
             <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 transition-transform">
               <img
-                src="/assets/aistudio/Rent2Go_icon_transparent.png"
-                alt="Rent2Go"
+                src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
+                alt="Jam Rent A Car Rahim Yar Khan"
                 className="w-full h-full object-contain brightness-125"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
+                }}
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-950 dark:text-white font-mono">
-                Rent<span className="text-[#F5B301]">2Go</span><span className="text-xs font-normal text-slate-400">®</span>
+              <span className="text-lg sm:text-xl font-black tracking-tight text-slate-950 dark:text-white font-mono">
+                Jam Rent A Car<span className="text-xs font-normal text-slate-400">®</span>
               </span>
-              <span className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">
-                {locale === 'ur' ? 'صادق آباد پریمیم فلیٹ' : 'Sadiqabad · Motorway'}
+              <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase">
+                {locale === 'ur' ? 'رحیم یار خان · 7 دن 24 گھنٹے سروس' : 'Rahim Yar Khan · 24/7 Service'}
               </span>
             </div>
           </div>
@@ -197,6 +200,16 @@ export const Header: React.FC = () => {
               {isAdminAuthenticated ? <ShieldCheck className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
             </button>
 
+            {/* Direct Call Button */}
+            <a
+              href={`tel:${settings.phone || '03006756054'}`}
+              className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold tracking-tight shadow-sm transition-all active:scale-95 cursor-pointer"
+              title="Call Jam Rent A Car Rahim Yar Khan"
+            >
+              <Phone className="w-3.5 h-3.5" />
+              <span>{settings.phone || '03006756054'}</span>
+            </a>
+
             {/* Primary Editorial "Book Now" CTA */}
             <button
               onClick={() => navigateToBooking()}
@@ -208,6 +221,15 @@ export const Header: React.FC = () => {
 
           {/* Mobile Right Bar (Theme toggle + Menu toggle) */}
           <div className="flex lg:hidden items-center gap-2">
+            <a
+              href={`tel:${settings.phone || '03006756054'}`}
+              className="p-2 rounded-full bg-emerald-600 text-white"
+              title="Call Now"
+              aria-label="Call Now"
+            >
+              <Phone className="w-4 h-4" />
+            </a>
+
             <button
               onClick={handleThemeToggle}
               className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-amber-400 cursor-pointer"
@@ -256,7 +278,20 @@ export const Header: React.FC = () => {
               ))}
             </div>
 
-            <div className="pt-4 border-t border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
+            <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900 border border-black/5 dark:border-white/10 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-slate-900 dark:text-white">7 Days 24 Hours Service</p>
+                <p className="text-[11px] text-slate-500 font-mono">03006756054 · Rahim Yar Khan</p>
+              </div>
+              <a
+                href={`tel:${settings.phone || '03006756054'}`}
+                className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold flex items-center gap-1"
+              >
+                <Phone className="w-3.5 h-3.5" /> Call
+              </a>
+            </div>
+
+            <div className="pt-2 border-t border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
               <button
                 onClick={() => {
                   soundFX.playClick();

@@ -5,7 +5,9 @@ import {
   CustomerReview,
   SiteSettings,
   CMSPage,
-  AuditEvent
+  AuditEvent,
+  HeroBannerItem,
+  DiscountCampaign
 } from '../types/index.ts';
 
 export const INITIAL_VEHICLES: Vehicle[] = [
@@ -784,33 +786,35 @@ export const INITIAL_REVIEWS: CustomerReview[] = [
 ];
 
 export const INITIAL_SETTINGS: SiteSettings = {
+  logoUrl: '/assets/aistudio/Rent2Go_icon_transparent.png',
   businessName: {
-    en: 'Rent2Go Rent-a-Car',
-    ur: 'رینٹ ٹو گو کار رینٹل'
+    en: 'Jam Rent A Car Rahim Yar Khan',
+    ur: 'جام رینٹ اے کار رحیم یار خان'
   },
   tagline: {
-    en: 'Rent Easy. Travel Better.',
-    ur: 'آسان کرایہ، بہتر سفر'
+    en: '7 Days 24 Hours Service · Luxury & Family Travel',
+    ur: '7 دن 24 گھنٹے سروس · رحیم یار خان اور موٹروے'
   },
-  phone: '03271126457',
-  phoneFormatted: '+92 327 1126457',
-  whatsappNumber: '923271126457',
-  email: 'info@rent2go-sadiqabad.pk',
+  phone: '03006756054',
+  phoneFormatted: '+92 300 6756054',
+  whatsappNumber: '923006756054',
+  email: 'info@jamrentacar.pk',
   address: {
-    en: 'Main KLP Road, Near Sadiqabad Bypass, Sadiqabad, Punjab',
-    ur: 'مین کے ایل پی روڈ، نزد صادق آباد بائی پاس، صادق آباد، پنجاب'
+    en: 'Jam Rent A Car, Rahim Yar Khan, Punjab, Pakistan',
+    ur: 'جام رینٹ اے کار، رحیم یار خان، پنجاب، پاکستان'
   },
-  city: 'Sadiqabad',
+  city: 'Rahim Yar Khan',
   businessHours: {
-    en: 'Monday - Sunday: 24/7 Available (Office: 8:00 AM - 10:00 PM)',
-    ur: 'پیر تا اتوار: 24 گھنٹے سروس دستیاب (دفتر: صبح 8 تا رات 10 بجے)'
+    en: '7 Days 24 Hours Service (24/7 Open)',
+    ur: '7 دن 24 گھنٹے سروس (24 گھنٹے کھلا ہے)'
   },
-  whatsappMessageTemplate: 'Assalam-o-Alaikum Rent2Go! I would like to inquire about booking {car} from {pickup} to {return}. Reference: {ref}',
+  mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7949743.754871205!2d67.90442178853719!3d29.915812714775523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794239357100!5m2!1sen!2s',
+  whatsappMessageTemplate: 'Assalam-o-Alaikum Jam Rent A Car Rahim Yar Khan! I would like to inquire about booking {car} from {pickup} to {return}. Reference: {ref}',
   announcementBar: {
     enabled: true,
     text: {
-      en: '🎉 Wedding Season Offer: Book luxury Fortuner or Civic 3 days in advance and get free floral ribbon decoration!',
-      ur: '🎉 شادی سیزن آفر: فارچونر یا سیوک 3 دن پہلے بک کروانے پر ربن سجاوٹ بالکل مفت!'
+      en: '⭐ Jam Rent A Car Rahim Yar Khan: 7 Days 24 Hours Service! Book luxury Fortuner, Civic or Corolla anytime!',
+      ur: '⭐ جام رینٹ اے کار رحیم یار خان: 7 دن 24 گھنٹے سروس! فارچونر، سیوک اور کرولا ہمہ وقت دستیاب!'
     },
     linkUrl: '/book'
   },
@@ -841,12 +845,12 @@ export const INITIAL_CMS_PAGE: CMSPage = {
   publishedAt: '2026-10-20T00:00:00Z',
   seo: {
     title: {
-      en: 'Rent2Go - Best Car Rental in Sadiqabad | Verified Fleet & Drivers',
-      ur: 'رینٹ ٹو گو صادق آباد - تصدیق شدہ گاڑیاں اور بہترین کرایہ'
+      en: 'Jam Rent A Car Rahim Yar Khan | 7 Days 24 Hours Service',
+      ur: 'جام رینٹ اے کار رحیم یار خان | 7 دن 24 گھنٹے سروس'
     },
     description: {
-      en: 'Rent clean, inspected cars with professional drivers or self-drive in Sadiqabad, Rahim Yar Khan, and all Punjab routes.',
-      ur: 'صادق آباد اور پنجاب بھر کے لیے ڈرائیور کے ساتھ یا سیلف ڈرائیو پر بہترین گاڑیاں کرائے پر حاصل کریں۔'
+      en: 'Jam Rent A Car Rahim Yar Khan: Premium car rental with 7 Days 24 Hours Service. Clean luxury & economy fleet, professional chauffeurs & self-drive.',
+      ur: 'جام رینٹ اے کار رحیم یار خان: 7 دن 24 گھنٹے معیاری سروس۔ جدید گاڑیاں، بااخلاق ڈرائیورز اور سیلف ڈرائیو۔'
     }
   },
   sections: [
@@ -854,15 +858,15 @@ export const INITIAL_CMS_PAGE: CMSPage = {
       id: 'sec-hero',
       blockType: 'hero',
       title: {
-        en: 'Rent a Car in Sadiqabad with Complete Peace of Mind',
-        ur: 'صادق آباد میں مکمل اطمینان اور آسانی کے ساتھ گاڑی کرائے پر لیں'
+        en: 'Jam Rent A Car Rahim Yar Khan — 7 Days 24 Hours Service',
+        ur: 'جام رینٹ اے کار رحیم یار خان — 7 دن 24 گھنٹے ہمہ وقت سروس'
       },
       subtitle: {
-        en: 'Modern fleet, verified polite chauffeurs, transparent pricing, and 24/7 roadside assistance across Punjab & Sindh highways.',
-        ur: 'جدید ترین گاڑیاں، بااخلاق ڈرائیورز، شفاف کرایہ اور موٹروے پر 24 گھنٹے مدد کی ضمانت۔'
+        en: 'Top luxury and family car rental in Rahim Yar Khan. Verified polite chauffeurs, transparent pricing, and 24/7 service on call 03006756054.',
+        ur: 'رحیم یار خان میں لگژری اور فیملی کار رینٹل۔ بااخلاق ڈرائیورز، مناسب کرایہ، 7 دن 24 گھنٹے سروس۔ کال اور واٹس ایپ 03006756054۔'
       },
       props: {
-        badgeText: { en: 'Sadiqabad’s #1 Trusted Car Rental', ur: 'صادق آباد کا سب سے قابلِ اعتماد کار رینٹل' },
+        badgeText: { en: 'Rahim Yar Khan · 7 Days 24 Hours Service', ur: 'رحیم یار خان · 7 دن 24 گھنٹے سروس' },
         primaryBtnText: { en: 'Explore All Fleet', ur: 'تمام گاڑیاں دیکھیں' },
         secondaryBtnText: { en: 'Book on WhatsApp', ur: 'واٹس ایپ پر رابطہ' },
         bannerImage: '/cars/civic-rs.jpg'
@@ -1163,5 +1167,88 @@ export const INITIAL_TEAM: any[] = [
   { id: 'usr-2', name: 'Chaudhry Farhan', email: 'manager@rent2go-sadiqabad.pk', role: 'manager', isActive: true, lastLogin: '2026-10-20T17:15:00Z' },
   { id: 'usr-3', name: 'Nasir Iqbal', email: 'dispatch@rent2go-sadiqabad.pk', role: 'staff', isActive: true, lastLogin: '2026-10-20T14:00:00Z' },
   { id: 'usr-4', name: 'Bilal Ahmad', email: 'editor@rent2go-sadiqabad.pk', role: 'content_editor', isActive: true, lastLogin: '2026-10-19T11:30:00Z' }
+];
+
+export const INITIAL_BANNERS: HeroBannerItem[] = [
+  {
+    id: 'ban-1',
+    image: '/assets/aistudio/a_polished_modern_car_rental_website_hero_banner_i_1a91e531.png',
+    titleEn: 'Your Journey. Your Ride. Discover Freedom.',
+    titleUr: 'آپ کا سفر۔ آپ کی گاڑی۔ آزادی کا آغاز۔',
+    badgeEn: '7 Days 24 Hours · Rahim Yar Khan',
+    badgeUr: '7 دن 24 گھنٹے سروس · رحیم یار خان',
+    animation: 'fade',
+    isActive: true,
+    sortOrder: 1
+  },
+  {
+    id: 'ban-2',
+    image: '/assets/aistudio/Rent2Go_Family_Travel_Banner_efd52a90.png',
+    titleEn: 'Luxury Travel & Memorable Family Trips',
+    titleUr: 'پُرسکون فیملی اسفار اور پریمیم لگژری',
+    badgeEn: 'Family Comfort · Chilled Dual AC',
+    badgeUr: 'فیملی سہولت · ٹھنڈا اے سی',
+    animation: 'spin',
+    isActive: true,
+    sortOrder: 2
+  },
+  {
+    id: 'ban-3',
+    image: '/assets/aistudio/Premium_Cars__Unforgettable_Journeys_abbb121d.png',
+    titleEn: 'Premium SUVs & Verified Highway Chauffeurs',
+    titleUr: 'طاقتور 4x4 فارچونر اور موٹروے پروٹوکول',
+    badgeEn: 'M-5 Motorway Ready · 24/7 Dispatch',
+    badgeUr: 'M-5 موٹروے ریڈی · 24/7 مدد',
+    animation: 'jump',
+    isActive: true,
+    sortOrder: 3
+  }
+];
+
+export const INITIAL_DISCOUNT_CAMPAIGNS: DiscountCampaign[] = [
+  {
+    id: 'camp-eid',
+    titleEn: 'Eid Mubarak Festival Special',
+    titleUr: 'عید الفطر خصوصی تہوار رعایت',
+    badgeEn: '15% OFF · FESTIVAL DEAL',
+    badgeUr: '15% خصوصی عید رعایت',
+    descriptionEn: 'Celebrate festive days with 15% discount on all family sedans and luxury SUVs!',
+    descriptionUr: 'تمام فیملی اور لگژری گاڑیوں پر 15 فیصد خصوصی رعایت۔',
+    discountType: 'percentage',
+    discountValue: 15,
+    applyTo: 'all',
+    isActive: false,
+    announceInBar: true
+  },
+  {
+    id: 'camp-month-end',
+    titleEn: 'Month-End Closing Super Sale',
+    titleUr: 'ماہانہ کلوزنگ سپر آفر',
+    badgeEn: '20% OFF · CLOSING SALE',
+    badgeUr: '20% ماہانہ کلوزنگ آفر',
+    descriptionEn: 'Special month-end closing rates on all sedans across Rahim Yar Khan!',
+    descriptionUr: 'رحیم یار خان میں تمام سیڈان گاڑیوں پر ماہانہ کلوزنگ رعایت۔',
+    discountType: 'percentage',
+    discountValue: 20,
+    applyTo: 'category',
+    targetCategory: 'sedan',
+    isActive: true,
+    announceInBar: true
+  },
+  {
+    id: 'camp-wedding',
+    titleEn: 'Wedding Convoy & Protocol Deal',
+    titleUr: 'شادی بیاہ اور پروٹوکول پیکیج',
+    badgeEn: 'Rs. 3,000 OFF',
+    badgeUr: '3,000 روپے کی رعایت',
+    descriptionEn: 'Flat Rs. 3,000 discount per day on Toyota Fortuner & Prado 4x4 wedding rentals!',
+    descriptionUr: 'فارچونر اور پراڈو پر شادی کی بکنگ پر یومیہ 3000 روپے کی خصوصی بچت۔',
+    discountType: 'fixed_pkr',
+    discountValue: 3000,
+    applyTo: 'category',
+    targetCategory: 'suv',
+    isActive: false,
+    announceInBar: false
+  }
 ];
 

@@ -12,11 +12,12 @@ export const FloatingWhatsApp: React.FC = () => {
 
   const prefilledMessage = encodeURIComponent(
     locale === 'ur'
-      ? 'السلام علیکم رینٹ ٹو گو! میں صادق آباد میں گاڑی کرائے پر لینے کے حوالے سے معلومات چاہتا ہوں۔'
-      : 'Hello Rent2Go! I would like to inquire about booking a rental car in Sadiqabad.'
+      ? 'السلام علیکم جام رینٹ اے کار رحیم یار خان! میں 7 دن 24 گھنٹے سروس کے تحت گاڑی کرائے پر لینے کی معلومات چاہتا ہوں۔'
+      : 'Hello Jam Rent A Car Rahim Yar Khan! I would like to inquire about booking a rental car with your 7 Days 24 Hours Service.'
   );
 
-  const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${prefilledMessage}`;
+  const phoneNum = settings.whatsappNumber || '923006756054';
+  const whatsappUrl = `https://wa.me/${phoneNum}?text=${prefilledMessage}`;
 
   return (
     <aside aria-label="WhatsApp quick chat" className="fixed bottom-20 sm:bottom-8 end-4 sm:end-6 z-40 flex items-center group">

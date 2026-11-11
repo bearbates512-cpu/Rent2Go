@@ -47,6 +47,8 @@ export interface Vehicle {
   };
   dailyRatePKR: number | null; // null represents "Contact for quote"
   driverDailyFeePKR: number;
+  discountPercentage?: number; // e.g. 15 for 15% off
+  discountBadge?: TranslatableString; // e.g. "Eid Special", "عید آفر"
   visibility: VehicleVisibility;
   opStatus: VehicleOpStatus;
   isFeatured: boolean;
@@ -219,6 +221,7 @@ export interface Enquiry {
 }
 
 export interface SiteSettings {
+  logoUrl?: string;
   businessName: TranslatableString;
   tagline: TranslatableString;
   phone: string;
@@ -228,6 +231,7 @@ export interface SiteSettings {
   address: TranslatableString;
   city: string;
   businessHours: TranslatableString;
+  mapEmbedUrl?: string;
   whatsappMessageTemplate: string;
   announcementBar: {
     enabled: boolean;
@@ -314,5 +318,37 @@ export interface TeamMember {
   role: AdminRole;
   isActive: boolean;
   lastLogin: string;
+}
+
+export interface HeroBannerItem {
+  id: string;
+  image: string;
+  titleEn: string;
+  titleUr: string;
+  badgeEn: string;
+  badgeUr: string;
+  animation: 'fade' | 'spin' | 'jump';
+  linkView?: string;
+  isActive: boolean;
+  sortOrder: number;
+}
+
+export interface DiscountCampaign {
+  id: string;
+  titleEn: string;
+  titleUr: string;
+  badgeEn: string;
+  badgeUr: string;
+  descriptionEn?: string;
+  descriptionUr?: string;
+  discountType: 'percentage' | 'fixed_pkr';
+  discountValue: number; // e.g. 15 for 15% or 2000 for Rs. 2000
+  applyTo: 'all' | 'category' | 'specific_cars';
+  targetCategory?: VehicleCategory;
+  targetVehicleIds?: string[];
+  isActive: boolean;
+  announceInBar: boolean;
+  startDate?: string;
+  endDate?: string;
 }
 

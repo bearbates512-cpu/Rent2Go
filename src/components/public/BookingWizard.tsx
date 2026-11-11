@@ -21,7 +21,8 @@ import {
   ArrowRight,
   ArrowLeft,
   Banknote,
-  Info
+  Info,
+  Sparkles
 } from 'lucide-react';
 
 export const BookingWizard: React.FC = () => {
@@ -32,7 +33,8 @@ export const BookingWizard: React.FC = () => {
     services,
     selectedCarForBooking,
     createBookingRequest,
-    setCurrentView
+    setCurrentView,
+    getVehicleEffectivePrice
   } = useApp();
 
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -72,10 +74,12 @@ export const BookingWizard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId) || vehicles[0];
+  const vehiclePricing = selectedVehicle ? getVehicleEffectivePrice(selectedVehicle) : null;
+  const effectiveBaseDailyRate = vehiclePricing?.hasDiscount ? vehiclePricing.discountedRate : (selectedVehicle?.dailyRatePKR ?? null);
 
-  // Dynamic live quote calculation
+  // Dynamic live quote calculation with promotional discount applied
   const quote = calculateQuote({
-    dailyRatePKR: selectedVehicle?.dailyRatePKR ?? null,
+    dailyRatePKR: effectiveBaseDailyRate,
     driverDailyFeePKR: selectedVehicle?.driverDailyFeePKR ?? 1500,
     driverOption,
     pickupDate,
@@ -704,6 +708,18 @@ export const BookingWizard: React.FC = () => {
                   <div className="flex justify-between items-center text-slate-600 dark:text-slate-400 text-xs">
                     <SpinInText as="span">{locale === 'ur' ? 'واپسی کے قابل سیکیورٹی ڈپازٹ' : 'Refundable Security Deposit (Self-Drive)'}</SpinInText>
                     <span className="font-mono text-slate-800 dark:text-slate-300">PKR {quote.securityDeposit.toLocaleString()}</span>
+                  </div>
+                )}
+
+                {vehiclePricing?.hasDiscount && (
+                  <div className="flex justify-between items-center text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-500/10 px-3.5 py-2 rounded-xl text-xs">
+                    <span className="flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      <span>{locale === 'ur' ? (vehiclePricing.discountBadgeUr || vehiclePricing.discountBadge) : vehiclePricing.discountBadge} (خصوصی بچت)</span>
+                    </span>
+                    <span className="font-mono">
+                      - PKR {(vehiclePricing.savingsPerDay * quote.rentalDays).toLocaleString()}
+                    </span>
                   </div>
                 )}
 

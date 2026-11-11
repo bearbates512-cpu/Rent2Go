@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 export const AdminLogin: React.FC = () => {
-  const { loginAdmin, setCurrentView, locale, dir } = useApp();
+  const { loginAdmin, setCurrentView, locale, dir, settings } = useApp();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -126,9 +126,12 @@ export const AdminLogin: React.FC = () => {
         <div className="text-center space-y-3">
           <div className="inline-flex p-3 rounded-2xl bg-[#0B1F3A] shadow-md shadow-slate-900/20">
             <img
-              src="/assets/aistudio/Rent2Go_icon_transparent.png"
+              src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
               alt="Rent2Go"
               className="w-10 h-10 object-contain brightness-125"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
+              }}
             />
           </div>
 

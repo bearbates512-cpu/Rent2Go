@@ -33,8 +33,8 @@ export const AboutView: React.FC = () => {
 
           <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl leading-relaxed">
             {locale === 'ur'
-              ? 'صادق آباد بائی پاس پر قائم، جہاں ہر گاڑی کا مکینیکل معیار، بااخلاق ڈرائیور اور ایمانداری پر مبنی کرایہ نامہ اولین ترجیح ہے۔'
-              : 'Established on Main KLP Road near Sadiqabad Bypass, engineered to eliminate unorganized brokers with company-managed fleets, polite chauffeurs, and upfront honest quotes.'}
+              ? 'جام رینٹ اے کار رحیم یار خان میں 7 دن 24 گھنٹے معیاری سروس فراہم کرتا ہے، جہاں ہر گاڑی کا مکینیکل معیار، بااخلاق ڈرائیور اور ایمانداری پر مبنی کرایہ نامہ اولین ترجیح ہے۔'
+              : 'Jam Rent A Car Rahim Yar Khan operates 7 Days 24 Hours (24/7). Providing inspected company-managed fleet, vetted polite chauffeurs, and upfront honest PKR quotes.'}
           </p>
         </div>
 
@@ -42,17 +42,17 @@ export const AboutView: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
             <h2 className="text-2xl sm:text-3xl font-black font-mono text-slate-950 dark:text-white">
-              {locale === 'ur' ? 'ہماری کہانی اور بنیاد' : 'The Sadiqabad Transit Standard'}
+              {locale === 'ur' ? 'ہماری کہانی اور بنیاد' : 'The Rahim Yar Khan Transit Standard'}
             </h2>
             <p>
               {locale === 'ur'
-                ? 'رینٹ ٹو گو صادق آباد کا قیام اس مقصد کے تحت عمل میں آیا کہ ضلع رحیم یار خان اور صادق آباد کے شہریوں کو معیاری، صاف ستھری اور محفوظ گاڑیاں مناسب اور شفاف کرائے پر مہیا کی جائیں۔ اکثر صارفین کو غیر معیاری ڈرائیورز یا غیر واضح اخراجات کا سامنا ہوتا تھا، جسے ہم نے ایک مکمل منظم اور قابلِ اعتماد نظام میں تبدیل کیا ہے۔'
-                : 'Rent2Go was founded in Sadiqabad with a singular objective: to replace unorganized middle-men with an inspected, company-managed fleet, vetted polite chauffeurs, and honest upfront PKR tariffs.'}
+                ? 'جام رینٹ اے کار رحیم یار خان کا قیام اس مقصد کے تحت عمل میں آیا کہ ضلع رحیم یار خان کے شہریوں کو معیاری، صاف ستھری اور محفوظ گاڑیاں 7 دن 24 گھنٹے مناسب اور شفاف کرائے پر مہیا کی جائیں۔'
+                : 'Jam Rent A Car was founded in Rahim Yar Khan with a singular objective: to provide 7 Days 24 Hours reliable transit with an inspected, company-managed fleet, vetted polite chauffeurs, and honest upfront rates.'}
             </p>
             <p>
               {locale === 'ur'
-                ? 'چاہے آپ کو شیخ زید ائیرپورٹ رحیم یار خان یا سکھر ائیرپورٹ جانا ہو، موٹروے ایم 5 کے ذریعے لاہور یا کراچی کا سفر ہو، یا فیکٹریز (FFC گوٹھ مچھی، فاطمہ فرٹیلائزر) کے لیے کارپوریٹ پروٹوکول چاہیے ہو، رینٹ ٹو گو ہمیشہ اعلیٰ ترین معیار کے ساتھ حاضر ہے۔'
-                : 'Whether transferring travelers to Sheikh Zayed Airport (RYK) or Sukkur Airport, navigating the M-5 motorway corridor, or serving corporate executives at Fauji Fertilizer (FFC) Goth Machi, our standards remain uncompromised.'}
+                ? 'چاہے آپ کو شیخ زید ائیرپورٹ رحیم یار خان یا سکھر ائیرپورٹ جانا ہو، موٹروے ایم 5 کے ذریعے لاہور یا کراچی کا سفر ہو، یا فیملی فنکشن اور شادی کے لیے وی آئی پی پروٹوکول درکار ہو، جام رینٹ اے کار ہمیشہ حاضر ہے۔'
+                : 'Whether transferring travelers to Sheikh Zayed International Airport (RYK) or Sukkur, navigating the M-5 motorway corridor, or serving corporate and wedding convoys, our 24/7 standards remain uncompromised.'}
             </p>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
@@ -61,17 +61,26 @@ export const AboutView: React.FC = () => {
                   soundFX.playClick();
                   navigateToBooking();
                 }}
-                className="px-6 py-3.5 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-md active:scale-95"
+                className="px-6 py-3.5 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-md active:scale-95 cursor-pointer"
               >
                 {locale === 'ur' ? 'گاڑی بک کریں' : 'Book a Vehicle'}
               </button>
 
               <a
-                href={`https://wa.me/${settings.whatsappNumber}`}
+                href={`tel:${settings.phone || '03006756054'}`}
+                onClick={() => soundFX.playClick()}
+                className="px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-md flex items-center gap-2 active:scale-95 cursor-pointer"
+              >
+                <Phone className="w-4 h-4" />
+                <span>Call 03006756054</span>
+              </a>
+
+              <a
+                href={`https://wa.me/${settings.whatsappNumber || '923006756054'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => soundFX.playClick()}
-                className="px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-md flex items-center gap-2 active:scale-95"
+                className="px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-md flex items-center gap-2 active:scale-95 cursor-pointer"
               >
                 <MessageSquare className="w-4 h-4 fill-white" />
                 <span>WhatsApp HQ</span>

@@ -13,7 +13,9 @@ import {
   AuditEvent,
   AdminRole,
   AdminUser,
-  QuoteBreakdown
+  QuoteBreakdown,
+  HeroBannerItem,
+  DiscountCampaign
 } from '../types/index.ts';
 import {
   INITIAL_VEHICLES,
@@ -22,7 +24,9 @@ import {
   INITIAL_REVIEWS,
   INITIAL_SETTINGS,
   INITIAL_CMS_PAGE,
-  INITIAL_AUDIT_LOGS
+  INITIAL_AUDIT_LOGS,
+  INITIAL_BANNERS,
+  INITIAL_DISCOUNT_CAMPAIGNS
 } from '../data/initialData.ts';
 import { generateBookingReference } from '../utils/reference.ts';
 import { checkVehicleAvailability } from '../utils/availability.ts';
@@ -95,6 +99,7 @@ interface AppContextType {
   publishCMSRevision: (note?: string) => void;
   restoreCMSRevision: (version: number) => boolean;
   updateSiteSettings: (settings: SiteSettings) => void;
+  updateSiteLogo: (logoUrl: string) => void;
   addReview: (review: Omit<CustomerReview, 'id' | 'date' | 'isApproved'>) => void;
   moderateReview: (id: string, isApproved: boolean) => void;
   submitEnquiry: (enquiry: Omit<Enquiry, 'id' | 'createdAt' | 'status'>) => void;
@@ -109,6 +114,27 @@ interface AppContextType {
   resetAllData: () => void;
   navigateToCar: (slug: string) => void;
   navigateToBooking: (vehicleId?: string) => void;
+  // Banners & Discounts
+  banners: HeroBannerItem[];
+  setBanners: React.Dispatch<React.SetStateAction<HeroBannerItem[]>>;
+  addBanner: (banner: Omit<HeroBannerItem, 'id' | 'sortOrder'>) => void;
+  updateBanner: (id: string, updates: Partial<HeroBannerItem>) => void;
+  deleteBanner: (id: string) => void;
+  reorderBanners: (newBanners: HeroBannerItem[]) => void;
+  discountCampaigns: DiscountCampaign[];
+  setDiscountCampaigns: React.Dispatch<React.SetStateAction<DiscountCampaign[]>>;
+  addDiscountCampaign: (campaign: Omit<DiscountCampaign, 'id'>) => void;
+  updateDiscountCampaign: (id: string, updates: Partial<DiscountCampaign>) => void;
+  deleteDiscountCampaign: (id: string) => void;
+  getVehicleEffectivePrice: (vehicle: Vehicle) => {
+    originalRate: number | null;
+    discountedRate: number | null;
+    discountPercent: number;
+    discountBadge: string | null;
+    discountBadgeUr: string | null;
+    hasDiscount: boolean;
+    savingsPerDay: number;
+  };
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -342,17 +368,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.whatsappNumber === '923007865432' || parsed.phone === '03007865432') {
-          const updated = {
+        if (
+          parsed.phone !== '03006756054' ||
+          parsed.whatsappNumber !== '923006756054' ||
+          !parsed.businessName?.en?.includes('Jam Rent A Car') ||
+          !parsed.mapEmbedUrl
+        ) {
+          const updated: SiteSettings = {
+            ...INITIAL_SETTINGS,
             ...parsed,
-            phone: '03271126457',
-            phoneFormatted: '+92 327 1126457',
-            whatsappNumber: '923271126457'
+            logoUrl: parsed.logoUrl || INITIAL_SETTINGS.logoUrl,
+            features: {
+              ...INITIAL_SETTINGS.features,
+              ...(parsed.features || {})
+            }
           };
           localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(updated));
           return updated;
         }
-        return parsed;
+        return {
+          ...INITIAL_SETTINGS,
+          ...parsed,
+          logoUrl: parsed.logoUrl || INITIAL_SETTINGS.logoUrl
+        };
       } catch (e) {
         return INITIAL_SETTINGS;
       }
@@ -381,7 +419,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [auditLogs, setAuditLogs] = useState<AuditEvent[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}auditLogs`);
-    return saved ? JSON.parse(saved) : INITIAL_AUDIT_LOGS;
+    if (saved) {
+      try {
+        const parsed: AuditEvent[] = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const seen = new Set<string>();
+          const uniqueLogs: AuditEvent[] = [];
+          for (let i = 0; i < parsed.length; i++) {
+            const item = parsed[i];
+            let id = item.id;
+            if (!id || seen.has(id)) {
+              id = `aud-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 7)}`;
+            }
+            seen.add(id);
+            uniqueLogs.push({ ...item, id });
+          }
+          return uniqueLogs;
+        }
+      } catch (e) {
+        return INITIAL_AUDIT_LOGS;
+      }
+    }
+    return INITIAL_AUDIT_LOGS;
+  });
+
+  const [banners, setBanners] = useState<HeroBannerItem[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}hero_banners`);
+    return saved ? JSON.parse(saved) : INITIAL_BANNERS;
+  });
+
+  const [discountCampaigns, setDiscountCampaigns] = useState<DiscountCampaign[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}discount_campaigns`);
+    return saved ? JSON.parse(saved) : INITIAL_DISCOUNT_CAMPAIGNS;
   });
 
   // Sync state to LocalStorage
@@ -390,6 +459,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === 'ur' ? 'rtl' : 'ltr';
   }, [locale]);
+
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}hero_banners`, JSON.stringify(banners));
+  }, [banners]);
+
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}discount_campaigns`, JSON.stringify(discountCampaigns));
+  }, [discountCampaigns]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY_PREFIX}vehicles`, JSON.stringify(vehicles));
@@ -434,7 +511,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const logAudit = (module: string, action: string, details: string) => {
     const newLog: AuditEvent = {
-      id: `aud-${Date.now()}`,
+      id: `aud-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       actor: `Admin (${adminRole})`,
       role: adminRole,
       module,
@@ -448,7 +525,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Create public booking request
   const createBookingRequest = (bookingData: Partial<Booking>) => {
     const reference = generateBookingReference();
-    const newId = `bk-${Date.now()}`;
+    const newId = `bk-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     const now = new Date().toISOString();
 
     const newBooking: Booking = {
@@ -765,6 +842,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     logAudit('Settings', 'Updated Settings', 'Site settings and business profile updated');
   };
 
+  const updateSiteLogo = (newLogoUrl: string) => {
+    setSettings(prev => {
+      const updated = { ...prev, logoUrl: newLogoUrl };
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(updated));
+      return updated;
+    });
+    logAudit('Settings & Branding', 'Update Logo', `Updated website logo picture: ${newLogoUrl.slice(0, 60)}`);
+  };
+
   const addReview = (review: Omit<CustomerReview, 'id' | 'date' | 'isApproved'>) => {
     const newRev: CustomerReview = {
       ...review,
@@ -906,6 +992,143 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     triggerLiquidGasSplash(window.innerWidth / 2, 220, 1.35);
   };
 
+  // Hero Banner Management
+  const addBanner = (bannerData: Omit<HeroBannerItem, 'id' | 'sortOrder'>) => {
+    const newBanner: HeroBannerItem = {
+      ...bannerData,
+      id: `ban-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      sortOrder: banners.length + 1
+    };
+    setBanners(prev => [...prev, newBanner]);
+    logAudit('Website Banners', 'Created New Banner', `Added banner: "${bannerData.titleEn}"`);
+  };
+
+  const updateBanner = (id: string, updates: Partial<HeroBannerItem>) => {
+    setBanners(prev => prev.map(b => (b.id === id ? { ...b, ...updates } : b)));
+    logAudit('Website Banners', 'Updated Banner', `Updated banner ID: ${id}`);
+  };
+
+  const deleteBanner = (id: string) => {
+    const target = banners.find(b => b.id === id);
+    setBanners(prev => prev.filter(b => b.id !== id));
+    logAudit('Website Banners', 'Deleted Banner', `Deleted banner: ${target?.titleEn || id}`);
+  };
+
+  const reorderBanners = (newBanners: HeroBannerItem[]) => {
+    const reordered = newBanners.map((b, idx) => ({ ...b, sortOrder: idx + 1 }));
+    setBanners(reordered);
+    logAudit('Website Banners', 'Reordered Banners', 'Updated banner sequence');
+  };
+
+  // Discount Campaigns
+  const addDiscountCampaign = (campaignData: Omit<DiscountCampaign, 'id'>) => {
+    const newCampaign: DiscountCampaign = {
+      ...campaignData,
+      id: `camp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+    };
+    setDiscountCampaigns(prev => [newCampaign, ...prev]);
+    logAudit('Discounts & Promotions', 'Created Campaign', `Created campaign: "${campaignData.titleEn}" (${campaignData.discountValue}${campaignData.discountType === 'percentage' ? '%' : ' PKR'} off)`);
+  };
+
+  const updateDiscountCampaign = (id: string, updates: Partial<DiscountCampaign>) => {
+    setDiscountCampaigns(prev => prev.map(c => (c.id === id ? { ...c, ...updates } : c)));
+    logAudit('Discounts & Promotions', 'Updated Campaign', `Updated campaign ID: ${id}`);
+  };
+
+  const deleteDiscountCampaign = (id: string) => {
+    const target = discountCampaigns.find(c => c.id === id);
+    setDiscountCampaigns(prev => prev.filter(c => c.id !== id));
+    logAudit('Discounts & Promotions', 'Deleted Campaign', `Deleted campaign: ${target?.titleEn || id}`);
+  };
+
+  // Centralized Vehicle Effective Price Calculator
+  const getVehicleEffectivePrice = (vehicle: Vehicle) => {
+    const originalRate = vehicle.dailyRatePKR;
+    if (originalRate === null || originalRate === undefined || originalRate <= 0) {
+      return {
+        originalRate: null,
+        discountedRate: null,
+        discountPercent: 0,
+        discountBadge: null,
+        discountBadgeUr: null,
+        hasDiscount: false,
+        savingsPerDay: 0
+      };
+    }
+
+    // 1. Check vehicle individual discount
+    let bestDiscountPercent = vehicle.discountPercentage || 0;
+    let badgeEn = vehicle.discountBadge?.en || null;
+    let badgeUr = vehicle.discountBadge?.ur || null;
+    let fixedDiscountPKR = 0;
+
+    // 2. Check active promotional campaigns
+    for (const camp of discountCampaigns) {
+      if (!camp.isActive) continue;
+
+      let applies = false;
+      if (camp.applyTo === 'all') {
+        applies = true;
+      } else if (camp.applyTo === 'category' && camp.targetCategory === vehicle.category) {
+        applies = true;
+      } else if (camp.applyTo === 'specific_cars' && camp.targetVehicleIds?.includes(vehicle.id)) {
+        applies = true;
+      }
+
+      if (applies) {
+        if (camp.discountType === 'percentage') {
+          if (camp.discountValue > bestDiscountPercent) {
+            bestDiscountPercent = camp.discountValue;
+            badgeEn = camp.badgeEn;
+            badgeUr = camp.badgeUr;
+          }
+        } else if (camp.discountType === 'fixed_pkr') {
+          if (camp.discountValue > fixedDiscountPKR) {
+            fixedDiscountPKR = camp.discountValue;
+            badgeEn = camp.badgeEn;
+            badgeUr = camp.badgeUr;
+          }
+        }
+      }
+    }
+
+    if (bestDiscountPercent > 0) {
+      const discountAmount = Math.round((originalRate * bestDiscountPercent) / 100);
+      const discountedRate = Math.max(1000, originalRate - discountAmount);
+      return {
+        originalRate,
+        discountedRate,
+        discountPercent: bestDiscountPercent,
+        discountBadge: badgeEn || `${bestDiscountPercent}% OFF`,
+        discountBadgeUr: badgeUr || `${bestDiscountPercent}% رعایت`,
+        hasDiscount: true,
+        savingsPerDay: originalRate - discountedRate
+      };
+    } else if (fixedDiscountPKR > 0) {
+      const discountedRate = Math.max(1000, originalRate - fixedDiscountPKR);
+      const calculatedPercent = Math.round(((originalRate - discountedRate) / originalRate) * 100);
+      return {
+        originalRate,
+        discountedRate,
+        discountPercent: calculatedPercent,
+        discountBadge: badgeEn || `Rs. ${fixedDiscountPKR.toLocaleString()} OFF`,
+        discountBadgeUr: badgeUr || `${fixedDiscountPKR.toLocaleString()} روپے رعایت`,
+        hasDiscount: true,
+        savingsPerDay: originalRate - discountedRate
+      };
+    }
+
+    return {
+      originalRate,
+      discountedRate: originalRate,
+      discountPercent: 0,
+      discountBadge: null,
+      discountBadgeUr: null,
+      hasDiscount: false,
+      savingsPerDay: 0
+    };
+  };
+
   const navigateToBooking = (vehicleId?: string) => {
     if (vehicleId) {
       const v = vehicles.find(item => item.id === vehicleId);
@@ -967,6 +1190,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         publishCMSRevision,
         restoreCMSRevision,
         updateSiteSettings,
+        updateSiteLogo,
         addReview,
         moderateReview,
         submitEnquiry,
@@ -980,7 +1204,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         importAllData,
         resetAllData,
         navigateToCar,
-        navigateToBooking
+        navigateToBooking,
+        // Banners & Discounts
+        banners,
+        setBanners,
+        addBanner,
+        updateBanner,
+        deleteBanner,
+        reorderBanners,
+        discountCampaigns,
+        setDiscountCampaigns,
+        addDiscountCampaign,
+        updateDiscountCampaign,
+        deleteDiscountCampaign,
+        getVehicleEffectivePrice
       }}
     >
       {children}

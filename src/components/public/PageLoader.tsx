@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useApp } from '../../context/AppContext.tsx';
 
 interface PageLoaderProps {
   onComplete?: () => void;
 }
 
 export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
+  const { settings } = useApp();
   const [progress, setProgress] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [statusText, setStatusText] = useState('Initializing Fleet Engine...');
@@ -22,11 +24,11 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
       if (current < 30) {
         setStatusText('Synchronizing Fleet Telemetry...');
       } else if (current < 65) {
-        setStatusText('Loading Motorway & Local Tariffs...');
+        setStatusText('7 Days 24 Hours Service Ready...');
       } else if (current < 95) {
         setStatusText('Verifying Chauffeurs & AC Readiness...');
       } else {
-        setStatusText('Fleet Ready · Sadiqabad 2026');
+        setStatusText('Fleet Ready · Rahim Yar Khan · 24/7 Service');
       }
 
       if (current >= 100) {
@@ -58,12 +60,12 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
           <div className="relative z-10 flex items-center justify-between text-xs font-mono text-slate-400 tracking-wider">
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
-              <span className="text-slate-200 font-bold">SADIQABAD FLEET DISPATCH</span>
+              <span className="text-slate-200 font-bold">RAHIM YAR KHAN FLEET DISPATCH</span>
               <span className="hidden sm:inline text-slate-500">·</span>
-              <span className="hidden sm:inline text-slate-400">M-5 HIGHWAY READY</span>
+              <span className="hidden sm:inline text-amber-400 font-bold">7 DAYS 24 HOURS SERVICE</span>
             </div>
             <span className="px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px] font-bold">
-              2026 EDITION
+              24/7 OPEN
             </span>
           </div>
 
@@ -77,18 +79,21 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
             >
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-white/10 p-3.5 flex items-center justify-center border border-white/20 shadow-2xl backdrop-blur-md">
                 <img
-                  src="/assets/aistudio/Rent2Go_icon_transparent.png"
-                  alt="Rent2Go"
+                  src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
+                  alt="Jam Rent A Car Rahim Yar Khan"
                   className="w-full h-full object-contain brightness-125"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
+                  }}
                 />
               </div>
 
               <div className="space-y-2">
-                <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white font-mono">
-                  Rent<span className="text-[#F5B301]">2Go</span>®
+                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white font-mono">
+                  Jam Rent A Car<span className="text-xs font-normal text-slate-400">®</span>
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-400 font-mono tracking-widest uppercase">
-                  Your Journey. Your Ride. Your Freedom.
+                <p className="text-xs sm:text-sm text-amber-400 font-mono tracking-widest uppercase">
+                  Rahim Yar Khan · 7 Days 24 Hours Service · 03006756054
                 </p>
               </div>
             </motion.div>
@@ -112,7 +117,7 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
                   LOADING EXPERIENCE
                 </span>
                 <span className="text-xs text-slate-400">
-                  Sadiqabad · Rahim Yar Khan · Motorway
+                  Jam Rent A Car · Rahim Yar Khan · 7 Days 24 Hours Service
                 </span>
               </div>
 

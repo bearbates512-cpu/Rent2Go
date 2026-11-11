@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw, Lock, KeyRound } from 'lucide-react';
+import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw, Lock, KeyRound, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { AUTHORIZED_ADMIN_EMAIL, setCustomSupabaseConfig, getSupabaseClient } from '../../utils/supabase.ts';
 
 export const AdminSettings: React.FC = () => {
-  const { settings, updateSiteSettings, resetAllData, clearDemoFleet, clearDemoBookings, exportAllData, importAllData } = useApp();
+  const { settings, updateSiteSettings, resetAllData, clearDemoFleet, clearDemoBookings, exportAllData, importAllData, updateSiteLogo } = useApp();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoFileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<string>('');
   const [supabaseUrl, setSupabaseUrl] = useState(
     () => (typeof window !== 'undefined' ? localStorage.getItem('rent2go_supabase_url') || '' : '')
@@ -15,6 +16,7 @@ export const AdminSettings: React.FC = () => {
   );
   const [supabaseSaveMsg, setSupabaseSaveMsg] = useState('');
 
+  const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/assets/aistudio/Rent2Go_icon_transparent.png');
   const [phone, setPhone] = useState(settings.phone);
   const [phoneFormatted, setPhoneFormatted] = useState(settings.phoneFormatted);
   const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber);
@@ -40,6 +42,7 @@ export const AdminSettings: React.FC = () => {
 
     updateSiteSettings({
       ...settings,
+      logoUrl,
       phone,
       phoneFormatted,
       whatsappNumber: whatsapp,
@@ -98,6 +101,120 @@ export const AdminSettings: React.FC = () => {
       )}
 
       <form onSubmit={handleSave} className="space-y-8">
+        {/* Website Logo & Brand Emblem */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h2 className="text-sm font-bold text-[#0B1F3A] uppercase tracking-wider flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Website Logo & Brand Emblem (ویب سائٹ کا لوگو)</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Upload or link a custom logo image for Jam Rent A Car. Updates everywhere on the website.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const defaultLogo = '/assets/aistudio/Rent2Go_icon_transparent.png';
+                  setLogoUrl(defaultLogo);
+                  updateSiteLogo(defaultLogo);
+                }}
+                className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold font-mono flex items-center gap-1.5 cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Default</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => logoFileInputRef.current?.click()}
+                className="px-4 py-1.5 rounded-xl bg-[#0B1F3A] text-white hover:bg-[#142F57] text-xs font-bold font-mono flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>Upload Logo File</span>
+              </button>
+              <input
+                ref={logoFileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    if (file.size > 4 * 1024 * 1024) {
+                      alert('Please select an image smaller than 4MB.');
+                      return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = ev => {
+                      const dataUrl = ev.target?.result as string;
+                      if (dataUrl) {
+                        setLogoUrl(dataUrl);
+                        updateSiteLogo(dataUrl);
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-center">
+            {/* Live Preview Dark Box */}
+            <div className="p-4 rounded-2xl bg-[#0B1F3A] border border-amber-500/20 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-400/30 flex items-center justify-center p-1.5 shrink-0">
+                <img
+                  src={logoUrl || '/assets/aistudio/Rent2Go_icon_transparent.png'}
+                  alt="Current Logo"
+                  className="w-full h-full object-contain"
+                  onError={e => {
+                    (e.currentTarget as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
+                  }}
+                />
+              </div>
+              <div>
+                <p className="text-[10px] text-amber-400 font-mono font-bold uppercase">Active Site Logo</p>
+                <p className="text-xs font-black text-white font-mono">Jam Rent A Car</p>
+                <p className="text-[10px] text-slate-300">Rahim Yar Khan</p>
+              </div>
+            </div>
+
+            {/* URL Input */}
+            <div className="md:col-span-2 space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block font-mono">
+                Logo Image URL or Local Path (تصویر کا لنک)
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={logoUrl}
+                  onChange={e => setLogoUrl(e.target.value)}
+                  placeholder="/assets/aistudio/... or https://example.com/logo.png"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (logoUrl.trim()) {
+                      updateSiteLogo(logoUrl.trim());
+                    }
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-amber-500 text-slate-900 font-bold text-xs font-mono hover:bg-amber-400 cursor-pointer shrink-0"
+                >
+                  Apply
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                You can also customize banners, promotional deals, and logo presets in the <span className="font-bold text-slate-600">Promotions & Marketing</span> tab.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Business Profile */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
           <h2 className="text-sm font-bold text-[#0B1F3A] uppercase tracking-wider border-b border-slate-100 pb-3">

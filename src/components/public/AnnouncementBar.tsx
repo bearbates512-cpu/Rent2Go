@@ -3,13 +3,19 @@ import { useApp } from '../../context/AppContext.tsx';
 import { X, Sparkles } from 'lucide-react';
 
 export const AnnouncementBar: React.FC = () => {
-  const { settings, locale, announcementDismissed, setAnnouncementDismissed, navigateToBooking } = useApp();
+  const { settings, locale, announcementDismissed, setAnnouncementDismissed, navigateToBooking, discountCampaigns } = useApp();
 
   if (!settings.announcementBar.enabled || announcementDismissed) {
     return null;
   }
 
-  const text = settings.announcementBar.text[locale] || settings.announcementBar.text.en;
+  const activePromo = (discountCampaigns || []).find(c => c.isActive && c.announceInBar);
+
+  const text = activePromo
+    ? (locale === 'ur'
+        ? `⭐ ${activePromo.badgeUr || ''} ${activePromo.titleUr || activePromo.titleEn} — ${activePromo.descriptionUr || activePromo.descriptionEn || ''}`
+        : `⭐ ${activePromo.badgeEn}: ${activePromo.titleEn} — ${activePromo.descriptionEn || ''}`)
+    : (settings.announcementBar.text[locale] || settings.announcementBar.text.en);
 
   return (
     <div className="bg-[#0B1F3A] text-white border-b border-amber-500/30 px-4 py-2.5 text-xs sm:text-sm font-medium transition-all relative">

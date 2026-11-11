@@ -57,19 +57,19 @@ export const ContactView: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Editorial Header */}
         <div className="space-y-4 border-b border-black/5 dark:border-white/10 pb-8">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>{locale === 'ur' ? 'براہِ راست رابطہ' : 'DIRECT DISPATCH DESK'}</span>
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-amber-500 font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{locale === 'ur' ? '7 دن 24 گھنٹے سروس · رحیم یار خان' : '7 DAYS 24 HOURS SERVICE · RAHIM YAR KHAN'}</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white">
-            {locale === 'ur' ? 'رینٹ ٹو گو ڈیسک، صادق آباد' : 'Let’s Talk. Reach Out.'}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white">
+            {locale === 'ur' ? 'جام رینٹ اے کار رحیم یار خان' : 'Jam Rent A Car Rahim Yar Khan'}
           </h1>
 
           <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-2xl leading-relaxed">
             {locale === 'ur'
-              ? 'ہماری ٹیم آپ کی رہنمائی اور فوری گاڑی فراہم کرنے کے لیے 24 گھنٹے دستیاب ہے۔'
-              : 'Have a question about rates, fleet availability, or corporate packages? Call, WhatsApp, or drop a direct message.'}
+              ? 'جام رینٹ اے کار رحیم یار خان میں 7 دن 24 گھنٹے معیاری سروس فراہم کرتا ہے۔ کسی بھی وقت فوری گاڑی کے لیے کال یا واٹس ایپ کریں۔'
+              : 'Jam Rent A Car Rahim Yar Khan operates 7 Days 24 Hours (24/7). Call or WhatsApp 03006756054 for verified luxury and family cars anytime.'}
           </p>
         </div>
 
@@ -77,49 +77,54 @@ export const ContactView: React.FC = () => {
           {/* Left Column: Direct Channels & Information */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white dark:bg-[#0B131F] rounded-3xl p-8 border border-black/5 dark:border-white/10 shadow-xl space-y-6">
-              <h2 className="text-xl font-bold font-mono text-slate-950 dark:text-white">
-                {locale === 'ur' ? 'رابطے کے ذرائع' : 'Direct Channels'}
+              <h2 className="text-xl font-bold font-mono text-slate-950 dark:text-white flex items-center justify-between">
+                <span>{locale === 'ur' ? 'رابطے کے ذرائع' : 'Direct Channels'}</span>
+                <span className="text-[11px] font-normal px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono">
+                  24/7 Open
+                </span>
               </h2>
 
               <div className="space-y-4 text-xs font-mono">
                 {/* Phone */}
                 <a
-                  href={`tel:${settings.phone}`}
+                  href={`tel:${settings.phone || '03006756054'}`}
                   className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-black/5 dark:border-white/10 hover:border-amber-400 transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0">
-                    <Phone className="w-4 h-4 text-amber-400" />
+                  <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <Phone className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <span className="text-slate-400 block">{locale === 'ur' ? 'ہیلپ لائن اور کال' : 'Direct Phone'}</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{settings.phoneFormatted}</span>
+                    <span className="text-slate-400 block">{locale === 'ur' ? 'ہیلپ لائن اور کال' : 'Direct Call (24 Hours)'}</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-sm">{settings.phoneFormatted || '+92 300 6756054'}</span>
                   </div>
                 </a>
 
                 {/* WhatsApp */}
                 <a
-                  href={`https://wa.me/${settings.whatsappNumber}`}
+                  href={`https://wa.me/${settings.whatsappNumber || '923006756054'}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500 transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm">
                     <MessageSquare className="w-4 h-4 fill-current" />
                   </div>
                   <div>
-                    <span className="text-emerald-700 dark:text-emerald-300 block font-semibold">{locale === 'ur' ? 'واٹس ایپ بکنگ' : 'WhatsApp Desk'}</span>
-                    <span className="font-bold text-emerald-950 dark:text-white">+{settings.whatsappNumber}</span>
+                    <span className="text-emerald-700 dark:text-emerald-300 block font-semibold">{locale === 'ur' ? 'واٹس ایپ بکنگ' : 'WhatsApp 24/7 Desk'}</span>
+                    <span className="font-bold text-emerald-950 dark:text-white text-sm">03006756054</span>
                   </div>
                 </a>
 
-                {/* Email */}
-                <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-black/5 dark:border-white/10">
-                  <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0">
-                    <Mail className="w-4 h-4" />
+                {/* Service Hours Highlight */}
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 font-bold">
+                    <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-slate-400 block">{locale === 'ur' ? 'ای میل ایڈریس' : 'Email Address'}</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{settings.email}</span>
+                    <span className="text-amber-800 dark:text-amber-300 block font-semibold">{locale === 'ur' ? 'اوقاتِ کار' : 'Service Schedule'}</span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {locale === 'ur' ? '7 دن 24 گھنٹے سروس (24/7 Open)' : '7 Days 24 Hours Service'}
+                    </span>
                   </div>
                 </div>
 
@@ -129,23 +134,21 @@ export const ContactView: React.FC = () => {
                     <MapPin className="w-4 h-4 text-amber-500" />
                   </div>
                   <div>
-                    <span className="text-slate-400 block">{locale === 'ur' ? 'دفتر کا پتہ' : 'HQ Location'}</span>
-                    <span className="text-slate-700 dark:text-slate-300 font-sans">
-                      {settings.address[locale] || settings.address.en}
+                    <span className="text-slate-400 block">{locale === 'ur' ? 'دفتر کا پتہ' : 'Office Location'}</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-sans font-medium">
+                      Jam Rent A Car, Rahim Yar Khan, Punjab, Pakistan
                     </span>
                   </div>
                 </div>
 
-                {/* Hours */}
+                {/* Email */}
                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-black/5 dark:border-white/10">
                   <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0">
-                    <Clock className="w-4 h-4 text-amber-500" />
+                    <Mail className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-slate-400 block">{locale === 'ur' ? 'اوقاتِ کار' : 'Working Hours'}</span>
-                    <span className="text-slate-700 dark:text-slate-300">
-                      {settings.businessHours[locale] || settings.businessHours.en}
-                    </span>
+                    <span className="text-slate-400 block">{locale === 'ur' ? 'ای میل ایڈریس' : 'Email Address'}</span>
+                    <span className="font-bold text-slate-900 dark:text-white">{settings.email}</span>
                   </div>
                 </div>
               </div>
@@ -282,6 +285,57 @@ export const ContactView: React.FC = () => {
                 </form>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Google Maps Embed Section - Jam Rent A Car Rahim Yar Khan */}
+        <div className="bg-white dark:bg-[#0B131F] rounded-3xl p-6 sm:p-8 border border-black/5 dark:border-white/10 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5 dark:border-white/10">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono text-amber-500 uppercase tracking-widest font-bold">
+                <MapPin className="w-4 h-4 text-rose-500" />
+                <span>{locale === 'ur' ? 'گوگل میپس لوکیشن' : 'LIVE LOCATION ON GOOGLE MAPS'}</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold font-mono text-slate-950 dark:text-white mt-1">
+                Jam Rent A Car Rahim Yar Khan
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
+                {locale === 'ur' ? '7 دن 24 گھنٹے سروس · کال اور واٹس ایپ 03006756054' : '7 Days 24 Hours Service · Call & WhatsApp 03006756054'}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="https://maps.google.com/?q=Jam+Rent+A+Car+Rahim+Yar+Khan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-mono font-bold tracking-tight inline-flex items-center gap-2 transition-all shadow-sm active:scale-95"
+              >
+                <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                <span>{locale === 'ur' ? 'گوگل میپس پر کھولیں' : 'Open in Google Maps'}</span>
+              </a>
+              <a
+                href={`tel:${settings.phone || '03006756054'}`}
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold tracking-tight inline-flex items-center gap-2 transition-all shadow-sm active:scale-95"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>03006756054</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Interactive Google Map Iframe */}
+          <div className="w-full h-[400px] sm:h-[480px] rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-inner bg-slate-100 dark:bg-slate-900">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7949743.754871205!2d67.90442178853719!3d29.915812714775523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794239357100!5m2!1sen!2s"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Jam Rent A Car Rahim Yar Khan Location"
+            />
           </div>
         </div>
       </div>

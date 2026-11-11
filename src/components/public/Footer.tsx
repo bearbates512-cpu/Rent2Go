@@ -82,7 +82,7 @@ export const Footer: React.FC = () => {
   const navLinks = [
     { id: 'home', en: 'Home', ur: 'مرکزی صفحہ' },
     { id: 'cars', en: 'Fleet Collection', ur: 'گاڑیاں اور فلیٹ' },
-    { id: 'about', en: 'About Rent2Go', ur: 'ہمارے متعلق' },
+    { id: 'about', en: 'About Jam Rent A Car', ur: 'ہمارے متعلق' },
     { id: 'services', en: 'Services', ur: 'سروسز' },
     { id: 'rates', en: 'Tariff & Rates', ur: 'کرایہ نامہ' },
     { id: 'contact', en: 'Contact Desk', ur: 'رابطہ' },
@@ -113,54 +113,57 @@ export const Footer: React.FC = () => {
             viewport={{ once: false, amount: 0.15 }}
             className="lg:col-span-7 space-y-6"
           >
-            <span className="text-xs font-mono font-bold tracking-widest uppercase text-amber-400">
-              {locale === 'ur' ? 'ہم سے رابطہ کریں' : 'REACH OUT'}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-mono font-bold tracking-widest uppercase text-amber-400">
+                {locale === 'ur' ? '7 دن 24 گھنٹے سروس · رحیم یار خان' : '7 DAYS 24 HOURS SERVICE · RAHIM YAR KHAN'}
+              </span>
+            </div>
 
             <h2 className="text-4xl sm:text-6xl xl:text-7xl font-black tracking-tight leading-[0.95] font-mono text-white">
               {locale === 'ur' ? (
                 <>
-                  اپنا سفر آسان بنائیں。<br />
-                  <span className="text-[#F5B301]">ہمہ وقت دستیاب۔</span>
+                  جام رینٹ اے کار。<br />
+                  <span className="text-[#F5B301]">رحیم یار خان۔</span>
                 </>
               ) : (
                 <>
-                  REFINE YOUR<br />
-                  JOURNEY.<br />
-                  <span className="text-[#F5B301]">WHEREVER YOU ARE.</span>
+                  JAM RENT A CAR<br />
+                  RAHIM YAR KHAN.<br />
+                  <span className="text-[#F5B301]">7 DAYS 24 HOURS.</span>
                 </>
               )}
             </h2>
 
             <p className="text-slate-400 text-sm sm:text-base max-w-xl leading-relaxed">
               {locale === 'ur'
-                ? 'صادق آباد اور موٹروے پر لگژری گاڑیوں کی بکنگ، کرایہ کی معلومات، یا کارپوریٹ معاہدوں کے لیے ابھی رابطہ کریں۔'
-                : 'Experience effortless travel with our verified fleet in Sadiqabad, Rahim Yar Khan, and M-5 Motorway corridor.'}
+                ? 'جام رینٹ اے کار رحیم یار خان: 7 دن 24 گھنٹے معیاری لگژری اور فیملی گاڑیاں، بااخلاق ڈرائیورز، سیلف ڈرائیو اور فوری بکنگ۔'
+                : 'Jam Rent A Car Rahim Yar Khan: Premium verified fleet, professional chauffeurs, transparent rates, and round-the-clock 24/7 service on call 03006756054.'}
             </p>
 
             {/* Direct Contact Links */}
             <div className="pt-4 flex flex-wrap items-center gap-6 text-sm font-mono">
               <a
-                href={`tel:${settings.phone}`}
+                href={`tel:${settings.phone || '03006756054'}`}
                 className="flex items-center gap-2 text-white hover:text-amber-400 transition-colors"
               >
-                <Phone className="w-4 h-4 text-amber-400" />
-                <span>{settings.phoneFormatted}</span>
+                <Phone className="w-4 h-4 text-emerald-400" />
+                <span className="font-bold">{settings.phone || '03006756054'}</span>
               </a>
 
               <a
-                href={`https://wa.me/${settings.whatsappNumber}`}
+                href={`https://wa.me/${settings.whatsappNumber || '923006756054'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
               >
                 <MessageSquare className="w-4 h-4 fill-current" />
-                <span>WhatsApp 24/7</span>
+                <span className="font-bold">WhatsApp 03006756054</span>
               </a>
 
               <div className="flex items-center gap-2 text-slate-400">
                 <MapPin className="w-4 h-4 text-amber-400" />
-                <span className="truncate">{settings.address[locale] || settings.address.en}</span>
+                <span className="truncate">Rahim Yar Khan, Punjab</span>
               </div>
             </div>
           </motion.div>
@@ -378,20 +381,21 @@ export const Footer: React.FC = () => {
               {locale === 'ur' ? 'مشہور روٹس' : 'POPULAR ROUTES'}
             </span>
             <ul className="space-y-2 text-slate-400">
-              <li>Sadiqabad · M-5 Motorway</li>
-              <li>Rahim Yar Khan · Airport</li>
-              <li>Sukkur · Multan Highway</li>
-              <li>Corporate Convoy · Machi Goth</li>
+              <li>Rahim Yar Khan · City & Airport</li>
+              <li>M-5 Motorway Corridor</li>
+              <li>Sadiqabad & Daharki Highway</li>
+              <li>Multan & Sukkur Inter-City</li>
             </ul>
           </div>
 
           <div className="flex flex-col justify-between">
             <div>
               <span className="text-slate-400 uppercase tracking-widest block mb-4">
-                {locale === 'ur' ? 'دفتر' : 'HQ OFFICE'}
+                {locale === 'ur' ? 'مرکزی دفتر' : 'HQ OFFICE'}
               </span>
-              <p className="text-slate-400 leading-relaxed">
-                KLP Road, Bypass Chowk, Sadiqabad, Punjab.
+              <p className="text-slate-400 leading-relaxed font-sans">
+                Jam Rent A Car, Rahim Yar Khan, Punjab, Pakistan.<br />
+                <span className="text-amber-400 font-mono text-[11px]">7 Days 24 Hours Service (24/7)</span>
               </p>
             </div>
 
@@ -414,14 +418,14 @@ export const Footer: React.FC = () => {
           viewport={{ once: false, amount: 0.15 }}
           className="pt-16 pb-4 flex justify-center overflow-hidden pointer-events-none select-none opacity-20 hover:opacity-30 transition-opacity"
         >
-          <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-black tracking-tighter text-white font-mono whitespace-nowrap">
-            Rent2Go®
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-[110px] font-black tracking-tighter text-white font-mono whitespace-nowrap text-center">
+            Jam Rent A Car®
           </h1>
         </motion.div>
 
         {/* Bottom Bar: Copyright & Stealth Admin */}
         <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
-          <p>© {new Date().getFullYear()} Rent2Go®. All rights reserved. Sadiqabad, Pakistan.</p>
+          <p>© {new Date().getFullYear()} Jam Rent A Car Rahim Yar Khan. 7 Days 24 Hours Service. All rights reserved.</p>
 
           <div className="flex items-center gap-4">
             <button

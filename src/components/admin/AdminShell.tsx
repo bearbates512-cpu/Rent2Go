@@ -55,7 +55,8 @@ export const AdminShell: React.FC<AdminShellProps> = ({
     bookings,
     enquiries,
     themeMode,
-    toggleThemeMode
+    toggleThemeMode,
+    settings
   } = useApp();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -67,7 +68,8 @@ export const AdminShell: React.FC<AdminShellProps> = ({
     { id: 'bookings', label: 'Bookings & Rental Orders', icon: FileEdit, badge: pendingCount },
     { id: 'calendar', label: 'Fleet Calendar & Slots', icon: Calendar },
     { id: 'vehicles', label: 'Vehicles & Fleet Inventory', icon: Car },
-    { id: 'cms', label: 'Website CMS & Banners', icon: Layers },
+    { id: 'promotions', label: 'Banners & Discounts (آفرز و بینرز)', icon: Sparkles },
+    { id: 'cms', label: 'Website CMS & Pages', icon: Layers },
     { id: 'navigation', label: 'Navigation & Menus', icon: SlidersHorizontal },
     { id: 'pricing', label: 'Pricing & Fare Engine', icon: Banknote },
     { id: 'enquiries', label: 'Enquiries & CRM Leads', icon: MessageSquare, badge: newEnquiriesCount },
@@ -113,9 +115,12 @@ export const AdminShell: React.FC<AdminShellProps> = ({
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-white/10 p-1.5 flex items-center justify-center shrink-0 border border-white/15 shadow-inner">
                 <img
-                  src="/assets/aistudio/Rent2Go_icon_transparent.png"
+                  src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
                   alt="Rent2Go"
                   className="w-full h-full object-contain brightness-125"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
+                  }}
                 />
               </div>
               <div className="flex items-center gap-1.5">

@@ -5,7 +5,7 @@ import { soundFX } from '../../utils/soundEffects.ts';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const RatesView: React.FC = () => {
-  const { vehicles, locale, dir, navigateToBooking } = useApp();
+  const { vehicles, locale, dir, navigateToBooking, getVehicleEffectivePrice } = useApp();
   const ArrowIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
 
   return (
@@ -46,51 +46,73 @@ export const RatesView: React.FC = () => {
               <tbody className="divide-y divide-black/5 dark:divide-white/10">
                 {vehicles
                   .filter(v => v.visibility === 'published')
-                  .map((veh, i) => (
-                    <tr
-                      key={veh.id}
-                      className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
-                    >
-                      <td className="py-5 px-6 font-bold text-slate-950 dark:text-white flex items-center gap-3">
-                        <img
-                          src={veh.coverImage}
-                          alt={veh.make}
-                          className="w-12 h-9 rounded-lg object-cover shrink-0 hidden sm:inline-block"
-                        />
-                        <div>
-                          <span className="block font-bold">{veh.make} {veh.model}</span>
-                          <span className="text-[11px] text-slate-400 block font-normal">{veh.modelYear} · {veh.transmission}</span>
-                        </div>
-                      </td>
-                      <td className="py-5 px-6 uppercase text-xs text-slate-600 dark:text-slate-400">
-                        {veh.category}
-                      </td>
-                      <td className="py-5 px-6 text-slate-700 dark:text-slate-300">
-                        {veh.seats} {locale === 'ur' ? 'افراد' : 'Seats'}
-                      </td>
-                      <td className="py-5 px-6 font-bold text-slate-950 dark:text-amber-400">
-                        {veh.dailyRatePKR ? `Rs. ${veh.dailyRatePKR.toLocaleString()}` : (
-                          <span className="text-amber-500 font-sans text-xs">
-                            {locale === 'ur' ? 'رابطہ کریں' : 'Custom Quote'}
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-5 px-6 text-slate-500 dark:text-slate-400">
-                        Rs. {veh.driverDailyFeePKR.toLocaleString()}/day
-                      </td>
-                      <td className="py-5 px-6 text-end">
-                        <button
-                          onClick={() => {
-                            soundFX.playClick();
-                            navigateToBooking(veh.id);
-                          }}
-                          className="px-4 py-2 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
-                        >
-                          {locale === 'ur' ? 'بک کریں' : 'Book'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  .map((veh) => {
+                    const pricing = getVehicleEffectivePrice(veh);
+                    return (
+                      <tr
+                        key={veh.id}
+                        className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                      >
+                        <td className="py-5 px-6 font-bold text-slate-950 dark:text-white flex items-center gap-3">
+                          <img
+                            src={veh.coverImage}
+                            alt={veh.make}
+                            className="w-12 h-9 rounded-lg object-cover shrink-0 hidden sm:inline-block"
+                          />
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold">{veh.make} {veh.model}</span>
+                              {pricing.hasDiscount && (
+                                <span className="px-2 py-0.5 rounded-full bg-[#F5B301] text-slate-950 text-[9px] font-black font-mono">
+                                  {locale === 'ur' ? (pricing.discountBadgeUr || pricing.discountBadge) : pricing.discountBadge}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-[11px] text-slate-400 block font-normal">{veh.modelYear} · {veh.transmission}</span>
+                          </div>
+                        </td>
+                        <td className="py-5 px-6 uppercase text-xs text-slate-600 dark:text-slate-400">
+                          {veh.category}
+                        </td>
+                        <td className="py-5 px-6 text-slate-700 dark:text-slate-300">
+                          {veh.seats} {locale === 'ur' ? 'افراد' : 'Seats'}
+                        </td>
+                        <td className="py-5 px-6 font-bold text-slate-950 dark:text-amber-400">
+                          {pricing.hasDiscount ? (
+                            <div>
+                              <span className="text-slate-400 line-through text-[11px] block">
+                                Rs. {pricing.originalRate?.toLocaleString()}
+                              </span>
+                              <span className="text-emerald-600 dark:text-emerald-400 font-black text-sm">
+                                Rs. {pricing.discountedRate?.toLocaleString()}
+                              </span>
+                              <span className="text-[10px] text-slate-400 font-normal">/{locale === 'ur' ? 'دن' : 'day'}</span>
+                            </div>
+                          ) : veh.dailyRatePKR ? (
+                            <span>Rs. {veh.dailyRatePKR.toLocaleString()}</span>
+                          ) : (
+                            <span className="text-amber-500 font-sans text-xs">
+                              {locale === 'ur' ? 'رابطہ کریں' : 'Custom Quote'}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-5 px-6 text-slate-500 dark:text-slate-400">
+                          Rs. {veh.driverDailyFeePKR.toLocaleString()}/day
+                        </td>
+                        <td className="py-5 px-6 text-end">
+                          <button
+                            onClick={() => {
+                              soundFX.playClick();
+                              navigateToBooking(veh.id);
+                            }}
+                            className="px-4 py-2 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
+                          >
+                            {locale === 'ur' ? 'بک کریں' : 'Book'}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

@@ -38,6 +38,7 @@ import { AdminFormBuilder } from './components/admin/AdminFormBuilder.tsx';
 import { AdminReports } from './components/admin/AdminReports.tsx';
 import { AdminTeam } from './components/admin/AdminTeam.tsx';
 import { AdminLogin } from './components/admin/AdminLogin.tsx';
+import { AdminPromotions } from './components/admin/AdminPromotions.tsx';
 
 function MainAppContent() {
   const { currentView, setCurrentView, navigateToCar, isAdminAuthenticated } = useApp();
@@ -146,6 +147,7 @@ function MainAppContent() {
         {adminTab === 'bookings' && <AdminBookings />}
         {adminTab === 'calendar' && <AdminCalendar />}
         {adminTab === 'vehicles' && <AdminVehicles />}
+        {adminTab === 'promotions' && <AdminPromotions />}
         {adminTab === 'cms' && <AdminCMS />}
         {adminTab === 'navigation' && <AdminNavigation />}
         {adminTab === 'pricing' && <AdminPricing />}

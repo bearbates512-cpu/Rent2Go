@@ -49,8 +49,8 @@ export const AdminAudit: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredLogs.map(log => (
-                <tr key={log.id} className="hover:bg-slate-50/50">
+              {filteredLogs.map((log, index) => (
+                <tr key={`${log.id || 'log'}-${index}`} className="hover:bg-slate-50/50">
                   <td className="py-3 px-4 font-mono text-[11px] text-slate-500">
                     {new Date(log.timestamp).toLocaleString()}
                   </td>

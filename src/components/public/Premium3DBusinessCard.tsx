@@ -101,9 +101,12 @@ export const Premium3DBusinessCard: React.FC<Premium3DBusinessCardProps> = ({
                   aria-label="Rent2Go brand mark"
                 >
                   <img
-                    src="/assets/aistudio/Rent2Go_icon_transparent.png"
+                    src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
                     alt="Rent2Go"
                     className="w-7 h-7 object-contain brightness-125"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
+                    }}
                   />
                 </div>
 

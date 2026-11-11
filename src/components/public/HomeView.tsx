@@ -20,7 +20,8 @@ import {
   Zap,
   CheckCircle2,
   Play,
-  Pause
+  Pause,
+  Phone
 } from 'lucide-react';
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -71,60 +72,40 @@ export const HomeView: React.FC = () => {
     dir,
     navigateToBooking,
     setCurrentView,
-    settings
+    settings,
+    banners,
+    discountCampaigns
   } = useApp();
 
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
   const [fleetCategory, setFleetCategory] = useState<string>('all');
 
-  // Hero 3-Banner Carousel State
+  // Dynamic Banners from Admin Context
+  const activeBanners = (banners && banners.length > 0)
+    ? banners.filter(b => b.isActive)
+    : [];
+  const displayBanners = activeBanners.length > 0 ? activeBanners : banners;
+
+  // Hero Banner Carousel State
   const [currentBannerIndex, setCurrentBannerIndex] = useState<number>(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(true);
 
-  const banners = [
-    {
-      id: 1,
-      image: '/assets/aistudio/a_polished_modern_car_rental_website_hero_banner_i_1a91e531.png',
-      titleEn: 'Your Journey. Your Ride. Discover Freedom.',
-      titleUr: 'آپ کا سفر۔ آپ کی گاڑی۔ آزادی کا آغاز۔',
-      badgeEn: 'Executive Fleet · Sadiqabad Hub',
-      badgeUr: 'ایگزیکٹو فلیٹ · صادق آباد حب',
-      animation: 'fade' // Fade In animation
-    },
-    {
-      id: 2,
-      image: '/assets/aistudio/Rent2Go_Family_Travel_Banner_efd52a90.png',
-      titleEn: 'Luxury Travel & Memorable Family Trips',
-      titleUr: 'پُرسکون فیملی اسفار اور پریمیم لگژری',
-      badgeEn: 'Family Comfort · Chilled Dual AC',
-      badgeUr: 'فیملی سہولت · ٹھنڈا اے سی',
-      animation: 'spin' // 3D Spin / Tilt In animation
-    },
-    {
-      id: 3,
-      image: '/assets/aistudio/Premium_Cars__Unforgettable_Journeys_abbb121d.png',
-      titleEn: 'Premium SUVs & Verified Highway Chauffeurs',
-      titleUr: 'طاقتور 4x4 فارچونر اور موٹروے پروٹوکول',
-      badgeEn: 'M-5 Motorway Ready · 24/7 Dispatch',
-      badgeUr: 'M-5 موٹروے ریڈی · 24/7 مدد',
-      animation: 'jump' // Jump / Elastic Bounce animation
-    }
-  ];
-
   // Auto-play timer for hero banners
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || displayBanners.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
+      setCurrentBannerIndex((prev) => (prev + 1) % displayBanners.length);
     }, 5500);
     return () => clearInterval(interval);
-  }, [isAutoPlaying, banners.length]);
+  }, [isAutoPlaying, displayBanners.length]);
 
   const toggleAutoPlay = () => {
     soundFX.playClick();
     setIsAutoPlaying(!isAutoPlaying);
   };
 
+  const activeDiscounts = (discountCampaigns || []).filter(c => c.isActive);
+  const topDiscount = activeDiscounts[0] || null;
 
   const ArrowIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
 
@@ -214,30 +195,30 @@ export const HomeView: React.FC = () => {
       num: '04',
       titleEn: 'Enjoy Your Journey',
       titleUr: 'پُرسکون سفر کا آغاز',
-      descEn: 'Vehicle delivered to your doorstep in Sadiqabad or dispatch hub on KLP Road.',
-      descUr: 'گاڑی آپ کی دہلیز پر پہنچائی جائے گی، سکون اور اعتماد کے ساتھ سفر کریں۔'
+      descEn: 'Vehicle delivered to your doorstep in Rahim Yar Khan or dispatched from our hub. 7 Days 24 Hours Service.',
+      descUr: 'گاڑی رحیم یار خان میں آپ کی دہلیز پر پہنچائی جائے گی، 7 دن 24 گھنٹے ہمہ وقت سروس۔'
     }
   ];
 
   // FAQ Items
   const faqItems = [
     {
-      qEn: 'What documents are required for car rental in Sadiqabad?',
-      qUr: 'صادق آباد میں گاڑی کرائے پر لینے کے لیے کن دستاویزات کی ضرورت ہے؟',
+      qEn: 'What documents are required for car rental in Rahim Yar Khan?',
+      qUr: 'رحیم یار خان میں گاڑی کرائے پر لینے کے لیے کن دستاویزات کی ضرورت ہے؟',
       aEn: 'For self-drive: Original CNIC, valid Pakistani driving license, and refundable security deposit. For chauffeur-driven trips, only basic booking details and phone number are required.',
       aUr: 'سیلف ڈرائیو کے لیے: اصل شناختی کارڈ، ڈرائیونگ لائسنس اور سیکیورٹی ڈپازٹ۔ ڈرائیور کے ساتھ بکنگ کے لیے صرف بنیادی تفصیلات اور رابطہ نمبر درکار ہے۔'
     },
     {
-      qEn: 'Do you provide cars for M-5 Motorway and long-distance travel?',
-      qUr: 'کیا آپ موٹروے M-5 اور لمبے سفر کے لیے گاڑیاں فراہم کرتے ہیں؟',
-      aEn: 'Yes! Our entire fleet is inspected for highway endurance, including trips to Multan, Sukkur, Lahore, Islamabad, and Karachi via M-5 corridor.',
-      aUr: 'جی بالکل! ہماری تمام گاڑیاں ہائی وے اور M-5 موٹروے کے لمبے سفر کے لیے مکمل فٹ اور باقاعدہ چیک شدہ ہیں۔'
+      qEn: 'Do you provide 7 Days 24 Hours Service for M-5 Motorway and emergencies?',
+      qUr: 'کیا آپ 7 دن 24 گھنٹے موٹروے M-5 اور ایمرجنسی سروس فراہم کرتے ہیں؟',
+      aEn: 'Yes! Jam Rent A Car Rahim Yar Khan operates 24/7. Our entire fleet is inspected for highway endurance, including trips to Multan, Sukkur, Lahore, Islamabad, and Karachi via M-5 corridor.',
+      aUr: 'جی بالکل! جام رینٹ اے کار رحیم یار خان 7 دن 24 گھنٹے اوپن ہے۔ ہماری تمام گاڑیاں ہائی وے اور M-5 موٹروے کے لیے مکمل فٹ اور تیار ہیں۔'
     },
     {
       qEn: 'Can I book a car on WhatsApp without credit card?',
       qUr: 'کیا میں کریڈٹ کارڈ کے بغیر واٹس ایپ پر گاڑی بک کر سکتا ہوں؟',
-      aEn: 'Absolutely. Rent2Go specializes in local convenience. You can book via WhatsApp and pay via Cash, JazzCash, EasyPaisa, or Bank Transfer upon vehicle handover.',
-      aUr: 'بالکل! آپ بغیر کریڈٹ کارڈ کے واٹس ایپ پر بکنگ کر سکتے ہیں اور کیش، ایزی پیسہ یا بینک ٹرانسفر کے ذریعے ادائیگی کر سکتے ہیں۔'
+      aEn: 'Absolutely. Jam Rent A Car Rahim Yar Khan specializes in 24/7 local convenience. You can call or WhatsApp 03006756054 and pay via Cash, JazzCash, EasyPaisa, or Bank Transfer upon vehicle handover.',
+      aUr: 'بالکل! آپ 03006756054 پر کال یا واٹس ایپ کر کے فوری بکنگ کر سکتے ہیں اور کیش، ایزی پیسہ یا بینک ٹرانسفر کے ذریعے ادائیگی کر سکتے ہیں۔'
     },
     {
       qEn: 'What is your fuel and driver allowance policy?',
@@ -289,8 +270,8 @@ export const HomeView: React.FC = () => {
     }
   };
 
-  const activeBanner = banners[currentBannerIndex];
-  const activeAnimation = getBannerAnimationVariants(activeBanner.animation);
+  const activeBanner = displayBanners[currentBannerIndex % displayBanners.length] || displayBanners[0];
+  const activeAnimation = getBannerAnimationVariants(activeBanner?.animation || 'fade');
 
   return (
     <div className="bg-[#FAF9F6] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 transition-colors duration-250 select-none">
@@ -302,19 +283,40 @@ export const HomeView: React.FC = () => {
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="space-y-8">
-          {/* Top Brand Tagline */}
-          <motion.div
-            variants={bidirectionalScroll}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, amount: 0.2 }}
-            className="flex items-center gap-3 text-xs font-mono text-slate-500 dark:text-slate-400"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-[#F5B301] animate-pulse" />
-            <span className="tracking-widest uppercase font-bold">
-              {locale === 'ur' ? 'صادق آباد پریمیم رینٹل فلیٹ · 2026 ایڈیشن' : 'SADIQABAD CAR RENTAL · VERIFIED LUXURY FLEET'}
-            </span>
-          </motion.div>
+          {/* Top Brand Tagline & Active Promo Deal Alert */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <motion.div
+              variants={bidirectionalScroll}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: false, amount: 0.2 }}
+              className="flex items-center gap-3 text-xs font-mono text-slate-500 dark:text-slate-400"
+            >
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="tracking-widest uppercase font-bold text-slate-900 dark:text-amber-400">
+                {locale === 'ur' ? 'جام رینٹ اے کار رحیم یار خان · 7 دن 24 گھنٹے سروس' : 'JAM RENT A CAR RAHIM YAR KHAN · 7 DAYS 24 HOURS SERVICE'}
+              </span>
+            </motion.div>
+
+            {/* Active Festival / Month-End Discount Banner */}
+            {topDiscount && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-[#F5B301]/30 to-amber-500/20 border border-amber-400/40 text-slate-900 dark:text-amber-300 text-xs font-bold font-mono shadow-xs"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-spin" />
+                <span>
+                  {locale === 'ur'
+                    ? (topDiscount.badgeUr || `${topDiscount.discountValue}% رعایت`)
+                    : (topDiscount.badgeEn || `${topDiscount.discountValue}% OFF`)}
+                </span>
+                <span className="text-[11px] text-slate-600 dark:text-slate-300 font-sans hidden sm:inline">
+                  · {locale === 'ur' ? (topDiscount.titleUr || topDiscount.titleEn) : topDiscount.titleEn}
+                </span>
+              </motion.div>
+            )}
+          </div>
 
           {/* Drkst Signature Oversized Headline Reveal */}
           <div className="space-y-1">
@@ -336,11 +338,11 @@ export const HomeView: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.2 }}
-              className="lg:col-span-7 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-sans"
+              className="lg:col-span-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-sans"
             >
               {locale === 'ur'
-                ? 'رینٹ ٹو گو کے ساتھ آرام، آزادی اور سہولت کا تجربہ کریں۔ ہر یادگار سفر کے لیے بہترین گاڑیاں بااعتماد سروس اور شفاف یومیہ کرایہ کے ساتھ۔'
-                : 'Discover comfort, freedom and convenience with Rent2Go. Find the perfect car for every journey across Sadiqabad and nationwide highways.'}
+                ? 'جام رینٹ اے کار رحیم یار خان کے ساتھ 7 دن 24 گھنٹے آرام اور آزادی کا تجربہ کریں۔ ہر یادگار سفر کے لیے بہترین گاڑیاں بااعتماد سروس اور شفاف یومیہ کرایہ کے ساتھ۔'
+                : 'Discover comfort, freedom and 7 Days 24 Hours Service with Jam Rent A Car Rahim Yar Khan. Find the perfect car for every journey.'}
             </motion.p>
 
             <motion.div
@@ -348,7 +350,7 @@ export const HomeView: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.2 }}
-              className="lg:col-span-5 flex flex-wrap items-center gap-3"
+              className="lg:col-span-6 flex flex-wrap items-center gap-2.5"
             >
               <button
                 onClick={() => {
@@ -356,7 +358,7 @@ export const HomeView: React.FC = () => {
                   setCurrentView('cars');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="px-6 py-4 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 active:scale-95 shadow-xl cursor-pointer"
+                className="px-5 py-3.5 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 active:scale-95 shadow-xl cursor-pointer"
               >
                 <span>{locale === 'ur' ? 'گاڑیاں دیکھیں' : 'Explore Fleet'}</span>
                 <ArrowIcon className="w-4 h-4" />
@@ -367,18 +369,28 @@ export const HomeView: React.FC = () => {
                   soundFX.playClick();
                   navigateToBooking();
                 }}
-                className="px-6 py-4 rounded-full bg-[#F5B301] hover:bg-amber-400 text-slate-950 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 active:scale-95 shadow-md cursor-pointer"
+                className="px-5 py-3.5 rounded-full bg-[#F5B301] hover:bg-amber-400 text-slate-950 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 active:scale-95 shadow-md cursor-pointer"
               >
-                <span>{locale === 'ur' ? 'ابھی بک کریں' : 'Book Your Ride'}</span>
+                <span>{locale === 'ur' ? 'ابھی بک کریں' : 'Book Ride'}</span>
               </button>
 
               <a
-                href={`https://wa.me/${settings.whatsappNumber}`}
+                href={`tel:${settings.phone || '03006756054'}`}
+                onClick={() => soundFX.playClick()}
+                className="px-4 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold tracking-tight transition-all flex items-center gap-1.5 active:scale-95 shadow-md cursor-pointer"
+                title="Call 03006756054 (24 Hours)"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="hidden sm:inline">03006756054</span>
+              </a>
+
+              <a
+                href={`https://wa.me/${settings.whatsappNumber || '923006756054'}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => soundFX.playClick()}
-                className="p-4 rounded-full bg-[#25D366] text-white hover:bg-[#20bd5a] transition-all flex items-center justify-center active:scale-95 shadow-md"
-                title="WhatsApp Us"
+                className="p-3.5 rounded-full bg-[#25D366] text-white hover:bg-[#20bd5a] transition-all flex items-center justify-center active:scale-95 shadow-md cursor-pointer"
+                title="WhatsApp 03006756054"
               >
                 <MessageSquare className="w-4 h-4 fill-current" />
               </a>
@@ -627,7 +639,7 @@ export const HomeView: React.FC = () => {
           </span>
           <h2 className="text-3xl sm:text-5xl font-black font-mono tracking-tight text-slate-950 dark:text-white">
             <EditorialWordsReveal
-              text={locale === 'ur' ? 'رینٹ ٹو گو کیوں منتخب کریں؟' : 'Engineering Trust in Every Mile'}
+              text={locale === 'ur' ? 'جام رینٹ اے کار کیوں منتخب کریں؟' : 'Engineering Trust in Every Mile'}
             />
           </h2>
         </motion.div>

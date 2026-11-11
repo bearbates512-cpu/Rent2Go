@@ -10,7 +10,9 @@ import {
   Snowflake,
   ArrowRight,
   ArrowLeft,
-  MessageSquare
+  MessageSquare,
+  Zap,
+  Sparkles
 } from 'lucide-react';
 
 interface CarCardProps {
@@ -19,14 +21,24 @@ interface CarCardProps {
 }
 
 export const CarCard: React.FC<CarCardProps> = ({ vehicle, index = 0 }) => {
-  const { locale, dir, navigateToCar, navigateToBooking, settings } = useApp();
+  const { locale, dir, navigateToCar, navigateToBooking, settings, getVehicleEffectivePrice } = useApp();
 
   const title = vehicle.title[locale] || vehicle.title.en;
 
+  const {
+    originalRate,
+    discountedRate,
+    hasDiscount,
+    discountBadge,
+    discountBadgeUr,
+    discountPercent,
+    savingsPerDay
+  } = getVehicleEffectivePrice(vehicle);
+
   const prefilledWA = encodeURIComponent(
     locale === 'ur'
-      ? `السلام علیکم! مجھے رینٹ ٹو گو کی گاڑی ${vehicle.make} ${vehicle.model} (${vehicle.modelYear}) کے کرایہ کی تفصیلات درکار ہیں۔`
-      : `Hello Rent2Go! I am interested in renting ${vehicle.make} ${vehicle.model} (${vehicle.modelYear}). Please share current availability and quote.`
+      ? `السلام علیکم! مجھے رینٹ ٹو گو کی گاڑی ${vehicle.make} ${vehicle.model} (${vehicle.modelYear}) کے کرایہ کی تفصیلات درکار ہیں۔${hasDiscount ? ` (خصوصی آفر: ${discountedRate} روپے یومیہ - بچت ${savingsPerDay} روپے)` : ''}`
+      : `Hello Jam Rent A Car! I am interested in renting ${vehicle.make} ${vehicle.model} (${vehicle.modelYear}).${hasDiscount ? ` Special Offer: Rs. ${discountedRate?.toLocaleString()}/day (Save Rs. ${savingsPerDay.toLocaleString()})!` : ''} Please share availability.`
   );
 
   const ArrowIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
@@ -84,6 +96,16 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle, index = 0 }) => {
               : (locale === 'ur' ? 'سیلف ڈرائیو' : 'Self Drive')}
           </span>
         </div>
+
+        {/* Special Promotional Discount Badge */}
+        {hasDiscount && (
+          <div className="absolute bottom-3 start-3 z-10 pointer-events-none">
+            <span className="px-3 py-1 rounded-full bg-[#F5B301] text-slate-950 text-[11px] font-black font-mono shadow-xl flex items-center gap-1 border border-black/10">
+              <Zap className="w-3 h-3 fill-current" />
+              <span>{locale === 'ur' ? (discountBadgeUr || discountBadge) : discountBadge}</span>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Editorial Content */}
@@ -127,7 +149,23 @@ export const CarCard: React.FC<CarCardProps> = ({ vehicle, index = 0 }) => {
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
                 {locale === 'ur' ? 'یومیہ کرایہ' : 'Tariff'}
               </span>
-              {vehicle.dailyRatePKR ? (
+              {hasDiscount ? (
+                <div>
+                  <span className="text-[11px] font-mono line-through text-slate-400 block">
+                    Rs. {originalRate?.toLocaleString()}
+                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-sm font-bold text-amber-500 font-mono">Rs.</span>
+                    <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono tracking-tight">
+                      {discountedRate?.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-slate-400 font-mono">/{locale === 'ur' ? 'دن' : 'day'}</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 font-mono block">
+                    {locale === 'ur' ? `بچت: ${savingsPerDay.toLocaleString()} روپے / دن` : `Save Rs. ${savingsPerDay.toLocaleString()}/day`}
+                  </span>
+                </div>
+              ) : vehicle.dailyRatePKR ? (
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm font-bold text-slate-400 font-mono">Rs.</span>
                   <span className="text-2xl font-black text-slate-950 dark:text-white font-mono tracking-tight">
