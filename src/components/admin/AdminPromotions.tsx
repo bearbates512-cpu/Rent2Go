@@ -30,6 +30,7 @@ import {
   Upload,
   RotateCcw
 } from 'lucide-react';
+import { compressImageToDataUrl } from '../../utils/imageCompression.ts';
 
 const PRESET_BANNER_IMAGES = [
   {
@@ -885,24 +886,22 @@ export const AdminPromotions: React.FC = () => {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={e => {
+                onChange={async e => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    if (file.size > 4 * 1024 * 1024) {
-                      alert('Please select an image smaller than 4MB.');
-                      return;
+                    try {
+                      showFeedback('لوگو پروسیس ہو رہا ہے... (Compressing logo...)');
+                      const dataUrl = await compressImageToDataUrl(file, 400, 400, 0.88);
+                      updateSiteLogo(dataUrl);
+                      setLogoInputUrl(dataUrl);
+                      soundFX.playSuccess();
+                      showFeedback('✅ لوگو کامیابی سے تبدیل ہو گیا اور ویب سائٹ پر لائیو ہے! (Logo updated & live!)');
+                    } catch (err) {
+                      console.error('Logo compression failed:', err);
+                      alert('تصویر لوڈ کرنے میں مسئلہ ہوا، براہ کرم دوسری تصویر منتخب کریں۔');
+                    } finally {
+                      if (e.target) e.target.value = '';
                     }
-                    const reader = new FileReader();
-                    reader.onload = ev => {
-                      const dataUrl = ev.target?.result as string;
-                      if (dataUrl) {
-                        updateSiteLogo(dataUrl);
-                        setLogoInputUrl(dataUrl);
-                        soundFX.playSuccess();
-                        showFeedback('✅ لوگو کامیابی سے تبدیل ہو گیا (Logo updated successfully)!');
-                      }
-                    };
-                    reader.readAsDataURL(file);
                   }
                 }}
               />

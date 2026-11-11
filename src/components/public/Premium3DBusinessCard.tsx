@@ -154,6 +154,37 @@ export const Premium3DBusinessCard: React.FC<Premium3DBusinessCardProps> = ({
                   ? 'محفوظ سفر، جدید ترین گاڑیاں اور بااخلاق ڈرائیورز کی ضمانت۔'
                   : 'Premium chauffeur service, luxury convoys & verified car rental in Sadiqabad.'}
               </p>
+
+              {/* Verified Platform Badges */}
+              <div className="flex items-center gap-2 pt-1.5">
+                <a
+                  href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    soundFX.playClick();
+                  }}
+                  className="px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-[9px] font-mono font-bold flex items-center gap-1 hover:bg-amber-500/25 transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  <span>Rental Sawari App ↗</span>
+                </a>
+
+                <a
+                  href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    soundFX.playClick();
+                  }}
+                  className="px-2.5 py-0.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-[9px] font-mono font-bold flex items-center gap-1 hover:bg-blue-500/25 transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                  <span>Facebook Page ↗</span>
+                </a>
+              </div>
             </section>
 
             {/* Footer Contact Details */}

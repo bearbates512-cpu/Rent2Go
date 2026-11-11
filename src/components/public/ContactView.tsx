@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext.tsx';
 import { normalizePkPhone } from '../../utils/phone.ts';
 import { soundFX } from '../../utils/soundEffects.ts';
-import { Phone, MessageSquare, Mail, MapPin, Clock, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Phone, MessageSquare, Mail, MapPin, Clock, Send, CheckCircle2, AlertCircle, ExternalLink, Sparkles } from 'lucide-react';
 
 export const ContactView: React.FC = () => {
   const { locale, settings, submitEnquiry } = useApp();
@@ -151,6 +151,58 @@ export const ContactView: React.FC = () => {
                     <span className="font-bold text-slate-900 dark:text-white">{settings.email}</span>
                   </div>
                 </div>
+
+                {/* Rental Sawari App Comparison Link */}
+                <a
+                  href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => soundFX.playClick()}
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 hover:border-amber-400 transition-all group cursor-pointer shadow-sm"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xs shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                    RS
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-amber-800 dark:text-amber-300 block font-semibold text-[11px] uppercase tracking-wider">
+                      {locale === 'ur' ? 'رینٹل سواری ایپ کمپیریژن' : 'Verified App Profile'}
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white text-sm truncate flex items-center gap-1.5">
+                      <span>Rental Sawari App</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-amber-500" />
+                    </span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
+                      {locale === 'ur' ? 'رحیم یار خان میں فلیٹ و ریٹنگز کا موازنہ کریں' : 'Compare rates & verified fleet on Rental Sawari'}
+                    </span>
+                  </div>
+                </a>
+
+                {/* Facebook Official Page */}
+                <a
+                  href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => soundFX.playClick()}
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-[#1877F2]/10 border border-[#1877F2]/25 hover:border-[#1877F2] transition-all group cursor-pointer shadow-sm"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-blue-700 dark:text-blue-300 block font-semibold text-[11px] uppercase tracking-wider">
+                      {locale === 'ur' ? 'آفیشل فیس بک پیج' : 'Official Facebook Page'}
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white text-sm truncate flex items-center gap-1.5">
+                      <span>Jam Brothers Rent A Car</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-blue-500" />
+                    </span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
+                      {locale === 'ur' ? 'فیس بک پر کسٹمر ریویوز اور ویڈیوز دیکھیں' : 'Follow for fleet photos & daily updates'}
+                    </span>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -327,7 +379,7 @@ export const ContactView: React.FC = () => {
           {/* Interactive Google Map Iframe */}
           <div className="w-full h-[400px] sm:h-[480px] rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-inner bg-slate-100 dark:bg-slate-900">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7949743.754871205!2d67.90442178853719!3d29.915812714775523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794239357100!5m2!1sen!2s"
+              src={settings.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.934851576573!2d70.29789199999999!3d28.4212226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794412836229!5m2!1sen!2s"}
               width="100%"
               height="100%"
               style={{ border: 0 }}

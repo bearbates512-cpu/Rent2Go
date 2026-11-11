@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
-import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw, Lock, KeyRound, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Settings, Save, Check, RefreshCw, ToggleLeft, ToggleRight, MessageSquare, AlertCircle, Download, Upload, Trash2, Database, ShieldCheck, RotateCcw, Lock, KeyRound, Sparkles, Image as ImageIcon, ExternalLink, Globe } from 'lucide-react';
 import { AUTHORIZED_ADMIN_EMAIL, setCustomSupabaseConfig, getSupabaseClient } from '../../utils/supabase.ts';
+import { soundFX } from '../../utils/soundEffects.ts';
+import { compressImageToDataUrl } from '../../utils/imageCompression.ts';
 
 export const AdminSettings: React.FC = () => {
   const { settings, updateSiteSettings, resetAllData, clearDemoFleet, clearDemoBookings, exportAllData, importAllData, updateSiteLogo } = useApp();
@@ -17,6 +19,22 @@ export const AdminSettings: React.FC = () => {
   const [supabaseSaveMsg, setSupabaseSaveMsg] = useState('');
 
   const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '/assets/aistudio/Rent2Go_icon_transparent.png');
+  const [logoFeedback, setLogoFeedback] = useState<string>('');
+
+  // Keep local logoUrl synced with settings in real-time
+  useEffect(() => {
+    if (settings.logoUrl) {
+      setLogoUrl(settings.logoUrl);
+    }
+  }, [settings.logoUrl]);
+
+  const applyLogoImmediately = (newUrl: string, feedbackMsg?: string) => {
+    setLogoUrl(newUrl);
+    updateSiteLogo(newUrl);
+    soundFX.playSuccess();
+    setLogoFeedback(feedbackMsg || '✅ لوگو فوری تبدیل ہو گیا اور ویب سائٹ پر لائیو ہے! (Logo updated & live!)');
+    setTimeout(() => setLogoFeedback(''), 4000);
+  };
   const [phone, setPhone] = useState(settings.phone);
   const [phoneFormatted, setPhoneFormatted] = useState(settings.phoneFormatted);
   const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber);
@@ -26,6 +44,16 @@ export const AdminSettings: React.FC = () => {
   const [hoursEn, setHoursEn] = useState(settings.businessHours.en);
   const [hoursUr, setHoursUr] = useState(settings.businessHours.ur);
   const [waTemplate, setWaTemplate] = useState(settings.whatsappMessageTemplate);
+  const [facebookUrl, setFacebookUrl] = useState(
+    settings.socialLinks?.facebook || 'https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/'
+  );
+  const [rentalSawariUrl, setRentalSawariUrl] = useState(
+    settings.socialLinks?.rentalSawari || 'https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk'
+  );
+  const [mapEmbedUrl, setMapEmbedUrl] = useState(
+    settings.mapEmbedUrl ||
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.934851576573!2d70.29789199999999!3d28.4212226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794412836229!5m2!1sen!2s'
+  );
 
   // Features
   const [selfDrive, setSelfDrive] = useState(settings.features.selfDriveEnabled);
@@ -42,11 +70,12 @@ export const AdminSettings: React.FC = () => {
 
     updateSiteSettings({
       ...settings,
-      logoUrl,
+      logoUrl: logoUrl.trim() || settings.logoUrl,
       phone,
       phoneFormatted,
       whatsappNumber: whatsapp,
       email,
+      mapEmbedUrl: (mapEmbedUrl.match(/src=["'](.*?)["']/) ? mapEmbedUrl.match(/src=["'](.*?)["']/)![1] : mapEmbedUrl).trim(),
       address: {
         en: addressEn,
         ur: addressUr
@@ -68,11 +97,16 @@ export const AdminSettings: React.FC = () => {
         hourlyRentalEnabled: hourly,
         floatingWhatsAppEnabled: floatingWA,
         reviewsSectionEnabled: true
+      },
+      socialLinks: {
+        facebook: facebookUrl.trim(),
+        rentalSawari: rentalSawariUrl.trim()
       }
     });
 
+    soundFX.playSuccess();
     setSavedToast(true);
-    setTimeout(() => setSavedToast(false), 2500);
+    setTimeout(() => setSavedToast(false), 3000);
   };
 
   return (
@@ -110,7 +144,7 @@ export const AdminSettings: React.FC = () => {
                 <span>Website Logo & Brand Emblem (ویب سائٹ کا لوگو)</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Upload or link a custom logo image for Jam Rent A Car. Updates everywhere on the website.
+                Upload or link a custom logo image for Jam Rent A Car. Updates everywhere on the website in real-time.
               </p>
             </div>
 
@@ -119,8 +153,7 @@ export const AdminSettings: React.FC = () => {
                 type="button"
                 onClick={() => {
                   const defaultLogo = '/assets/aistudio/Rent2Go_icon_transparent.png';
-                  setLogoUrl(defaultLogo);
-                  updateSiteLogo(defaultLogo);
+                  applyLogoImmediately(defaultLogo, '✅ اصل ڈیفالٹ لوگو بحال ہو گیا (Default logo restored)!');
                 }}
                 className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold font-mono flex items-center gap-1.5 cursor-pointer"
               >
@@ -134,40 +167,46 @@ export const AdminSettings: React.FC = () => {
                 className="px-4 py-1.5 rounded-xl bg-[#0B1F3A] text-white hover:bg-[#142F57] text-xs font-bold font-mono flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Upload className="w-3.5 h-3.5" />
-                <span>Upload Logo File</span>
+                <span>Upload Logo File (تصویر منتخب کریں)</span>
               </button>
               <input
                 ref={logoFileInputRef}
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={e => {
+                onChange={async e => {
                   const file = e.target.files?.[0];
-                  if (file) {
-                    if (file.size > 4 * 1024 * 1024) {
-                      alert('Please select an image smaller than 4MB.');
-                      return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = ev => {
-                      const dataUrl = ev.target?.result as string;
-                      if (dataUrl) {
-                        setLogoUrl(dataUrl);
-                        updateSiteLogo(dataUrl);
-                      }
-                    };
-                    reader.readAsDataURL(file);
+                  if (!file) return;
+
+                  try {
+                    setLogoFeedback('لوگو پروسیس ہو رہا ہے... (Compressing logo...)');
+                    const dataUrl = await compressImageToDataUrl(file, 400, 400, 0.88);
+                    applyLogoImmediately(dataUrl, '✅ لوگو کامیابی سے اپلوڈ ہو گیا اور ویب سائٹ پر لائیو ہے! (Logo uploaded & live!)');
+                  } catch (err) {
+                    console.error('Logo compression failed:', err);
+                    alert('تصویر لوڈ کرنے میں مسئلہ ہوا، براہ کرم دوسری تصویر منتخب کریں۔');
+                  } finally {
+                    if (e.target) e.target.value = '';
                   }
                 }}
               />
             </div>
           </div>
 
+          {/* Instant Real-Time Success Feedback Toast */}
+          {logoFeedback && (
+            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-bold font-mono flex items-center gap-2 animate-in fade-in">
+              <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{logoFeedback}</span>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-center">
             {/* Live Preview Dark Box */}
-            <div className="p-4 rounded-2xl bg-[#0B1F3A] border border-amber-500/20 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-400/30 flex items-center justify-center p-1.5 shrink-0">
+            <div className="p-4 rounded-2xl bg-[#0B1F3A] border border-amber-500/20 flex items-center gap-3 shadow-inner">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-400/30 flex items-center justify-center p-2 shrink-0">
                 <img
+                  key={logoUrl}
                   src={logoUrl || '/assets/aistudio/Rent2Go_icon_transparent.png'}
                   alt="Current Logo"
                   className="w-full h-full object-contain"
@@ -176,41 +215,108 @@ export const AdminSettings: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
-                <p className="text-[10px] text-amber-400 font-mono font-bold uppercase">Active Site Logo</p>
-                <p className="text-xs font-black text-white font-mono">Jam Rent A Car</p>
-                <p className="text-[10px] text-slate-300">Rahim Yar Khan</p>
+              <div className="min-w-0">
+                <p className="text-[10px] text-amber-400 font-mono font-bold uppercase tracking-wider">Active Site Logo</p>
+                <p className="text-xs font-black text-white font-mono truncate">Jam Rent A Car</p>
+                <p className="text-[10px] text-slate-300">Rahim Yar Khan · 24/7</p>
               </div>
             </div>
 
             {/* URL Input */}
             <div className="md:col-span-2 space-y-1.5">
               <label className="text-xs font-bold text-slate-700 block font-mono">
-                Logo Image URL or Local Path (تصویر کا لنک)
+                Logo Image URL or Local Path (تصویر کا لنک درج کریں)
               </label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={logoUrl}
                   onChange={e => setLogoUrl(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (logoUrl.trim()) {
+                        applyLogoImmediately(logoUrl.trim(), '✅ نیا لوگو لنک کامیابی سے لاگو ہو گیا! (Logo link applied!)');
+                      }
+                    }
+                  }}
                   placeholder="/assets/aistudio/... or https://example.com/logo.png"
-                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-mono"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-mono text-slate-800"
                 />
                 <button
                   type="button"
                   onClick={() => {
                     if (logoUrl.trim()) {
-                      updateSiteLogo(logoUrl.trim());
+                      applyLogoImmediately(logoUrl.trim(), '✅ نیا لوگو لنک کامیابی سے لاگو ہو گیا! (Logo link applied!)');
                     }
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-amber-500 text-slate-900 font-bold text-xs font-mono hover:bg-amber-400 cursor-pointer shrink-0"
+                  className="px-5 py-2.5 rounded-xl bg-amber-500 text-slate-900 font-bold text-xs font-mono hover:bg-amber-400 cursor-pointer shrink-0 shadow-sm active:scale-95 transition-all"
                 >
-                  Apply
+                  Apply Logo
                 </button>
               </div>
               <p className="text-[11px] text-slate-400">
-                You can also customize banners, promotional deals, and logo presets in the <span className="font-bold text-slate-600">Promotions & Marketing</span> tab.
+                You can upload a file, paste an image link, or pick one of the verified luxury emblems below.
               </p>
+            </div>
+          </div>
+
+          {/* Quick 1-Click Automotive Emblem Presets */}
+          <div className="pt-3 border-t border-slate-100">
+            <span className="text-[11px] font-mono font-bold text-slate-600 uppercase tracking-wider block mb-2.5">
+              Quick 1-Click Emblem Presets (فوری ریڈی میڈ ڈیزائنز):
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                {
+                  id: 'gold-crest',
+                  name: 'Gold Emblem',
+                  url: '/assets/aistudio/Rent2Go_icon_transparent.png',
+                  badge: 'Standard'
+                },
+                {
+                  id: 'full-brand',
+                  name: 'Signature Logo',
+                  url: '/assets/aistudio/Rent2Go_Logo_transparent.png',
+                  badge: 'Signature'
+                },
+                {
+                  id: 'motion-edition',
+                  name: 'Motion Gold',
+                  url: '/assets/aistudio/Rent2Go_Home___Motion_Logo_4f24b879.png',
+                  badge: 'Executive'
+                },
+                {
+                  id: 'vip-falcon',
+                  name: 'VIP Falcon Shield',
+                  url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Ccircle cx='50' cy='50' r='46' stroke='%23F5B301' stroke-width='3' fill='%230B1F3A'/%3E%3Cpath d='M20 50 C32 30, 45 42, 50 32 C55 42, 68 30, 80 50 C68 46, 56 62, 50 72 C44 62, 32 46, 20 50 Z' fill='%23F5B301'/%3E%3Cpolygon points='50,22 45,30 55,30' fill='%23FFFFFF'/%3E%3Ctext x='50' y='86' font-size='9' font-weight='bold' fill='%23FFFFFF' text-anchor='middle' font-family='sans-serif'%3EJAM RENT%3C/text%3E%3C/svg%3E",
+                  badge: 'Protocol'
+                }
+              ].map(preset => {
+                const isSelected = settings.logoUrl === preset.url;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => {
+                      applyLogoImmediately(preset.url, `✅ ${preset.name} لوگو کامیابی سے سیٹ ہو گیا!`);
+                    }}
+                    className={`p-3 rounded-2xl border text-start transition-all cursor-pointer flex items-center gap-2.5 ${
+                      isSelected
+                        ? 'border-amber-500 bg-amber-500/10 shadow-sm ring-2 ring-amber-500/30'
+                        : 'border-slate-200 hover:border-amber-300 bg-slate-50/60'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center p-1 shrink-0">
+                      <img src={preset.url} alt={preset.name} className="w-full h-full object-contain" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[11px] font-bold text-slate-800 block truncate font-mono">{preset.name}</span>
+                      <span className="text-[10px] text-amber-600 font-bold block">{isSelected ? '✓ Active' : preset.badge}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -282,6 +388,120 @@ export const AdminSettings: React.FC = () => {
                 onChange={e => setAddressUr(e.target.value)}
                 className="w-full p-2.5 rounded-xl border border-slate-200 font-urdu"
                 dir="rtl"
+              />
+            </div>
+          </div>
+
+          {/* Google Maps Embed Field */}
+          <div className="pt-3 border-t border-slate-100 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="font-bold text-slate-700 block text-xs font-mono">
+                Google Maps Embed URL or &lt;iframe&gt; Code (گوگل میپس لائیو لوکیشن)
+              </label>
+              <a
+                href="https://maps.google.com/?q=Jam+Rent+A+Car+Rahim+Yar+Khan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 font-mono"
+              >
+                <span>Open Google Maps</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+            <textarea
+              rows={2}
+              value={mapEmbedUrl}
+              onChange={e => {
+                const val = e.target.value;
+                const match = val.match(/src=["'](.*?)["']/);
+                setMapEmbedUrl(match ? match[1] : val);
+              }}
+              placeholder="https://www.google.com/maps/embed?pb=... or paste full <iframe> code"
+              className="w-full p-2.5 rounded-xl border border-slate-200 font-mono text-xs text-slate-800"
+            />
+            <p className="text-[11px] text-slate-400">
+              Paste either the raw embed URL or the full Google Maps &lt;iframe&gt; snippet. The system will automatically extract the clean URL.
+            </p>
+          </div>
+        </div>
+
+        {/* Verified Social & Platform Integrations */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h2 className="text-sm font-bold text-[#0B1F3A] uppercase tracking-wider flex items-center gap-2">
+                <Globe className="w-4 h-4 text-blue-600" />
+                <span>Official Profiles & App Links (سوشل میڈیا اور ایپ لنکس)</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Manage your official Rental Sawari app comparison page and Facebook company page links.
+              </p>
+            </div>
+            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Active on Site & Footer
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-mono">
+            {/* Rental Sawari App */}
+            <div className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/20 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-amber-800 uppercase text-[11px] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span>Rental Sawari App Link</span>
+                </span>
+                {rentalSawariUrl && (
+                  <a
+                    href={rentalSawariUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-700 hover:text-amber-900 inline-flex items-center gap-1 text-[11px] font-bold"
+                  >
+                    <span>Test URL</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-500 font-sans">
+                کار موازنہ اور تصدیق شدہ فلیٹ ریٹنگز کے لیے رینٹل سواری ایپ کا لنک۔
+              </p>
+              <input
+                type="url"
+                value={rentalSawariUrl}
+                onChange={e => setRentalSawariUrl(e.target.value)}
+                placeholder="https://rentalsawari.com/compare/..."
+                className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono text-slate-900 focus:outline-hidden focus:border-amber-500"
+              />
+            </div>
+
+            {/* Facebook Official Page */}
+            <div className="p-5 rounded-2xl bg-blue-500/5 border border-blue-500/20 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-blue-800 uppercase text-[11px] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-600" />
+                  <span>Facebook Official Page</span>
+                </span>
+                {facebookUrl && (
+                  <a
+                    href={facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-700 hover:text-blue-900 inline-flex items-center gap-1 text-[11px] font-bold"
+                  >
+                    <span>Test URL</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-500 font-sans">
+                جام برادرز رینٹ اے کار کا آفیشل فیس بک پیج (تصاویر، ویڈیوز اور ریویوز)۔
+              </p>
+              <input
+                type="url"
+                value={facebookUrl}
+                onChange={e => setFacebookUrl(e.target.value)}
+                placeholder="https://www.facebook.com/..."
+                className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono text-slate-900 focus:outline-hidden focus:border-blue-500"
               />
             </div>
           </div>

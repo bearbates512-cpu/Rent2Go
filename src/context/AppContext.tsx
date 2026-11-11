@@ -368,16 +368,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        const hasOldMap = !parsed.mapEmbedUrl || parsed.mapEmbedUrl.includes('7949743');
         if (
           parsed.phone !== '03006756054' ||
           parsed.whatsappNumber !== '923006756054' ||
           !parsed.businessName?.en?.includes('Jam Rent A Car') ||
-          !parsed.mapEmbedUrl
+          hasOldMap
         ) {
           const updated: SiteSettings = {
             ...INITIAL_SETTINGS,
             ...parsed,
+            mapEmbedUrl: hasOldMap ? INITIAL_SETTINGS.mapEmbedUrl : (parsed.mapEmbedUrl || INITIAL_SETTINGS.mapEmbedUrl),
             logoUrl: parsed.logoUrl || INITIAL_SETTINGS.logoUrl,
+            socialLinks: {
+              ...INITIAL_SETTINGS.socialLinks,
+              ...(parsed.socialLinks || {})
+            },
             features: {
               ...INITIAL_SETTINGS.features,
               ...(parsed.features || {})
@@ -389,7 +395,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return {
           ...INITIAL_SETTINGS,
           ...parsed,
-          logoUrl: parsed.logoUrl || INITIAL_SETTINGS.logoUrl
+          mapEmbedUrl: parsed.mapEmbedUrl || INITIAL_SETTINGS.mapEmbedUrl,
+          logoUrl: parsed.logoUrl || INITIAL_SETTINGS.logoUrl,
+          socialLinks: {
+            ...INITIAL_SETTINGS.socialLinks,
+            ...(parsed.socialLinks || {})
+          }
         };
       } catch (e) {
         return INITIAL_SETTINGS;
@@ -489,10 +500,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [reviews]);
 
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(settings));
+    try {
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(settings));
+    } catch (e) {
+      console.warn('Storage quota warning for settings:', e);
+    }
     // Apply dynamic theme color tokens to CSS variables
-    document.documentElement.style.setProperty('--color-primary', settings.themeTokens.primaryColor);
-    document.documentElement.style.setProperty('--color-accent', settings.themeTokens.accentColor);
+    if (settings.themeTokens) {
+      document.documentElement.style.setProperty('--color-primary', settings.themeTokens.primaryColor);
+      document.documentElement.style.setProperty('--color-accent', settings.themeTokens.accentColor);
+    }
   }, [settings]);
 
   useEffect(() => {
@@ -839,13 +856,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateSiteSettings = (newSettings: SiteSettings) => {
     setSettings(newSettings);
+    try {
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(newSettings));
+    } catch (e) {
+      console.warn('Could not immediately save settings to localStorage:', e);
+    }
     logAudit('Settings', 'Updated Settings', 'Site settings and business profile updated');
   };
 
   const updateSiteLogo = (newLogoUrl: string) => {
     setSettings(prev => {
       const updated = { ...prev, logoUrl: newLogoUrl };
-      localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(updated));
+      try {
+        localStorage.setItem(`${STORAGE_KEY_PREFIX}settings`, JSON.stringify(updated));
+      } catch (e) {
+        console.warn('Could not immediately save logo to localStorage:', e);
+      }
       return updated;
     });
     logAudit('Settings & Branding', 'Update Logo', `Updated website logo picture: ${newLogoUrl.slice(0, 60)}`);

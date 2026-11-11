@@ -21,7 +21,10 @@ import {
   CheckCircle2,
   Play,
   Pause,
-  Phone
+  Phone,
+  ExternalLink,
+  MapPin,
+  Navigation
 } from 'lucide-react';
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -393,6 +396,34 @@ export const HomeView: React.FC = () => {
                 title="WhatsApp 03006756054"
               >
                 <MessageSquare className="w-4 h-4 fill-current" />
+              </a>
+
+              {/* Rental Sawari App Comparison Link */}
+              <a
+                href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundFX.playClick()}
+                className="px-4 py-3 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/25 text-xs font-mono font-bold transition-all flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer"
+                title="Compare on Rental Sawari App"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                <span>Rental Sawari</span>
+                <ExternalLink className="w-3 h-3 text-amber-500" />
+              </a>
+
+              {/* Facebook Official Page */}
+              <a
+                href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundFX.playClick()}
+                className="p-3.5 rounded-full bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] dark:text-blue-400 border border-[#1877F2]/25 transition-all flex items-center justify-center active:scale-95 shadow-sm cursor-pointer"
+                title="Facebook Official Page (Jam Brothers Rent A Car)"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
               </a>
             </motion.div>
           </div>
@@ -870,6 +901,204 @@ export const HomeView: React.FC = () => {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          10. LIVE LOCATION & TERMINAL SECTION (گوگل میپس پر لائیو لوکیشن)
+         ======================================================== */}
+      <section className="py-20 sm:py-24 bg-slate-50 dark:bg-[#070D18] border-t border-black/5 dark:border-white/10 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            variants={bidirectionalScroll}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
+            className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 pb-6 border-b border-black/5 dark:border-white/10"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-bold block">
+                  {locale === 'ur' ? 'ہمارے دفتر کی لائیو لوکیشن' : 'OFFICIAL FLEET TERMINAL & HEADQUARTERS'}
+                </span>
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-black font-mono tracking-tight text-slate-950 dark:text-white">
+                <EditorialWordsReveal
+                  text={locale === 'ur' ? 'جام رینٹ اے کار رحیم یار خان' : 'Jam Rent A Car Rahim Yar Khan'}
+                />
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl font-sans">
+                {locale === 'ur'
+                  ? '7 دن 24 گھنٹے سروس کے ساتھ رحیم یار خان میں ہمارے مرکزی دفتر تشریف لائیں یا لائیو میپ پر سمت معلوم کریں۔'
+                  : 'Located centrally in Rahim Yar Khan with round-the-clock 7 Days 24 Hours dispatch, dedicated customer reception, and instant vehicle handover.'}
+              </p>
+            </div>
+
+            {/* Quick Action Badges */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <a
+                href="https://maps.google.com/?q=Jam+Rent+A+Car+Rahim+Yar+Khan"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundFX.playClick()}
+                className="px-5 py-3 rounded-full bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-mono font-bold tracking-tight inline-flex items-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                <span>{locale === 'ur' ? 'گوگل میپس پر کھولیں' : 'Open in Google Maps'}</span>
+                <ExternalLink className="w-3 h-3 text-slate-400 dark:text-slate-600" />
+              </a>
+
+              <a
+                href={`tel:${settings.phone || '03006756054'}`}
+                className="px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold tracking-tight inline-flex items-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>03006756054</span>
+              </a>
+
+              <a
+                href={`https://wa.me/${settings.whatsappNumber || '923006756054'}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold tracking-tight inline-flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>WhatsApp</span>
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Location Meta Bar */}
+          <motion.div
+            variants={bidirectionalScroll}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
+          >
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0B131F] border border-black/5 dark:border-white/10 shadow-sm flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 shrink-0">
+                <MapPin className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block font-bold">
+                  {locale === 'ur' ? 'مرکزی پتہ' : 'Office Address'}
+                </span>
+                <p className="text-xs font-bold text-slate-900 dark:text-white truncate mt-0.5">
+                  {settings.address?.[locale] || 'Rahim Yar Khan, Punjab'}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0B131F] border border-black/5 dark:border-white/10 shadow-sm flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 shrink-0">
+                <Clock className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block font-bold">
+                  {locale === 'ur' ? 'اوقاتِ کار' : 'Working Hours'}
+                </span>
+                <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>7 Days 24 Hours Service</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0B131F] border border-black/5 dark:border-white/10 shadow-sm flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 shrink-0">
+                <Phone className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block font-bold">
+                  {locale === 'ur' ? 'کال و واٹس ایپ' : 'Hotline & Booking'}
+                </span>
+                <p className="text-xs font-bold text-slate-900 dark:text-white mt-0.5 font-mono">
+                  03006756054
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0B131F] border border-black/5 dark:border-white/10 shadow-sm flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block font-bold">
+                  {locale === 'ur' ? 'آن لائن پروفائلز' : 'Verified Profiles'}
+                </span>
+                <div className="flex items-center gap-2 mt-1">
+                  <a
+                    href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-0.5"
+                  >
+                    <span>RS App</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                  <span className="text-slate-300 dark:text-slate-600">·</span>
+                  <a
+                    href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5"
+                  >
+                    <span>Facebook</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* THE LIVE INTERACTIVE GOOGLE MAP */}
+          <motion.div
+            variants={bidirectionalScroll}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.15 }}
+            className="relative rounded-3xl overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl bg-slate-900 group"
+          >
+            {/* Live Location Pulse Badge */}
+            <div className="absolute top-4 start-4 z-10 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-xs font-mono font-bold shadow-lg pointer-events-none">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>Jam Rent A Car · Live Location Map</span>
+            </div>
+
+            {/* Direct Directions button floating inside map */}
+            <div className="absolute bottom-4 end-4 z-10">
+              <a
+                href="https://maps.google.com/?q=Jam+Rent+A+Car+Rahim+Yar+Khan"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundFX.playClick()}
+                className="px-4 py-2.5 rounded-xl bg-[#F5B301] hover:bg-amber-400 text-slate-950 text-xs font-mono font-bold tracking-tight inline-flex items-center gap-1.5 shadow-xl transition-all cursor-pointer active:scale-95"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                <span>{locale === 'ur' ? 'سمت معلوم کریں' : 'Get Live Directions'}</span>
+              </a>
+            </div>
+
+            {/* Google Maps Embed iframe */}
+            <div className="w-full h-[440px] sm:h-[500px] lg:h-[540px]">
+              <iframe
+                src={settings.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.934851576573!2d70.29789199999999!3d28.4212226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794412836229!5m2!1sen!2s"}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="Jam Rent A Car Rahim Yar Khan Live Location Map"
+              />
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

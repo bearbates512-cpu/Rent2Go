@@ -79,9 +79,10 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
             >
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-white/10 p-3.5 flex items-center justify-center border border-white/20 shadow-2xl backdrop-blur-md">
                 <img
+                  key={settings.logoUrl}
                   src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
                   alt="Jam Rent A Car Rahim Yar Khan"
-                  className="w-full h-full object-contain brightness-125"
+                  className="w-full h-full object-contain"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
                   }}

@@ -8,7 +8,9 @@ export const FuturisticTicker: React.FC = () => {
     'RAHIM YAR KHAN FLEET & MOTORWAY TRAVEL',
     'TOYOTA FORTUNER · CIVIC RS · ALTIS GRANDE · YARIS',
     'VERIFIED CHAUFFEURS & LUXURY SELF-DRIVE',
+    'RENTAL SAWARI APP VERIFIED FLEET',
     '7 دن 24 گھنٹے سروس · جام رینٹ اے کار',
+    'FACEBOOK: JAM BROTHERS RENT A CAR',
     'AIRPORT TRANSFERS & WEDDING FLEETS'
   ];
 

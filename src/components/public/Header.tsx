@@ -14,7 +14,8 @@ import {
   Sun,
   Moon,
   Lock,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -91,11 +92,12 @@ export const Header: React.FC = () => {
             onClick={() => handleNavClick('home')}
             className="flex items-center gap-3 cursor-pointer select-none group"
           >
-            <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-800 flex items-center justify-center p-1.5 shadow-sm group-hover:scale-105 transition-transform">
               <img
+                key={settings.logoUrl}
                 src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
                 alt="Jam Rent A Car Rahim Yar Khan"
-                className="w-full h-full object-contain brightness-125"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
                 }}
@@ -200,6 +202,44 @@ export const Header: React.FC = () => {
               {isAdminAuthenticated ? <ShieldCheck className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
             </button>
 
+            {/* Social & Verified App Icons Group (Facebook & Rental Sawari App side-by-side) */}
+            <div className="flex items-center gap-1.5">
+              {/* Facebook Quick Link */}
+              <a
+                href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-full bg-slate-100 hover:bg-[#1877F2]/15 dark:bg-slate-900 text-slate-600 hover:text-[#1877F2] dark:text-slate-300 dark:hover:text-[#1877F2] transition-all cursor-pointer active:scale-95"
+                title="Official Facebook Page (Jam Brothers Rent A Car)"
+                aria-label="Facebook Page"
+              >
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+
+              {/* Rental Sawari App Icon (Side-by-side with Facebook) */}
+              <a
+                href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-full bg-amber-500/10 hover:bg-amber-500/25 text-amber-600 hover:text-amber-500 dark:text-amber-400 dark:hover:text-amber-300 border border-amber-500/30 transition-all cursor-pointer active:scale-95 flex items-center justify-center relative group"
+                title="Rental Sawari App — Verified Fleet Profile"
+                aria-label="Rental Sawari App"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="5" y="2" width="14" height="20" rx="3" />
+                  <path d="M9 18h6" />
+                  <path d="M8 8l2.5-3h3L16 8v3a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V8z" />
+                </svg>
+                <span className="hidden 2xl:inline-block ms-1.5 text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400">RS App</span>
+                <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+              </a>
+            </div>
+
             {/* Direct Call Button */}
             <a
               href={`tel:${settings.phone || '03006756054'}`}
@@ -219,11 +259,41 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Mobile Right Bar (Theme toggle + Menu toggle) */}
-          <div className="flex lg:hidden items-center gap-2">
+          {/* Mobile Right Bar (Theme toggle + Facebook + App + Call + Menu toggle) */}
+          <div className="flex lg:hidden items-center gap-1.5 sm:gap-2">
+            {/* Mobile Facebook Icon */}
+            <a
+              href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-[#1877F2]/10 text-[#1877F2] dark:bg-slate-900 dark:text-blue-400 active:scale-95"
+              title="Official Facebook Page"
+              aria-label="Facebook Page"
+            >
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+
+            {/* Mobile Rental Sawari App Icon (Side-by-side with Facebook) */}
+            <a
+              href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-amber-500/10 text-amber-600 dark:bg-slate-900 dark:text-amber-400 border border-amber-500/30 active:scale-95"
+              title="Rental Sawari App"
+              aria-label="Rental Sawari App"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="3" />
+                <path d="M9 18h6" />
+                <path d="M8 8l2.5-3h3L16 8v3a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V8z" />
+              </svg>
+            </a>
+
             <a
               href={`tel:${settings.phone || '03006756054'}`}
-              className="p-2 rounded-full bg-emerald-600 text-white"
+              className="p-2 rounded-full bg-emerald-600 text-white active:scale-95"
               title="Call Now"
               aria-label="Call Now"
             >
@@ -232,7 +302,7 @@ export const Header: React.FC = () => {
 
             <button
               onClick={handleThemeToggle}
-              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-amber-400 cursor-pointer"
+              className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-amber-400 cursor-pointer active:scale-95"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -240,7 +310,7 @@ export const Header: React.FC = () => {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 cursor-pointer"
+              className="p-2.5 rounded-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 cursor-pointer active:scale-95"
               aria-label="Open navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -288,6 +358,33 @@ export const Header: React.FC = () => {
                 className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold flex items-center gap-1"
               >
                 <Phone className="w-3.5 h-3.5" /> Call
+              </a>
+            </div>
+
+            {/* Mobile Verified Social & App Links */}
+            <div className="grid grid-cols-2 gap-2">
+              <a
+                href={settings.socialLinks?.rentalSawari || "https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk"}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-bold font-mono text-center"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                <span>Rental Sawari App</span>
+              </a>
+
+              <a
+                href={settings.socialLinks?.facebook || "https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/"}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#1877F2]/10 border border-[#1877F2]/25 text-[#1877F2] dark:text-blue-400 text-xs font-bold font-mono text-center"
+              >
+                <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                <span>Facebook Page</span>
               </a>
             </div>
 

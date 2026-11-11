@@ -808,7 +808,7 @@ export const INITIAL_SETTINGS: SiteSettings = {
     en: '7 Days 24 Hours Service (24/7 Open)',
     ur: '7 دن 24 گھنٹے سروس (24 گھنٹے کھلا ہے)'
   },
-  mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7949743.754871205!2d67.90442178853719!3d29.915812714775523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794239357100!5m2!1sen!2s',
+  mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3508.934851576573!2d70.29789199999999!3d28.4212226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39375b25208c5229%3A0x257a12c964fc043c!2sJam%20Rent%20A%20Car%20Rahim%20Yar%20Khan!5e0!3m2!1sen!2s!4v1794412836229!5m2!1sen!2s',
   whatsappMessageTemplate: 'Assalam-o-Alaikum Jam Rent A Car Rahim Yar Khan! I would like to inquire about booking {car} from {pickup} to {return}. Reference: {ref}',
   announcementBar: {
     enabled: true,
@@ -823,6 +823,10 @@ export const INITIAL_SETTINGS: SiteSettings = {
     hourlyRentalEnabled: true,
     floatingWhatsAppEnabled: true,
     reviewsSectionEnabled: true
+  },
+  socialLinks: {
+    facebook: 'https://www.facebook.com/p/Jam-Brothers-Rent-A-Car-100065165124538/',
+    rentalSawari: 'https://rentalsawari.com/compare/jam-rent-a-car-rahim-yar-khan-vs-ali-rent-a-car-ryk'
   },
   themeTokens: {
     primaryColor: '#0B1F3A',

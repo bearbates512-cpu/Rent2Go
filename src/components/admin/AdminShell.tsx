@@ -115,9 +115,10 @@ export const AdminShell: React.FC<AdminShellProps> = ({
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-white/10 p-1.5 flex items-center justify-center shrink-0 border border-white/15 shadow-inner">
                 <img
+                  key={settings.logoUrl}
                   src={settings.logoUrl || "/assets/aistudio/Rent2Go_icon_transparent.png"}
-                  alt="Rent2Go"
-                  className="w-full h-full object-contain brightness-125"
+                  alt="Jam Rent A Car"
+                  className="w-full h-full object-contain"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/assets/aistudio/Rent2Go_icon_transparent.png';
                   }}

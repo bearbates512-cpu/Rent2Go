@@ -244,6 +244,10 @@ export interface SiteSettings {
     floatingWhatsAppEnabled: boolean;
     reviewsSectionEnabled: boolean;
   };
+  socialLinks?: {
+    facebook?: string;
+    rentalSawari?: string;
+  };
   themeTokens: {
     primaryColor: string;
     primaryHover: string;
